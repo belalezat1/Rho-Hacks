@@ -4,7 +4,7 @@
 **Tagline:** Talk to your Rho account. Get decisions, not dashboards. Deliver the brief where clients already buy.  
 **Document type:** PRD (hackathon → product foundation)  
 **Status:** Draft for weekend build  
-**Last updated:** 2026-09-12 (Tavily Outside Context Engine revision)  
+**Last updated:** 2026-09-12 (synced to full prior-chat spec: plain-language overview + Outside Context Engine playbooks 1–5 + hire/comps split)  
 **Event context:** Rho Lock In Hackathon (NYC) — sponsors: Rho, ElevenLabs, Tavily, Stan  
 
 ---
@@ -24,6 +24,50 @@ Users speak to RhoPilot like a CFO. The product:
 
 **One-sentence pitch for judges:**  
 *A safe, read-only voice CFO on Rho that doesn’t just read your transactions—it researches the world around them, then publishes the decision brief to Stan.*
+
+---
+
+## 1.1 Plain-language overview
+
+**RhoPilot is a voice assistant for your company’s money.**
+
+Instead of logging into a banking dashboard, scrolling transactions, and Googling vendors, you **talk** to it:
+
+> “How much cash do we have?”  
+> “Anything weird this week?”  
+> “Can we afford to hire?”  
+> “Should we keep paying for this tool?”  
+> “How much are we paying our designer — and what’s a competitive substitute?”
+
+It answers using your **real Rho bank data**, checks the **web when judgment needs outside facts** (Tavily), speaks back naturally (ElevenLabs), and can turn the answer into a **shareable report** on Stan.
+
+### How a normal use looks
+
+1. You ask by voice (or chat).  
+2. RhoPilot looks at your Rho accounts and transactions.  
+3. If the question needs judgment (vendor trust, renew, hire comps, weekly risk), it researches the web via Tavily and cites sources.  
+4. It explains the situation in plain language and suggests a next step.  
+5. Optionally it packages that into a short report + audio summary and publishes it on Stan.
+
+You’re not “using four APIs.” You’re having a money conversation that finishes as a deliverable.
+
+### What each piece is doing (human terms)
+
+| Piece | Job | Analogy |
+|---|---|---|
+| **Rho** | Source of truth for balances, spend, and *what you currently pay* | The books |
+| **Tavily** | Outside Context Engine — what ledger events *mean*, market/substitute prices, payee trust, vendor risk | The research team that Googles the things on your statement |
+| **ElevenLabs** | Conversational agent (listen, tool-call, speak) — not decorative TTS | The CFO you can interrupt and talk to |
+| **Stan** | Delivery layer for finished briefs/memos as digital products | The shared folder + link-in-bio storefront for the output |
+
+**Shorter still:** RhoPilot doesn’t just read your transactions—it researches the world around them so you can decide faster.
+
+### What it is *not*
+
+- Not a new bank  
+- Not a robot that pays bills for you  
+- Not tax/legal/employment advice  
+- Not “AI that replaces your accountant” — it’s a **faster daily layer** on top of Rho  
 
 ---
 
@@ -159,15 +203,26 @@ User (voice/chat)
 | **Tavily** | **Outside Context Engine** (*what it means / market substitutes*) | Search, Extract, Research; `topic: finance` / news; cited risk, pricing, and labor-market memos |
 | **Stan** | Business-in-a-box delivery | Host/sell/deliver Cash Briefs (with External Risk), Close Packs, Vendor / Hire Decision Memos |
 
-### 6.4 Tavily capability note (hire / pricing comps)
+### 6.4 Tavily capability note (hire / pricing comps) — required product answer
 
-Tavily does **not** know your payroll by itself. Competitive pricing works as a **two-tool loop**:
+**Founder question this product must answer:**  
+*“I’m talking to the ElevenLabs agent about my finances. Can it tell me how much I’m currently paying someone I’ve hired, and what competitive prices I could pay for a substitute?”*
 
-1. **Rho** identifies what you currently pay (e.g. recurring contractor ACH, Gusto/Deel/Upwork payouts, named vendor).
-2. **Tavily** researches live market rates and substitutes (salary bands, contractor day rates, SaaS list prices) via Search → Extract → Research, with citations.
-3. **ElevenLabs Agent** compares the two and recommends keep / renegotiate / substitute, including runway impact.
+**Answer: Yes — as a Rho × Tavily split, spoken by the agent.**
 
-Tavily can surface competitive prices from public web sources; it cannot invent private employer databases. Outputs are decision support with sources—not guaranteed quotes.
+| Half of the question | Who answers | How |
+|---|---|---|
+| “How much am I paying them *now*?” | **Rho** | Recurring contractor ACH, Gusto/Deel/Upwork payouts, labeled merchant/payee on the ledger |
+| “What are competitive / substitute prices?” | **Tavily** | Public-web Search → Extract → Research (salary bands, contractor rates, SaaS list prices) with citations |
+| “So what should I do / what’s the runway impact?” | **ElevenLabs Agent** | Compares Rho current pay vs Tavily market/substitute band; models burn/runway; offers Stan Hire Memo |
+
+**Limits (must be clear in UI + agent guardrails):**
+
+- Tavily is **not** a private salary database. Ranges are public-web estimates.
+- Outputs are **decision support with sources**, not guaranteed quotes or employment advice.
+- If Rho only shows a lump sum (e.g. “Deel — $9,000”) without a job title, the agent asks one clarifying question before running comps.
+
+This loop is **Playbook 4 (P0)** and is a first-class demo path.
 
 ---
 
@@ -236,11 +291,24 @@ Tavily can surface competitive prices from public web sources; it cannot invent 
 
 ### 7.4 Outside Context Engine (Tavily) — P0 product pillar
 
-Tavily is **not** “search when stuck.” It is the engine that turns ledger events into forward-looking decisions.
+**Framing from product direction (required):**  
+*Rho tells you what already happened. Tavily tells you what it means—and what to do next.*
+
+Without Tavily, RhoPilot is a talking dashboard. With Tavily as a core layer, it becomes a **decision engine**.
+
+Tavily is **not** “search when stuck” or a bolted-on Google plugin. It is the engine that turns ledger events into forward-looking decisions. **Playbooks 1 through 5 below are all P0 and must be implemented.**
 
 **Product rule:**  
 - Pure math (“What’s our balance?” / “What’s burn?”) → Rho only.  
 - Judgment (“Should we renew?” / “Is this payee safe?” / “What does the world mean for our books?” / “Are we overpaying this hire?”) → **Rho + Tavily required.**
+
+| # | Playbook | Why it’s load-bearing |
+|---|---|---|
+| 1 | Weekly External Risk Brief | Every Cash Brief includes outside vendor/category/rate context |
+| 2 | Payee / counterparty trust check | Protects cash on new/large payees |
+| 3 | Renew / cut competitive pricing | Tavily *is* the feature for SaaS keep/cut/negotiate |
+| 4 | Hire / substitute comps + stress tests | Rho = what you pay; Tavily = market substitutes |
+| 5 | Proactive world-watch | Always-on intelligence mapped back to *this* ledger |
 
 #### 7.4.1 Shared Tavily platform requirements
 
