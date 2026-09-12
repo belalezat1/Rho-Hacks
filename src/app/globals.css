@@ -17,6 +17,23 @@
   --nav-active: #f0f1f1;
   --background: var(--canvas);
   --foreground: var(--ink);
+
+  /* Rho-like spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --control-h: 44px;
+  --radius-control: 10px;
+  --radius-panel: 16px;
+  --shadow-panel: 0 1px 2px rgba(15, 23, 22, 0.04), 0 8px 24px rgba(15, 23, 22, 0.06);
+  --leading-tight: 1.15;
+  --leading-body: 1.5;
+  --focus-ring: 0 0 0 3px rgba(57, 239, 205, 0.35);
 }
 
 @theme inline {
@@ -68,39 +85,78 @@ body {
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-h);
   background: var(--mint);
   color: #000;
-  border-radius: 9999px;
+  border-radius: var(--radius-control);
   font-weight: 500;
-  transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: filter 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 .btn-primary:hover {
-  filter: brightness(0.97);
+  filter: brightness(0.96);
+}
+.btn-primary:active {
+  filter: brightness(0.92);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-h);
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--hairline);
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   font-weight: 500;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 .btn-secondary:hover {
   background: var(--canvas);
+  border-color: #d8dbdb;
+}
+.btn-secondary:active {
+  background: var(--nav-active);
+}
+.btn-secondary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-h);
   background: var(--ink);
   color: #fff;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   font-weight: 500;
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transition: filter 0.15s ease, background 0.15s ease;
 }
 .btn-dark:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.1);
+}
+.btn-dark:active {
+  filter: brightness(1.05);
+}
+.btn-dark:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
+/* Marketing landing CTAs stay pill-shaped */
 .btn-ghost-light {
   background: transparent;
   color: #fff;
@@ -114,12 +170,60 @@ body {
   background: rgba(255, 255, 255, 0.04);
 }
 
+.landing-root .btn-primary,
+.btn-primary.rounded-full {
+  border-radius: 9999px;
+}
+
 .btn-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 .btn-lift:active {
   transform: translateY(0);
+}
+
+.btn-icon-mint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-h);
+  height: var(--control-h);
+  flex-shrink: 0;
+  background: var(--mint);
+  color: #000;
+  border-radius: var(--radius-control);
+  transition: filter 0.15s ease;
+}
+.btn-icon-mint:hover {
+  filter: brightness(0.96);
+}
+.btn-icon-mint:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-icon-mint:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.control-input {
+  min-height: var(--control-h);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  padding: 0 var(--space-4);
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.control-input:focus {
+  border-color: rgba(21, 23, 22, 0.28);
+  box-shadow: var(--focus-ring);
+}
+.control-input::placeholder {
+  color: var(--muted);
 }
 
 .nav-link {
@@ -272,15 +376,17 @@ body {
 }
 
 .page-title {
-  font-size: 2rem;
+  font-size: clamp(1.75rem, 2vw, 2.125rem);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  line-height: var(--leading-tight);
   color: var(--ink);
 }
 
 .meta {
   color: var(--muted);
-  font-size: 1rem;
+  font-size: 0.9375rem;
+  line-height: var(--leading-body);
 }
 
 .dot-grid {
@@ -292,13 +398,40 @@ body {
 .studio-panel {
   background: var(--surface);
   border: 1px solid var(--hairline);
-  border-radius: 16px;
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
 }
 
 .studio-soft {
   background: #fafbfb;
   border: 1px solid #eef0f0;
-  border-radius: 16px;
+  border-radius: var(--radius-panel);
+}
+
+.prompt-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.prompt-chip:hover:not(:disabled) {
+  background: var(--canvas);
+  border-color: #d0d4d3;
+}
+.prompt-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.prompt-chip:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 @keyframes fadeUp {
