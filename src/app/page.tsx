@@ -10,10 +10,14 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <ScrollRevealInit />
 
-      <div className="landing-root relative flex min-h-screen flex-col bg-rho-black text-white">
-        <div className="landing-noise pointer-events-none absolute inset-0" aria-hidden />
+      <div className="landing-root relative flex min-h-[min(100vh,920px)] flex-col bg-rho-black text-white">
+        {/* Noise stays in the upper hero only — keeps particles off the gradient seam */}
         <div
-          className="landing-fade pointer-events-none absolute inset-x-0 bottom-0 h-[40%]"
+          className="landing-noise pointer-events-none absolute inset-x-0 top-0 h-[70%]"
+          aria-hidden
+        />
+        <div
+          className="landing-fade pointer-events-none absolute inset-x-0 bottom-0 h-[35%]"
           aria-hidden
         />
 
@@ -61,18 +65,17 @@ export default function HomePage() {
             </p>
           </section>
 
-          <div className="reveal reveal-delay relative z-10 mt-auto w-full px-4 pt-16 md:px-8 md:pt-20">
-            <LandingDashboardPreview />
+          {/* Dashboard sits inside the black→white wash so the fade and product peek align */}
+          <div className="landing-hero-bottom relative z-10 mt-auto w-full">
+            <div className="landing-bw-fade absolute inset-0" aria-hidden />
+            <div className="relative px-4 pt-16 md:px-8 md:pt-20">
+              <div className="reveal reveal-delay">
+                <LandingDashboardPreview />
+              </div>
+            </div>
           </div>
         </main>
-
       </div>
-
-      {/* One continuous black → white wash (no second black restart) */}
-      <div
-        className="landing-bw-fade pointer-events-none h-36 w-full md:h-44"
-        aria-hidden
-      />
 
       <LandingScrollSections />
     </div>

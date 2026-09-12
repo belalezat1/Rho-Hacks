@@ -107,18 +107,6 @@ export function LandingHeader() {
             menuId={`${menuId}-workspace`}
             groups={WORKSPACE}
           />
-          <Link
-            href="/briefs"
-            className="rounded-md px-3 py-2 text-[15px] text-white/80 transition hover:bg-white/[0.06] hover:text-white"
-          >
-            Briefs
-          </Link>
-          <Link
-            href="/talk"
-            className="rounded-md px-3 py-2 text-[15px] text-white/80 transition hover:bg-white/[0.06] hover:text-white"
-          >
-            Talk
-          </Link>
         </nav>
 
         <div className="ml-auto flex items-center gap-5">
@@ -143,7 +131,6 @@ export function LandingHeader() {
         </div>
       </div>
 
-      {/* Mobile feature strip */}
       <div className="flex gap-2 overflow-x-auto px-6 pb-3 md:hidden">
         {[
           { href: "/briefs", label: "Briefs" },
@@ -202,15 +189,16 @@ function NavTrigger({
         {label}
       </button>
 
-      {open ? (
-        <div
-          id={menuId}
-          className="absolute left-0 top-full z-40 pt-3"
-          role="menu"
-        >
-          <MegaPanel groups={groups} />
-        </div>
-      ) : null}
+      <div
+        id={menuId}
+        className={`mega-menu absolute left-0 top-full z-40 pt-3 ${
+          open ? "mega-menu-open" : ""
+        }`}
+        role="menu"
+        aria-hidden={!open}
+      >
+        <MegaPanel groups={groups} />
+      </div>
     </div>
   );
 }

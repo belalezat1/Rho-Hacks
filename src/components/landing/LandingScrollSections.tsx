@@ -2,24 +2,25 @@
 
 import Link from "next/link";
 import { PilotWordmark } from "@/components/PilotWordmark";
-import { ParticleField } from "@/components/landing/ParticleField";
 import { PartnerMarquee } from "@/components/landing/PartnerMarquee";
+
+const GLASS_LOOP =
+  "https://a.storyblok.com/f/332122/x/780bb1b652/6409738_glass-loop-dynamic-abstract_by_bawan_artlist_hd-particles.mp4";
 
 export function LandingScrollSections() {
   return (
     <div className="relative z-10 bg-white text-ink">
       <section
         id="integrations"
-        className="reveal relative overflow-hidden px-6 py-20 md:px-10 md:py-24"
+        className="reveal overflow-hidden px-0 py-20 md:py-24"
       >
-        <ParticleField className="opacity-70" density={0.9} />
-        <div className="relative z-10 mx-auto max-w-5xl">
+        <div className="mx-auto max-w-6xl px-6 md:px-10">
           <p className="mx-auto w-fit rounded-full border border-hairline px-5 py-2 text-center text-[14px] font-medium tracking-wide text-muted">
             Integration using companies such as
           </p>
-          <div className="mt-12">
-            <PartnerMarquee />
-          </div>
+        </div>
+        <div className="mt-12 w-full">
+          <PartnerMarquee />
         </div>
       </section>
 
@@ -30,7 +31,7 @@ export function LandingScrollSections() {
               Open Pilot
             </h2>
             <p className="mt-4 max-w-md text-[17px] leading-relaxed text-muted">
-              Talk to your books, review spend context, and ship a brief. Three
+              Talk to your books, review spend context, and ship a brief. Four
               doors into the same product.
             </p>
             <div className="mt-8 flex flex-col gap-3">
@@ -38,7 +39,6 @@ export function LandingScrollSections() {
                 href="/briefs"
                 title="Briefs"
                 body="Assemble and publish the pack"
-                primary
               />
               <EntryLink
                 href="/spend-context"
@@ -59,7 +59,15 @@ export function LandingScrollSections() {
           </div>
 
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-[#0a0a0a] md:aspect-square">
-            <AbstractPilotVisual />
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src={GLASS_LOOP}
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-label="Abstract glass particle animation"
+            />
           </div>
         </div>
       </section>
@@ -73,21 +81,15 @@ function EntryLink({
   href,
   title,
   body,
-  primary,
 }: {
   href: string;
   title: string;
   body: string;
-  primary?: boolean;
 }) {
   return (
     <Link
       href={href}
-      className={`btn-lift flex items-center justify-between rounded-2xl px-5 py-4 transition ${
-        primary
-          ? "bg-mint text-ink"
-          : "bg-[#f3f4f4] text-ink hover:bg-[#eceeee]"
-      }`}
+      className="btn-lift flex items-center justify-between rounded-2xl bg-[#f3f4f4] px-5 py-4 text-ink transition hover:bg-[#eceeee]"
     >
       <span>
         <span className="block text-[17px] font-semibold tracking-tight">
@@ -99,64 +101,6 @@ function EntryLink({
         →
       </span>
     </Link>
-  );
-}
-
-function AbstractPilotVisual() {
-  return (
-    <div className="absolute inset-0">
-      <div
-        className="absolute inset-0 opacity-50"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 28% 22%, rgba(57,239,205,0.28), transparent 42%), radial-gradient(circle at 78% 68%, rgba(255,255,255,0.07), transparent 38%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.2]"
-        style={{
-          backgroundImage:
-            "radial-gradient(rgba(255,255,255,0.75) 1px, transparent 1.2px)",
-          backgroundSize: "18px 18px",
-          maskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%)",
-        }}
-      />
-      {/* Abstract liquidity curves */}
-      <svg
-        className="absolute inset-0 h-full w-full opacity-30"
-        viewBox="0 0 400 400"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden
-      >
-        <path
-          d="M0 280 C80 240 120 320 200 260 C280 200 320 220 400 160"
-          fill="none"
-          stroke="rgba(57,239,205,0.7)"
-          strokeWidth="1.5"
-        />
-        <path
-          d="M0 310 C90 270 140 340 210 290 C290 230 340 250 400 200"
-          fill="none"
-          stroke="rgba(255,255,255,0.35)"
-          strokeWidth="1.2"
-        />
-        <path
-          d="M0 340 C100 300 160 360 230 320 C300 280 350 290 400 250"
-          fill="none"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="1"
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center p-10">
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] px-8 py-10 backdrop-blur-sm">
-          <PilotWordmark size="lg" tone="dark" href={null} />
-          <p className="mt-6 max-w-[14rem] text-[14px] leading-relaxed text-white/50">
-            Liquidity intelligence you can brief and forward.
-          </p>
-        </div>
-      </div>
-    </div>
   );
 }
 

@@ -142,9 +142,9 @@ body {
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
-    transparent 35%,
-    rgba(0, 0, 0, 0.45) 55%,
-    #000 100%
+    rgba(0, 0, 0, 0.35) 20%,
+    #000 55%,
+    transparent 100%
   );
 }
 
@@ -164,16 +164,38 @@ body {
   animation: landing-rise 0.9s ease-out both;
 }
 
-/* Single black → white transition under the dark hero */
+/* Black → white wash behind the dashboard peek */
+.landing-hero-bottom {
+  min-height: 280px;
+}
+
 .landing-bw-fade {
   background: linear-gradient(
     180deg,
     #050505 0%,
-    #1a1a1a 28%,
-    #6e6e6e 62%,
-    #d4d4d4 86%,
+    #121212 22%,
+    #3a3a3a 48%,
+    #b8b8b8 78%,
     #ffffff 100%
   );
+}
+
+.mega-menu {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    transform 0.22s ease,
+    visibility 0.22s;
+}
+
+.mega-menu-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
 }
 
 @keyframes landing-rise {
@@ -207,6 +229,9 @@ body {
   }
   .landing-dash-frame {
     animation: none;
+  }
+  .mega-menu {
+    transition: none;
   }
   .reveal {
     opacity: 1;

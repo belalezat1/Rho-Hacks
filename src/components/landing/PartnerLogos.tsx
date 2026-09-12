@@ -6,7 +6,7 @@ export function LogoRho({ className = "" }: { className?: string }) {
       className={`inline-flex items-center text-ink ${className}`}
       style={{
         fontFamily: "var(--font-wordmark), Georgia, serif",
-        fontSize: "1.9rem",
+        fontSize: "2.1rem",
         fontWeight: 700,
         letterSpacing: "-0.04em",
         lineHeight: 1,
@@ -24,12 +24,12 @@ export function LogoElevenLabs({ className = "" }: { className?: string }) {
       className={`inline-flex items-center gap-1.5 text-ink ${className}`}
       aria-label="ElevenLabs"
     >
-      <svg viewBox="0 0 18 28" className="h-8 w-[13px] shrink-0 md:h-9" aria-hidden>
+      <svg viewBox="0 0 18 28" className="h-9 w-[14px] shrink-0 md:h-10" aria-hidden>
         <rect x="0" y="0" width="5.5" height="28" rx="0.5" fill="currentColor" />
         <rect x="12.5" y="0" width="5.5" height="28" rx="0.5" fill="currentColor" />
       </svg>
       <span
-        className="text-[1.45rem] font-bold tracking-tight md:text-[1.65rem]"
+        className="text-[1.6rem] font-bold tracking-tight md:text-[1.8rem]"
         style={{ letterSpacing: "-0.035em" }}
       >
         ElevenLabs
@@ -44,7 +44,7 @@ export function LogoTavily({ className = "" }: { className?: string }) {
       className={`inline-flex items-center gap-2.5 text-ink ${className}`}
       aria-label="Tavily by Nebius"
     >
-      <svg viewBox="0 0 48 48" className="h-11 w-11 shrink-0 md:h-12 md:w-12" aria-hidden>
+      <svg viewBox="0 0 48 48" className="h-12 w-12 shrink-0 md:h-[3.25rem] md:w-[3.25rem]" aria-hidden>
         <rect width="48" height="48" rx="12" fill="currentColor" />
         <g
           fill="none"
@@ -63,12 +63,12 @@ export function LogoTavily({ className = "" }: { className?: string }) {
       </svg>
       <span className="flex flex-col leading-none">
         <span
-          className="text-[1.55rem] font-bold tracking-tight md:text-[1.7rem]"
+          className="text-[1.7rem] font-bold tracking-tight md:text-[1.85rem]"
           style={{ letterSpacing: "-0.03em" }}
         >
           tavily
         </span>
-        <span className="mt-1 text-[11px] font-medium tracking-wide text-muted">
+        <span className="mt-1 text-[12px] font-medium tracking-wide text-muted">
           by{" "}
           <span className="uppercase tracking-[0.12em] text-ink">NEBIUS</span>
         </span>
@@ -84,7 +84,7 @@ export function LogoStan({ className = "" }: { className?: string }) {
       className={`inline-flex items-center gap-2.5 text-ink ${className}`}
       aria-label="Stan"
     >
-      <svg viewBox="0 0 40 40" className="h-9 w-9 shrink-0 md:h-10 md:w-10" aria-hidden>
+      <svg viewBox="0 0 40 40" className="h-10 w-10 shrink-0 md:h-11 md:w-11" aria-hidden>
         <circle cx="20" cy="20" r="18" fill="currentColor" />
         <text
           x="20"
@@ -101,7 +101,7 @@ export function LogoStan({ className = "" }: { className?: string }) {
         </text>
       </svg>
       <span
-        className="text-[1.65rem] font-bold tracking-tight md:text-[1.85rem]"
+        className="text-[1.8rem] font-bold tracking-tight md:text-[2rem]"
         style={{ letterSpacing: "-0.03em" }}
       >
         Stan
