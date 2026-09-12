@@ -13,8 +13,8 @@ Use **Demo Mode** (empty keys) or live partner keys. Path: landing → **Talk**.
 | Step | Time | What you do | What judges see |
 |---|---|---|---|
 | 1. Problem | ~10s | Open `/` | Calm Pilot wordmark + one-liner |
-| 2. Commit | ~5s | **Talk** → click **Talk to Pilot** | Idle screen is one CTA (Hick’s Law). Click starts the session |
-| 3. Peak | ~40s | Speak/type *“Give me the week…”* | **Halftone appears only after the click**; pulses while tools run; cash truth in reply |
+| 2. Commit | ~5s | **Talk** → click **Talk to Pilot** | Idle is one CTA. Button drops; stage opens |
+| 3. Peak | ~40s | Speak/type *“Give me the week…”* | Bubble + side **halftone**; pulses while tools run; ask → brief path |
 | 4. Spend Context | ~50s | *“Intercom and Jordan vs public ranges…”* **or** **Money → Spend Context** | Cited comps table; open **Evidence** only if you want tool traces |
 | 5. Ship | ~30s | *“Draft the Weekly Money Brief…”* **or** **Briefs** | PDF → Confirm → Stan |
 | 6. Close | ~15s | End session / safety line | Read-only · Not financial advice |
@@ -65,7 +65,7 @@ flowchart TB
     Session --> Talk
 ```
 
-**Hero loop:** Click **Talk to Pilot** → living halftone voice field → Rho-shaped ledger truth → Tavily citations → draft brief → Stan. Evidence stays behind a drawer until asked.
+**Hero loop:** Click **Talk to Pilot** → button drops → speech bubble + side halftone → ask → draft brief → Stan. Evidence stays behind a drawer until asked.
 
 ---
 

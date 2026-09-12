@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { formatUsd } from "@/lib/ledger/analytics";
 import {
@@ -243,16 +244,21 @@ export function BriefStudio() {
             No pack yet
           </p>
           <p className="meta mt-2 max-w-md">
-            Draft a weekly brief or close pack to pull cash, anomalies, and spend
-            context into one calm review surface.
+            Start on Talk — ask Pilot to draft a Monday brief — or draft a pack
+            here. Cash, anomalies, and Spend Context land in one review surface.
           </p>
-          <button
-            type="button"
-            onClick={() => void draft()}
-            className="btn-primary btn-lift mt-6 px-4 py-2.5 text-sm"
-          >
-            Draft pack
-          </button>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/talk" className="btn-primary btn-lift px-4 py-2.5 text-sm">
+              Talk to Pilot
+            </Link>
+            <button
+              type="button"
+              onClick={() => void draft()}
+              className="btn-secondary px-4 py-2.5 text-sm"
+            >
+              Draft pack here
+            </button>
+          </div>
         </div>
       ) : (
         <>

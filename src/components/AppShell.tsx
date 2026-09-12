@@ -2,14 +2,14 @@ import Link from "next/link";
 import { PilotWordmark } from "@/components/PilotWordmark";
 
 const nav = [
-  { href: "/briefs", label: "Briefs", match: ["/briefs"] },
-  { href: "/spend-context", label: "Spend", match: ["/spend-context"] },
-  {
-    href: "/cash-pulse",
-    label: "Cash",
-    match: ["/cash-pulse", "/anomalies"],
-  },
   { href: "/talk", label: "Talk", match: ["/talk"] },
+  {
+    href: "/money",
+    label: "Money",
+    match: ["/money", "/cash-pulse", "/anomalies", "/spend-context"],
+  },
+  { href: "/briefs", label: "Briefs", match: ["/briefs"] },
+  { href: "/settings", label: "Settings", match: ["/settings"] },
 ];
 
 export function AppShell({
