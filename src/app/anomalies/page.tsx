@@ -15,7 +15,7 @@ export default async function AnomaliesPage() {
   return (
     <AppShell active="/anomalies">
       <div className="mb-7 max-w-2xl">
-        <h1 className="page-title">Anomaly Radar</h1>
+        <h1 className="page-title">Exceptions</h1>
         <p className="meta mt-3">
           Heuristic flags only - radar, not verdict. Escalate in Rho. Not
           compliance clearance.

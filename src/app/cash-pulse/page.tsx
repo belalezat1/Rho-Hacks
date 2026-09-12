@@ -1,35 +1,47 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
+import { AttentionGrid } from "@/components/cash/AttentionGrid";
+import { ReceivablesCard, RevenueChart } from "@/components/cash/CashCharts";
 import { VendorMark } from "@/components/VendorMark";
+import {
+  buildAttentionBuckets,
+  demoReceivables,
+  demoRevenueSeries,
+} from "@/lib/cash/demo-metrics";
 import { formatUsd, resolveMerchant } from "@/lib/ledger/analytics";
 import { loadLedgerSnapshot } from "@/lib/ledger/snapshot";
 
 function statusTone(status: string) {
-  if (status === "posted" || status === "settled")
-    return "bg-emerald-50 text-ok";
+  if (status === "posted") return "bg-emerald-50 text-ok";
   if (status === "pending") return "bg-amber-50 text-warn";
   return "bg-canvas text-muted";
 }
 
 export default async function CashPulsePage() {
   const snap = await loadLedgerSnapshot();
+  const buckets = buildAttentionBuckets(snap.anomalies, snap.transactions);
+  const pendingCents = snap.transactions
+    .filter((t) => t.status === "pending" || t.status === "awaiting_approval")
+    .reduce((a, t) => a + Math.abs(t.amountCents), 0);
+  const highCents = snap.anomalies
+    .filter((a) => a.severity === "high")
+    .reduce((a, x) => a + Math.abs(x.amountCents), 0);
+  const revenue = demoRevenueSeries(snap.cash.totalCents);
+  const receivables = demoReceivables(pendingCents, highCents);
 
   return (
     <AppShell active="/cash-pulse">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <h1 className="page-title">Cash Pulse</h1>
+          <h1 className="page-title">Cash</h1>
           <p className="meta mt-3">
             Multi-account cash, burn/runway, concentration - claims tie to
             Rho-shaped IDs.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/anomalies"
-            className="btn-secondary px-4 text-[13px]"
-          >
-            Anomaly radar
+          <Link href="/anomalies" className="btn-secondary px-4 text-[13px]">
+            Exceptions
           </Link>
           <span className="chip">
             {snap.demoMode ? "Demo Mode" : "Live Rho"}
@@ -37,7 +49,9 @@ export default async function CashPulsePage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <AttentionGrid buckets={buckets} />
+
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
         <div className="card p-5">
           <p className="text-[12px] font-medium uppercase tracking-[0.06em] text-muted">
             Cash balance
@@ -119,6 +133,11 @@ export default async function CashPulsePage() {
             ))}
           </ul>
         </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        <RevenueChart series={revenue} />
+        <ReceivablesCard slices={receivables} />
       </div>
 
       <div className="mt-6">

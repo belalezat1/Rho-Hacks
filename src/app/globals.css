@@ -85,8 +85,13 @@ body {
   box-shadow: var(--shadow-panel);
 }
 
-.page-enter {
-  animation: page-enter 0.45s ease-out both;
+.pilot-fab:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.pilot-panel {
+  max-height: min(72vh, 640px);
 }
 
 @keyframes page-enter {

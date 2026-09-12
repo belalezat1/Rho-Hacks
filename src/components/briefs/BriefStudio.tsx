@@ -255,7 +255,7 @@ export function BriefStudio() {
               </p>
               <div className="mt-7 flex flex-wrap gap-2.5">
                 <Link
-                  href="/talk"
+                  href="/cash-pulse?pilot=1"
                   className="btn-primary px-5 text-sm"
                 >
                   Talk to Pilot

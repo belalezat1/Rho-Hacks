@@ -37,7 +37,7 @@ export function LandingScrollSections() {
             <div className="mt-8 flex flex-col gap-3">
               <EntryLink
                 href="/briefs"
-                title="Briefs"
+                title="Brief Studio"
                 body="Assemble and publish the pack"
               />
               <EntryLink
@@ -51,9 +51,9 @@ export function LandingScrollSections() {
                 body="Balances, burn, runway"
               />
               <EntryLink
-                href="/talk"
-                title="Talk"
-                body="Ask Pilot about the week"
+                href="/cash-pulse?pilot=1"
+                title="Ask Pilot"
+                body="CFO-style briefing assistant"
               />
             </div>
           </div>
@@ -140,10 +140,10 @@ function LandingFooter() {
         <FooterCol
           title="Product"
           links={[
-            { href: "/briefs", label: "Briefs" },
-            { href: "/spend-context", label: "Spend" },
             { href: "/cash-pulse", label: "Cash" },
-            { href: "/talk", label: "Talk" },
+            { href: "/spend-context", label: "Spend" },
+            { href: "/anomalies", label: "Exceptions" },
+            { href: "/briefs", label: "Brief Studio" },
           ]}
         />
         <FooterCol
@@ -158,9 +158,9 @@ function LandingFooter() {
         <FooterCol
           title="Demo"
           links={[
-            { href: "/talk", label: "Start briefing" },
+            { href: "/cash-pulse?pilot=1", label: "Ask Pilot" },
             { href: "/briefs", label: "Brief Studio" },
-            { href: "/anomalies", label: "Anomalies" },
+            { href: "/anomalies", label: "Exceptions" },
           ]}
         />
       </div>
