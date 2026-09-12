@@ -21,9 +21,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pilot — live liquidity intelligence",
+  title: "Pilot — talk to your money like a CFO",
   description:
-    "Talk to Pilot like a CFO. Live liquidity intelligence you can brief in minutes. Decision support, not advice. Built on Rho.",
+    "Talk to Pilot like a CFO. Live liquidity intelligence on Rho you can brief in minutes. Decision support, not advice.",
 };
 
 export default function RootLayout({
