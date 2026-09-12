@@ -1,52 +1,54 @@
 # Product Requirements Document: RhoPilot
 
 **Product name:** RhoPilot  
-**Tagline:** Talk to your Rho account. Get decisions, not dashboards. Deliver the brief where clients already buy.  
+**Tagline:** RhoPilot — live liquidity intelligence you can brief in minutes  
 **Document type:** PRD (hackathon → product foundation)  
 **Status:** Draft for weekend build  
-**Last updated:** 2026-09-12 (synced to full prior-chat spec: plain-language overview + Outside Context Engine playbooks 1–5 + hire/comps split)  
+**Last updated:** 2026-09-12 (Grand Prize repositioning: liquidity intelligence + Competitive Spend Context hero + decision-support posture + Rho depth + integration kill-tests)  
 **Event context:** Rho Lock In Hackathon (NYC) — sponsors: Rho, ElevenLabs, Tavily, Stan  
 
 ---
 
 ## 1. Executive summary
 
-RhoPilot is a **voice-first finance operating system** for startups and the accountants who support them.
+RhoPilot is **live liquidity intelligence** for startups and the accountants who support them — a **money-brief layer on Rho**, not a competing finance platform.
 
-Users speak to RhoPilot like a CFO. The product:
+**Founder hook:** Ask your Rho account how the week looks, whether your spend is in range for businesses like yours, and leave with a brief you can forward.
 
-1. Reads live company money data from the **Rho API** (accounts, balances, transactions, statements) — *what already happened on the books*.
-2. Runs a load-bearing **Outside Context Engine** on **Tavily** (search, extract, research, finance topic) — *what those numbers mean in the world, and what to do next* (vendor risk, payee trust, renew/cut comps, hire/market rate comps, proactive external briefings).
-3. Converses and acts through **ElevenLabs Agents** (voice + chat agents with tool calling, workflows, guardrails), plus narration via ElevenCreative / TTS and optional Speech-to-Text via Scribe.
-4. Ships finished work products as digital products on **Stan** (Cash Briefs with External Risk sections, Client Close Packs, Vendor / Hire Decision Memos).
+The product:
 
-**Core split:** Rho = ledger truth. Tavily = outside truth. ElevenLabs = how you talk. Stan = how you ship the answer.
+1. Reads live company money data from the **Rho API** (accounts, balances, transactions, statements) with depth — merchant normalization, multi-account cash position, vendor concentration, period/statement context, claim→Rho ID evidence — *what happened on the books and what you currently pay*.
+2. Runs a load-bearing **Spend Context Engine** on **Tavily** — *public market context for your stack*: what similar businesses typically pay for tools and roles like yours, alternatives and list pricing vs your Rho amounts, plus a thin External Risk section on the weekly brief. Payee context dossiers are supporting, not the star.
+3. Converses through **ElevenLabs Agents** (voice + chat with tool calling, workflows, guardrails) and narrates briefs via ElevenCreative / TTS — agency, not decorative voiceover.
+4. Ships finished work products on **Stan** (Weekly Money Brief with Spend Context + External Risk, Client Close Packs) as PDF + audio.
+
+**Core split:** Rho = ledger truth. Tavily = public market / outside context. ElevenLabs = how you talk. Stan = how you ship the brief.
 
 **One-sentence pitch for judges:**  
-*A safe, read-only voice CFO on Rho that doesn’t just read your transactions—it researches the world around them, then publishes the decision brief to Stan.*
+*Live liquidity intelligence on Rho—compare your spend to public market ranges with citations, brief it by voice, and publish the pack to Stan. Decision support, not advice.*
 
 ---
 
 ## 1.1 Plain-language overview
 
-**RhoPilot is a voice assistant for your company’s money.**
+**RhoPilot helps you brief your company’s money fast.**
 
-Instead of logging into a banking dashboard, scrolling transactions, and Googling vendors, you **talk** to it:
+Instead of logging into a banking dashboard, scrolling transactions, and Googling “is this normal?”, you **talk** to it:
 
 > “How much cash do we have?”  
 > “Anything weird this week?”  
-> “Can we afford to hire?”  
-> “Should we keep paying for this tool?”  
-> “How much are we paying our designer — and what’s a competitive substitute?”
+> “How does what we pay for Intercom and our designer compare to public market ranges?”  
+> “Draft the Monday update I can send.”  
+> “Walk anomalies since the 1st for the client pack.”
 
-It answers using your **real Rho bank data**, checks the **web when judgment needs outside facts** (Tavily), speaks back naturally (ElevenLabs), and can turn the answer into a **shareable report** on Stan.
+It answers using your **real Rho bank data**, researches **public market context** when spend comparisons need outside facts (Tavily), speaks back naturally (ElevenLabs), and can turn the answer into a **shareable brief** on Stan.
 
 ### How a normal use looks
 
 1. You ask by voice (or chat).  
-2. RhoPilot looks at your Rho accounts and transactions.  
-3. If the question needs judgment (vendor trust, renew, hire comps, weekly risk), it researches the web via Tavily and cites sources.  
-4. It explains the situation in plain language and suggests a next step.  
+2. RhoPilot looks at your Rho accounts and transactions (with IDs you can verify).  
+3. If the question needs market context (spend comps, external risk, payee public footprint), it researches via Tavily and **cites sources**.  
+4. It **compares and explains** in plain language — it does not prescribe hire/cut/renew decisions.  
 5. Optionally it packages that into a short report + audio summary and publishes it on Stan.
 
 You’re not “using four APIs.” You’re having a money conversation that finishes as a deliverable.
@@ -56,18 +58,20 @@ You’re not “using four APIs.” You’re having a money conversation that fi
 | Piece | Job | Analogy |
 |---|---|---|
 | **Rho** | Source of truth for balances, spend, and *what you currently pay* | The books |
-| **Tavily** | Outside Context Engine — what ledger events *mean*, market/substitute prices, payee trust, vendor risk | The research team that Googles the things on your statement |
-| **ElevenLabs** | Conversational agent (listen, tool-call, speak) — not decorative TTS | The CFO you can interrupt and talk to |
-| **Stan** | Delivery layer for finished briefs/memos as digital products | The shared folder + link-in-bio storefront for the output |
+| **Tavily** | Spend Context Engine — public market ranges, alternatives, light external risk | The research pass on “is this in range?” |
+| **ElevenLabs** | Conversational agent (listen, tool-call, speak) — not decorative TTS | The teammate who pulls the numbers and briefs you |
+| **Stan** | Delivery layer for finished briefs/packs as digital products | The link you forward instead of a screenshot |
 
-**Shorter still:** RhoPilot doesn’t just read your transactions—it researches the world around them so you can decide faster.
+**Shorter still:** RhoPilot doesn’t just read your transactions—it puts them next to public market context so you can brief faster.
 
 ### What it is *not*
 
-- Not a new bank  
+- Not a new bank or a “finance OS” that replaces Rho  
 - Not a robot that pays bills for you  
-- Not tax/legal/employment advice  
-- Not “AI that replaces your accountant” — it’s a **faster daily layer** on top of Rho  
+- Not tax, legal, employment, or investment advice  
+- Not KYC, sanctions, or compliance clearance  
+- Not a CFO that tells you what to hire, cut, or renew  
+- Not “AI that replaces your accountant” — it’s a **faster briefing layer** on top of Rho  
 
 ---
 
@@ -79,10 +83,10 @@ Founders, ops leads, and fractional CFOs drown in finance busywork:
 
 - Cash, burn, and runway live in dashboards they open too late.
 - “Weird spend” is discovered after the fact.
-- Unknown vendors and new payees require manual Google tabs and Slack threads — with no trust check.
-- Recurring SaaS and contractor spend continues on autopilot because comparing market rates is tedious.
-- Hire / substitute decisions are made on gut feel, not “what we pay today vs what the market pays.”
-- Accountants retype the same client narratives every close — without an external risk layer.
+- Recurring SaaS and contractor spend continues on autopilot because comparing public market rates is tedious.
+- Founders ask “is what we pay normal for businesses like ours?” and get tab chaos, not a cited table.
+- Unknown vendors and new payees trigger manual Google threads — useful as context, not as a “compliance check.”
+- Accountants retype the same client narratives every close — without spend context or a sendable pack.
 - Creators with Stan storefronts still lack a simple money standup tied to real banking data.
 
 ### 2.2 Why existing tools fall short
@@ -99,7 +103,7 @@ Founders, ops leads, and fractional CFOs drown in finance busywork:
 
 Rho’s API is **read-only by design** (accounts, transactions, statements). That is a product strength for AI: agents can analyze without payment authority.
 
-The winning product insight: **a talking dashboard is not enough.** Founders need judgment. Judgment requires outside context—vendor health, payee legitimacy, competitive SaaS pricing, labor/contractor market rates, and category risk. Tavily is therefore not optional lookup; it is RhoPilot’s **Outside Context Engine**. Pairing Rho truth + Tavily decisions + ElevenLabs agency + Stan delivery creates a daily workflow tool judges and Rho itself can imagine shipping.
+The winning product insight: **a talking dashboard is not enough.** Founders need **liquidity intelligence they can brief** — what’s on the books, whether key spend looks in range vs public market context, and a pack they can forward. Tavily is therefore not optional lookup; it is RhoPilot’s **Spend Context Engine**. Pairing deep Rho truth + cited spend context + ElevenLabs agency + Stan delivery creates a daily briefing tool judges and Rho itself can imagine shipping as a layer—not a rival platform.
 
 ---
 
@@ -109,23 +113,27 @@ The winning product insight: **a talking dashboard is not enough.** Founders nee
 
 | Goal | Success signal |
 |---|---|
-| Everyday usefulness | Founder can complete a Monday cash standup in &lt;2 minutes by voice |
-| Sponsor-native depth | Rho, ElevenLabs, Tavily, and Stan are each load-bearing in the demo |
-| Outside-context decisions | Judgment calls (renew, hire/substitute, trust payee, weekly risk) **require** Tavily citations |
-| Decision support | Answers include evidence (Rho) + citations (Tavily) + next step |
-| Comp / rate intelligence | Agent can compare *what you pay* (Rho) vs *market substitutes* (Tavily) for vendors and roles |
-| Shipable output | User leaves with a Stan digital product link (brief / memo / pack) |
+| Everyday usefulness | Founder can complete a Monday money brief in &lt;2 minutes by voice |
+| Rho technical depth | Merchant normalization, multi-account cash, concentration, period context, claim→Rho IDs visible in UI |
+| Sponsor-native depth | Rho, ElevenLabs, Tavily, and Stan each pass their **kill-test** (no decorative logos) |
+| Spend-context quality | Market/spend claims show Rho amount vs cited public ranges |
+| Decision support posture | Answers compare + cite + draft next step in Rho — they do not prescribe |
+| Shipable output | User leaves with a Stan digital product link (Weekly Money Brief / Close Pack) |
 | Safety posture | Agent never claims it can move money; reinforces read-only Rho access |
-| Hackathon win posture | Contends for Grand Prize + Best Rho API + Best ElevenLabs + Best Tavily |
+| Hackathon win posture | Contends for Grand Prize; side prizes (Rho / ElevenLabs / Tavily / content) follow from the same loop |
 
 ### 3.2 Non-goals (explicit)
 
 - Initiating payments, wires, ACH, card issuance, or account modifications via API.
 - Replacing Rho’s full banking dashboard or Rho Close.
-- Providing formal tax, legal, or investment advice.
+- Providing formal tax, legal, employment, or investment advice.
+- Prescriptive hire / fire / renew / cut directives as the product promise.
+- KYC, sanctions screening, or compliance / regulatory clearance.
+- Fiduciary or “AI CFO that decides for you” positioning.
 - Multi-entity enterprise consolidation in v1.
 - Full accounting system of record (QuickBooks/Xero replacement).
 - Building a general consumer banking app.
+- Fully polishing five equal Tavily playbooks in one weekend.
 
 ---
 
@@ -134,12 +142,12 @@ The winning product insight: **a talking dashboard is not enough.** Founders nee
 ### 4.1 Primary — Startup founder / ops lead
 
 - Needs runway, burn, and spend clarity without living in spreadsheets.
-- Asks: “What’s our cash?” “Any weird spend?” “Can we hire?” “Should we renew X?”
+- Asks: “What’s our cash?” “Any weird spend?” “Is what we pay for X in range?” “Draft the Monday update.”
 
 ### 4.2 Primary — Fractional CFO / accountant (Rho partner audience)
 
 - Needs faster exception review and client-ready narratives.
-- Asks: “Walk anomalies since the 1st.” “Draft the client cash brief.” “Explain this wire.”
+- Asks: “Walk anomalies since the 1st.” “Draft the client cash brief.” “Explain this wire with sources.”
 
 ### 4.3 Secondary — Creator-operator (Stan audience)
 
@@ -148,20 +156,33 @@ The winning product insight: **a talking dashboard is not enough.** Founders nee
 
 ### 4.4 Internal champion (hackathon narrative)
 
-- Rho CS / product / partner teams who want founders to feel finance as frictionless — aligned with Rho’s mission.
+- Rho CS / product / partner teams who want founders to feel finance as frictionless — aligned with Rho’s mission — and who can imagine RhoPilot as a **briefing layer** Rho could productize.
 
 ---
 
 ## 5. Product principles
 
-1. **Voice is the interface; numbers are the authority.** ElevenLabs is UX, Rho is ledger truth.
-2. **Rho = what happened. Tavily = what it means.** Outside context is a product pillar, not a fallback.
-3. **Math can be Rho-only. Judgment requires Tavily.** Balance/burn questions may skip the web; renew / hire / trust / weekly risk must not.
-4. **No answer without evidence.** Every material claim ties to Rho data and/or Tavily citations.
-5. **Read-only is a feature.** Safe AI for finance; escalation happens in Rho, not in the agent.
-6. **Finish the job.** Analysis without a deliverable is incomplete — publish to Stan.
-7. **One hero loop.** Speak → Rho → Tavily Outside Context → decision → Stan brief.
-8. **Personas, not sprawl.** Founder mode and Accountant mode share one core; don’t build ten products.
+1. **Voice is the interface; numbers are the authority.** ElevenLabs is UX; Rho is ledger truth.
+2. **Rho = what happened / what you pay. Tavily = public market context.** Spend intelligence is a product pillar, not a fallback Google tab.
+3. **Math can be Rho-only. Market/spend claims require Tavily citations.**
+4. **Compare and cite — do not prescribe.** Draft briefs and comparison tables; never “you should hire/cut”; never claim compliance clearance.
+5. **No material claim without evidence.** Rho data and/or Tavily citations for every load-bearing statement.
+6. **Read-only is a feature.** Safe AI for finance; escalation happens in Rho, not in the agent.
+7. **Finish the job.** Analysis without a deliverable is incomplete — publish to Stan.
+8. **One hero loop for Grand Prize.** Speak → deep Rho → Competitive Spend Context → brief → Stan.
+9. **Personas, not sprawl.** Founder mode and Accountant mode share one core; don’t build ten products.
+10. **Every sponsor must be load-bearing.** If removing a sponsor doesn’t break a promise, cut the fake integration.
+
+### 5.1 Sponsor kill-tests
+
+| Sponsor | Kill-test (product promise that breaks if removed) |
+|---|---|
+| **Rho** | Cannot truthfully answer what you have, what moved, or what you currently pay — no live ledger IDs |
+| **ElevenLabs** | No interruptible voice/chat agent with tool calling and guardrails; brief has no spoken standup (decorative TTS only fails the test) |
+| **Tavily** | Cannot show cited public market ranges / alternatives for your Rho spend stack; market claims become hallucinations |
+| **Stan** | Session ends as a chat transcript — no forwardable digital product (PDF + audio pack) |
+
+**Anti-patterns (banned):** ElevenLabs = only pre-rendered MP3; Tavily = one README search; Rho = dump txs into an LLM with no structure/IDs; Stan = footer link to a generic storefront.
 
 ---
 
@@ -171,11 +192,12 @@ The winning product insight: **a talking dashboard is not enough.** Founders nee
 
 RhoPilot is a web application with:
 
-- A polished finance cockpit (balances, anomalies, activity).
+- A polished **Cash Pulse** cockpit (deep Rho: balances, burn/runway, normalized merchants, concentration, period context).
+- An **Anomaly Radar** (heuristics + optional payee public-context enrichment).
 - An embedded **ElevenLabs Agent** (voice + text) with tools.
-- An **Outside Context Engine** powered by Tavily (weekly risk, payee trust, renew/cut, hire comps, proactive watch).
-- A **Decision Studio** for hire / substitute / renew / runway scenarios.
-- A **Stan publisher** for Cash Briefs and client packs (PDF + audio).
+- A **Spend Context Engine** powered by Tavily (Competitive Spend Context hero; External Risk on briefs; trust/world-watch supporting).
+- A **Compare / Decision Studio** for runway math + spend comparison tables (not a prescription engine).
+- A **Stan publisher** for Weekly Money Briefs and Client Close Packs (PDF + audio).
 
 ### 6.2 High-level architecture
 
@@ -183,61 +205,66 @@ RhoPilot is a web application with:
 User (voice/chat)
     → ElevenLabs Agent (workflows, guardrails, tool calling)
         → Tool: Rho API (accounts, balances, transactions, statements)
-        → Tool: Outside Context Engine (Tavily search / extract / research)
-            → Weekly External Risk Brief
-            → Payee / counterparty trust check
-            → Renew / cut competitive pricing
-            → Hire / labor market comps + substitutes
-            → Proactive “what changed” watch on top merchants + category
+            → normalize merchants, cash position, concentration, period view
+        → Tool: Spend Context Engine (Tavily search / extract / research)
+            → Competitive Spend Context (hero): Rho pay vs public market ranges
+            → Weekly External Risk (supporting on brief)
+            → Payee public-context dossier (supporting)
+            → World-watch thin feed into Risk / brief
         → Tool: Brief generator (metrics + narrative + audio via ElevenLabs TTS)
-        → Tool: Stan publish (digital product / storefront delivery)
-    → UI cockpit mirrors agent state (evidence panels, citations, publish link)
+        → Tool: Stan publish (Weekly Money Brief / Client Close Pack)
+    → UI cockpit mirrors agent state (Rho IDs, citations, publish link)
 ```
 
 ### 6.3 Sponsor capability mapping
 
 | Sponsor | Role in RhoPilot | Concrete surfaces |
 |---|---|---|
-| **Rho** | Source of truth for company money (*what you pay / what moved*) | Accounts, balances, transactions, statements (read-only REST) |
-| **ElevenLabs** | Conversational agency + content | ElevenAgents (voice/chat, tools, workflows, guardrails); TTS / Creative for brief narration; optional Scribe STT |
-| **Tavily** | **Outside Context Engine** (*what it means / market substitutes*) | Search, Extract, Research; `topic: finance` / news; cited risk, pricing, and labor-market memos |
-| **Stan** | Business-in-a-box delivery | Host/sell/deliver Cash Briefs (with External Risk), Close Packs, Vendor / Hire Decision Memos |
+| **Rho** | Source of truth for company money (*what you pay / what moved*) | Accounts, balances, transactions, statements; normalization; concentration; period/close context (read-only REST) |
+| **ElevenLabs** | Conversational agency + brief narration | ElevenAgents (voice/chat, tools, workflows, guardrails); TTS / Creative for brief audio; optional Scribe STT |
+| **Tavily** | **Spend Context Engine** (*public market context for your stack*) | Search, Extract, Research; `topic: finance` / news; cited comps table + light External Risk |
+| **Stan** | Delivery for finished briefs/packs | Host/deliver Weekly Money Brief (Spend Context + Risk), Client Close Packs |
 
-### 6.4 Tavily capability note (hire / pricing comps) — required product answer
+### 6.4 Competitive Spend Context (required product answer)
 
 **Founder question this product must answer:**  
-*“I’m talking to the ElevenLabs agent about my finances. Can it tell me how much I’m currently paying someone I’ve hired, and what competitive prices I could pay for a substitute?”*
+*“I’m talking about my finances. Can it show what I’m currently paying for tools and people on Rho, and how that compares to what similar businesses typically pay publicly?”*
 
-**Answer: Yes — as a Rho × Tavily split, spoken by the agent.**
+**Answer: Yes — as a Rho × Tavily split, spoken by the agent, rendered as a comparison table.**
 
 | Half of the question | Who answers | How |
 |---|---|---|
-| “How much am I paying them *now*?” | **Rho** | Recurring contractor ACH, Gusto/Deel/Upwork payouts, labeled merchant/payee on the ledger |
-| “What are competitive / substitute prices?” | **Tavily** | Public-web Search → Extract → Research (salary bands, contractor rates, SaaS list prices) with citations |
-| “So what should I do / what’s the runway impact?” | **ElevenLabs Agent** | Compares Rho current pay vs Tavily market/substitute band; models burn/runway; offers Stan Hire Memo |
+| “How much am I paying *now*?” | **Rho** | Recurring SaaS, contractor ACH, Gusto/Deel/Upwork payouts, labeled merchant/payee on the ledger |
+| “What’s in range / what do alternatives list?” | **Tavily** | Public-web Search → Extract → Research (list pricing, packaging, contractor/salary bands) with citations |
+| “So what goes in the brief / runway math?” | **ElevenLabs Agent** | Compares Rho current pay vs cited ranges; models burn/runway impact as **math**; offers Stan Money Brief — **does not prescribe hire/cut** |
+
+**Table shape (UI + Stan):** `Merchant or role | What you pay (Rho) | Cited public range | Sources | Notes`
 
 **Limits (must be clear in UI + agent guardrails):**
 
-- Tavily is **not** a private salary database. Ranges are public-web estimates.
-- Outputs are **decision support with sources**, not guaranteed quotes or employment advice.
-- If Rho only shows a lump sum (e.g. “Deel — $9,000”) without a job title, the agent asks one clarifying question before running comps.
+- Tavily is **not** a private peer-company ledger or salary database. Ranges are public-web estimates.
+- “Similar businesses” means public pricing / market bands for similar tools and roles — not private competitor bank data.
+- Outputs are **decision support with sources**, not offers, quotes, or employment advice.
+- If Rho only shows a lump sum (e.g. “Deel — $9,000”) without a job title, the agent asks one clarifying question before running role comps.
 
-This loop is **Playbook 4 (P0)** and is a first-class demo path.
+This loop is the **P0 Tavily hero** and the primary Grand Prize demo path.
 
 ---
 
 ## 7. Functional requirements
 
-### 7.1 Cash Pulse (Rho)
+### 7.1 Cash Pulse (Rho) — deepen for Best Rho / adoption
 
 | ID | Requirement | Priority |
 |---|---|---|
-| CP-1 | Display account list with balances (checking, savings, treasury if present) | P0 |
+| CP-1 | Display account list with balances (checking, savings, treasury if present) as one **multi-account cash position** | P0 |
 | CP-2 | Compute 30/60/90-day burn and approximate runway from transactions + cash | P0 |
 | CP-3 | Show recent cash movements in plain English (card, ACH, wire, transfer, etc.) | P0 |
-| CP-4 | Pull statement metadata / period context for close narratives | P1 |
-| CP-5 | Rank top vendors / largest outflows for concentration risk | P1 |
+| CP-4 | Pull statement metadata / period context for close narratives (“since the 1st”) | P0 |
+| CP-5 | Rank top vendors / largest outflows for concentration risk (% of burn) | P0 |
 | CP-6 | Support sandbox/demo mode with sample Rho-shaped data when no token | P0 |
+| CP-7 | **Merchant normalization:** map messy descriptors → clean payee entities; show raw → normalized in evidence panel | P0 |
+| CP-8 | Every material Cash Pulse claim links to **Rho account or transaction IDs** in UI | P0 |
 
 **Voice examples**
 
@@ -246,7 +273,7 @@ This loop is **Playbook 4 (P0)** and is a first-class demo path.
 
 ---
 
-### 7.2 Anomaly Radar (Rho + Tavily)
+### 7.2 Anomaly Radar (Rho + supporting Tavily)
 
 | ID | Requirement | Priority |
 |---|---|---|
@@ -254,67 +281,66 @@ This loop is **Playbook 4 (P0)** and is a first-class demo path.
 | AR-2 | Flag first-time / unknown merchants | P0 |
 | AR-3 | Surface failed, pending, and awaiting_approval transactions | P0 |
 | AR-4 | Flag near-duplicate charges (similar amount + merchant + time window) | P1 |
-| AR-5 | Enrich unknown / large payees via **Tavily payee trust check (playbook 2)** | P0 |
-| AR-6 | Present anomaly queue sortable by severity / amount / date | P0 |
+| AR-5 | Optionally enrich unknown / large payees via **payee public-context dossier (P1 playbook)** — framed as context, not compliance | P1 |
+| AR-6 | Present anomaly queue sortable by severity / amount / date; severity tiers (“radar, not verdict”) | P0 |
 
 **Voice examples**
 
 - “Anything weird since Monday?”
-- “Who is ‘PQRS CLOUD’ and is $2,400 normal?”
+- “Who is ‘PQRS CLOUD’ on the books — show me the Rho txs and any public footprint.”
 
 ---
 
-### 7.3 Voice CFO Agent (ElevenLabs)
+### 7.3 Voice money-brief agent (ElevenLabs)
 
 | ID | Requirement | Priority |
 |---|---|---|
 | VA-1 | Embedded conversational agent supporting voice and chat | P0 |
-| VA-2 | Agent tools: `get_balances`, `get_transactions`, `get_anomalies` | P0 |
-| VA-3 | Agent tools (Outside Context): `tavily_risk_brief`, `tavily_payee_trust`, `tavily_renew_comps`, `tavily_hire_comps`, `tavily_world_watch` | P0 |
-| VA-4 | Agent tools: `run_scenario`, `generate_brief`, `publish_to_stan` | P0 |
-| VA-5 | Workflow branching: cash → outside context → recommendation → publish | P0 |
-| VA-6 | Guardrails: refuse payment initiation; disclaim tax/legal/employment advice; require citations for web/comp claims | P0 |
+| VA-2 | Agent tools: `get_balances`, `get_transactions`, `get_anomalies`, `get_concentration` | P0 |
+| VA-3 | Agent tools (Spend Context): `tavily_spend_context` (hero); `tavily_risk_brief` (supporting); `tavily_payee_context`, `tavily_world_watch` (P1) | P0 / P1 |
+| VA-4 | Agent tools: `run_compare_scenario`, `generate_brief`, `publish_to_stan` | P0 |
+| VA-5 | Workflow branching: cash → spend context → draft brief → publish | P0 |
+| VA-6 | Guardrails: refuse payment initiation; disclaim tax/legal/employment/investment advice; refuse compliance-clearance claims; require citations for market/spend claims; never prescribe hire/cut/renew | P0 |
 | VA-7 | Generate spoken brief narration (TTS / Creative) for Stan packs | P0 |
 | VA-8 | Optional: ingest voice notes via Speech-to-Text (Scribe) into session context | P2 |
-| VA-9 | Show live tool traces in UI (what Rho/Tavily returned) for trust | P0 |
-| VA-10 | Judgment routing rule: renew / hire-substitute / payee-trust / weekly-risk **must** call Tavily before recommending | P0 |
+| VA-9 | Show live tool traces in UI (Rho payloads + Tavily citations) for trust | P0 |
+| VA-10 | Routing rule: spend-context / external-risk / payee-context market claims **must** call Tavily before stating ranges or public footprint | P0 |
 
 **Conversation contract**
 
 1. User asks in natural language.  
-2. Agent fetches Rho numbers (*what you pay / what moved*).  
-3. For judgment questions, Outside Context Engine runs the matching Tavily playbook with citations.  
-4. Agent answers with Rho evidence + market/outside context + recommendation + confidence.  
-5. Agent offers: “Publish this as a Stan Cash Brief / Decision Memo?”
+2. Agent fetches Rho numbers (*what you pay / what moved*) with IDs.  
+3. For spend/market questions, Spend Context Engine runs with citations.  
+4. Agent answers with Rho evidence + cited public context + plain-language summary + optional runway **math** — not prescriptions.  
+5. Agent offers: “Publish this as a Stan Weekly Money Brief / Client Close Pack?”
 
 ---
 
-### 7.4 Outside Context Engine (Tavily) — P0 product pillar
+### 7.4 Spend Context Engine (Tavily) — sharpened pillar
 
-**Framing from product direction (required):**  
-*Rho tells you what already happened. Tavily tells you what it means—and what to do next.*
+**Framing:**  
+*Rho tells you what already happened and what you pay. Tavily tells you how that spend compares to public market context—and what external signals belong on this week’s brief.*
 
-Without Tavily, RhoPilot is a talking dashboard. With Tavily as a core layer, it becomes a **decision engine**.
-
-Tavily is **not** “search when stuck” or a bolted-on Google plugin. It is the engine that turns ledger events into forward-looking decisions. **Playbooks 1 through 5 below are all P0 and must be implemented.**
+Without Tavily, RhoPilot is a talking dashboard. With Tavily as Spend Context, it becomes **liquidity intelligence you can brief**.
 
 **Product rule:**  
 - Pure math (“What’s our balance?” / “What’s burn?”) → Rho only.  
-- Judgment (“Should we renew?” / “Is this payee safe?” / “What does the world mean for our books?” / “Are we overpaying this hire?”) → **Rho + Tavily required.**
+- Market/spend claims (“Is this in range?” / “What do alternatives list?” / “External signals on our top vendors”) → **Rho + Tavily required.**
 
-| # | Playbook | Why it’s load-bearing |
-|---|---|---|
-| 1 | Weekly External Risk Brief | Every Cash Brief includes outside vendor/category/rate context |
-| 2 | Payee / counterparty trust check | Protects cash on new/large payees |
-| 3 | Renew / cut competitive pricing | Tavily *is* the feature for SaaS keep/cut/negotiate |
-| 4 | Hire / substitute comps + stress tests | Rho = what you pay; Tavily = market substitutes |
-| 5 | Proactive world-watch | Always-on intelligence mapped back to *this* ledger |
+| # | Playbook | Priority | Role |
+|---|---|---|---|
+| A | **Competitive Spend Context** (vendor + role/contractor comps) | **P0 hero** | Unified table: Rho pay vs cited public ranges |
+| 1 | Weekly External Risk Brief | **P0 supporting** | Thin, cited section on every Weekly Money Brief |
+| 2 | Payee public-context dossier | **P1** | Supporting enrichment on anomalies — not compliance |
+| 5 | Proactive world-watch | **P1** | Thin feed into Risk / brief |
+
+Former “renew/cut engine” and “hire/substitute comps” are **merged into Competitive Spend Context** (one polished surface). Do not ship five equal full playbooks.
 
 #### 7.4.1 Shared Tavily platform requirements
 
 | ID | Requirement | Priority |
 |---|---|---|
-| TV-0a | Use Tavily `search`, `extract`, and `research` as appropriate per playbook | P0 |
+| TV-0a | Use Tavily `search`, `extract`, and `research` as appropriate | P0 |
 | TV-0b | Prefer `topic: finance` or `news` when query type matches | P0 |
 | TV-0c | Display citations (title, URL, snippet) in UI and exported briefs | P0 |
 | TV-0d | Redact PII from queries; never send full account numbers, SSNs, or raw pay stubs | P0 |
@@ -323,127 +349,96 @@ Tavily is **not** “search when stuck” or a bolted-on Google plugin. It is th
 
 ---
 
-#### 7.4.2 Playbook 1 — Weekly External Risk Brief (P0)
+#### 7.4.2 Playbook A — Competitive Spend Context (P0 hero)
 
-Automatically research the world around *this company’s* books and attach it to every Weekly Cash Brief.
+From Rho top recurrings + contractor/payroll-shaped payees, research public market context for **tools and roles like these**.
 
 | ID | Requirement | Priority |
 |---|---|---|
-| TV-1a | From Rho, identify top N merchants by spend (default 10) + primary industry/category tags | P0 |
-| TV-1b | Tavily Research/Search each top merchant for outages, breaches, price changes, shutdown/lawsuit signals | P0 |
-| TV-1c | Tavily Research category / customer-segment demand signals relevant to the business | P0 |
-| TV-1d | Tavily finance-topic context for idle-cash / short-term yield environment (informational) | P0 |
-| TV-1e | Produce a structured **External Risk** section: vendor risks, category signals, cash-context bullets, citations | P0 |
-| TV-1f | Include External Risk in Stan Weekly Cash Brief PDF + spoken standup | P0 |
+| TV-Aa | From Rho, identify top recurring merchants (SaaS/tools) and current monthly/annual amount paid | P0 |
+| TV-Ab | From Rho, identify contractor / payroll-provider payouts when available; clarify role if label is fuzzy | P0 |
+| TV-Ac | Tavily Research/Search/Extract: public list pricing, packaging, and alternatives for those tools | P0 |
+| TV-Ad | Tavily Research/Search: public compensation / contractor rate bands for clarified roles (geo/seniority when available) | P0 |
+| TV-Ae | Output comparison table: Rho amount vs cited public range vs alternatives; include sources | P0 |
+| TV-Af | Optional runway **math**: translate delta vs midpoint range into days of runway (informational) | P0 |
+| TV-Ag | Include Spend Context section in Stan Weekly Money Brief; optional standalone Spend Context memo template | P0 |
+| TV-Ah | Agent language: “in range / above cited range / below cited range / insufficient public data” — **not** “renew / cut / hire / fire” | P0 |
 
-**Voice example:** “Give me the week — including anything outside our books I should worry about.”
+**Voice example:** “For our top SaaS and this contractor, how does what we pay compare to public market ranges?”
 
 ---
 
-#### 7.4.3 Playbook 2 — Counterparty / payee trust check (P0)
+#### 7.4.3 Playbook 1 — Weekly External Risk Brief (P0 supporting)
 
-Protect company cash when Rho shows a new or large payee.
+Thin research on the world around *this company’s* top merchants — attached to the Weekly Money Brief.
 
 | ID | Requirement | Priority |
 |---|---|---|
-| TV-2a | Trigger on first-time merchant, amount above threshold, or user ask (“Can I trust this payee?”) | P0 |
-| TV-2b | Tavily Search + Extract: does the company appear real (site, about, contact footprint)? | P0 |
-| TV-2c | Tavily News/Search: scam reports, lawsuits, shutdowns, breach headlines | P0 |
-| TV-2d | Compare charged amount vs public pricing pages when discoverable (Extract) | P1 |
-| TV-2e | Output trust dossier: Real / Needs review / High caution + citations + suggested next step in Rho | P0 |
+| TV-1a | From Rho, identify top N merchants by spend (default 5–10) + category tags | P0 |
+| TV-1b | Tavily Research/Search each for material outages, breaches, price-change headlines, shutdown/lawsuit signals | P0 |
+| TV-1c | Optional category demand / idle-cash public context (informational only) | P1 |
+| TV-1d | Produce a short **External Risk** section with citations | P0 |
+| TV-1e | Include External Risk in Stan Weekly Money Brief PDF + spoken standup | P0 |
 
-**Voice example:** “We have a new $8,400 wire to Northpeak Labs — is that legitimate?”
+**Voice example:** “Anything outside our books I should know about for our top vendors this week?”
 
 ---
 
-#### 7.4.4 Playbook 3 — Renew / cut competitive pricing engine (P0)
+#### 7.4.4 Playbook 2 — Payee public-context dossier (P1)
 
-For recurring vendors, Tavily is why the feature exists—not enrichment.
+Public footprint for new or large payees — **context for review in Rho**, not compliance clearance.
 
 | ID | Requirement | Priority |
 |---|---|---|
-| TV-3a | Detect recurring Rho merchants (SaaS/tools) and current monthly/annual amount paid | P0 |
-| TV-3b | Tavily Research alternatives + list pricing / packaging | P0 |
-| TV-3c | Tavily Search recent incidents, pricing changes, and switching signals | P0 |
-| TV-3d | Structured memo: **keep / negotiate / replace** + estimated monthly savings | P0 |
-| TV-3e | Translate savings into **runway days saved** using Rho burn | P0 |
-| TV-3f | Publish as Stan Vendor Decision Memo | P0 |
+| TV-2a | Trigger on first-time merchant, amount above threshold, or user ask | P1 |
+| TV-2b | Tavily Search + Extract: public site / about / contact footprint | P1 |
+| TV-2c | Tavily News/Search: public news hits (lawsuits, shutdowns, breaches) — presented as headlines, not verdicts | P1 |
+| TV-2d | Output dossier: Public footprint found / Limited / None + citations + **suggested next step in Rho** | P1 |
+| TV-2e | UI copy must not say “compliant,” “approved,” “safe,” or “cleared” | P1 |
 
-**Voice example:** “Should we renew Intercom, and what’s the competitive price to switch?”
+**Voice example:** “We have a new $8,400 wire to Northpeak Labs — what’s the public footprint?”
 
 ---
 
-#### 7.4.5 Playbook 4 — Decision stress tests + hire / substitute comps (P0)
-
-Rho answers affordability. Tavily answers whether the *price of the person or substitute* is competitive.
+#### 7.4.5 Playbook 5 — World-watch feed (P1)
 
 | ID | Requirement | Priority |
 |---|---|---|
-| TV-4a | Hire affordability: model all-in cost impact on burn/runway from Rho cash + burn | P0 |
-| TV-4b | Identify current pay for a person/role/contractor from Rho transactions (payroll provider, contractor ACH, labeled merchant) when available | P0 |
-| TV-4c | Tavily Search/Research market compensation bands for role, seniority, geo, and employment type (FT / contractor) | P0 |
-| TV-4d | Tavily Research substitute options (contractor vs FT, agency vs individual, nearshore bands) with cited ranges | P0 |
-| TV-4e | Compare **current Rho pay vs market band vs substitute band**; flag over/under-pay vs citations | P0 |
-| TV-4f | Layer optional macro context (hiring freezes, cooling/tightening signals) via Tavily News/Research | P1 |
-| TV-4g | Output Hire / Substitute Decision Memo → optional Stan publish | P0 |
-
-**Example founder conversation**
-
-1. “How much are we paying Jordan / our freelance designer right now?” → **Rho** (recurring payouts).  
-2. “What would a competitive substitute cost?” → **Tavily** (market rate research + citations).  
-3. “If we switched to the midpoint substitute, what happens to runway?” → **Rho math + Tavily rate**.  
-
-**Voice examples**
-
-- “We’re paying $9k/mo for a contractor designer—what’s the competitive rate for a substitute?”  
-- “Can we hire a senior eng, and what does the market actually pay vs our offer?”
+| TV-5a | Watchlist derived from Rho top merchants + optional industry tags | P1 |
+| TV-5b | On standup / on-demand, Tavily Search/News for material changes since last brief | P1 |
+| TV-5c | Only surface items that map to a Rho merchant, payee, or stated category | P1 |
+| TV-5d | Feed hits into External Risk section | P1 |
 
 ---
 
-#### 7.4.6 Playbook 5 — Proactive “what changed in the world?” watch (P0)
-
-Always-on outside intelligence mapped back to *this* ledger—not user-initiated Google.
+### 7.5 Compare / Decision Studio (advice-safe)
 
 | ID | Requirement | Priority |
 |---|---|---|
-| TV-5a | Maintain a watchlist derived from Rho top merchants + user industry tags | P0 |
-| TV-5b | On standup / on-demand, Tavily Search/News for material changes since last brief | P0 |
-| TV-5c | Only surface items that map to a Rho merchant, payee, or stated category decision | P0 |
-| TV-5d | Present as “External changes affecting your books” with severity + citations | P0 |
-| TV-5e | Feed watch hits into Weekly External Risk Brief and anomaly enrichment | P0 |
-
-**Voice example:** “What changed in the world this week that affects our vendors or category?”
-
----
-
-### 7.5 Decision Studio
-
-| ID | Requirement | Priority |
-|---|---|---|
-| DS-1 | Hire affordability scenario (salary/all-in cost → burn/runway impact) using Rho | P0 |
-| DS-2 | Hire / substitute **market comps** via Tavily playbook 4 (required before final recommendation) | P0 |
-| DS-3 | Renew / cancel / negotiate recommendation for recurring vendors via Tavily playbook 3 | P0 |
-| DS-4 | Payee trust gate via Tavily playbook 2 before “looks fine” on large/new payees | P0 |
+| DS-1 | Hire / spend affordability scenario (cost → burn/runway impact) using Rho math | P0 |
+| DS-2 | Competitive Spend Context table via Playbook A (required before stating market ranges) | P0 |
+| DS-3 | Show tool alternatives’ public list pricing vs Rho current pay (informational) | P0 |
+| DS-4 | Optional payee public-context gate before strong language on large/new payees (P1) | P1 |
 | DS-5 | Tool/capex purchase impact on runway | P1 |
-| DS-6 | Idle cash narrative vs treasury context via Tavily finance topic (informational) | P1 |
-| DS-7 | Every recommendation shows: Rho evidence → Tavily citations → confidence → next step in Rho | P0 |
+| DS-6 | Idle cash narrative vs public treasury/yield context (informational only) | P1 |
+| DS-7 | Every compare view shows: Rho evidence → Tavily citations → confidence → **next step in Rho** (not a prescription) | P0 |
 
 ---
 
-### 7.6 Stan Cash Brief Publisher
+### 7.6 Stan Money Brief Publisher
 
 | ID | Requirement | Priority |
 |---|---|---|
-| ST-1 | Generate Weekly Cash Brief (PDF) from Cash Pulse + anomalies + **External Risk Brief (Tavily playbook 1)** | P0 |
+| ST-1 | Generate Weekly Money Brief (PDF) from Cash Pulse + anomalies + **Spend Context** + **External Risk** | P0 |
 | ST-2 | Attach ElevenLabs audio standup (MP3) to the brief | P0 |
 | ST-3 | Publish / attach brief as a Stan digital product (API if available; else guided export + live store URL in demo) | P0 |
-| ST-4 | Support Client Close Pack variant for accountant persona | P1 |
-| ST-5 | Support Vendor Decision Memo (playbook 3) and Hire / Substitute Memo (playbook 4) | P0 |
+| ST-4 | Support **Client Close Pack** variant for accountant persona | P0 |
+| ST-5 | Optional Spend Context memo template (same publish path, different template) | P1 |
 | ST-6 | Return shareable Stan link in UI and agent response | P0 |
 
 **Stan alignment**
 
-Stan positions itself as the all-in-one creator store (courses, digital products, bookings, link-in-bio, 1-tap checkout, 0% transaction fees messaging). RhoPilot uses Stan as the **delivery and monetization layer** for finance work products—not as a decorative logo.
+Stan is the **delivery layer** for finance work products—Weekly Money Brief and Client Close Pack as digital products (PDF + audio)—not a decorative logo.
 
 ---
 
@@ -452,102 +447,88 @@ Stan positions itself as the all-in-one creator store (courses, digital products
 | ID | Requirement | Priority |
 |---|---|---|
 | SA-1 | Rho API token configuration via env / settings (never commit secrets) | P0 |
-| SA-2 | One-click Demo Mode with deterministic sample data | P0 |
+| SA-2 | One-click Demo Mode with deterministic sample data (named contractor + ≥3 SaaS recurrings + pending items) | P0 |
 | SA-3 | Clear UI badge: “Read-only · Cannot move money” | P0 |
 | SA-4 | README with setup, sample data, and run instructions (hackathon submission) | P0 |
 | SA-5 | Logging of tool calls for demo replay without exposing secrets | P1 |
+| SA-6 | Persistent decision-support disclaimer in UI and briefs | P0 |
 
 ---
 
 ## 8. Functional desirable use cases
 
-These are the **intended everyday workflows** RhoPilot should make faster. Priority reflects hackathon + product desirability.
+These are the **intended everyday workflows** RhoPilot should make faster. Priority reflects Grand Prize demo + product desirability.
 
 ### 8.1 P0 — Must delight in demo and daily use
 
-#### UC-01 — Monday founder cash standup + External Risk Brief
+#### UC-01 — Monday founder money brief + Spend Context
 **Actor:** Founder  
 **Trigger:** Start of week / daily open  
-**Flow:** Voice “Give me the week” → Cash Pulse + Anomaly Radar → **Tavily Weekly External Risk Brief (playbook 1)** on top merchants/category → Stan Weekly Cash Brief (includes External Risk).  
-**Outcome:** Shared co-founder brief with *books + world* in &lt;2 minutes.  
-**Desirability:** Highest — ritualizable, demo-perfect, makes Tavily mandatory.
+**Flow:** Voice “Give me the week” → Cash Pulse + Anomaly Radar → **Competitive Spend Context (Playbook A)** on top recurrings/contractor → thin External Risk → Stan Weekly Money Brief.  
+**Outcome:** Forwardable brief with *books + public market context* in &lt;2 minutes.  
+**Desirability:** Highest — ritualizable, demo-perfect, makes Tavily mandatory as spend intelligence.
 
-#### UC-02 — Payee / weird spend trust triage
-**Actor:** Founder or accountant  
-**Trigger:** Spike, new merchant, large payee, failed/pending item  
-**Flow:** Anomaly queue → voice “Explain / can I trust this?” → Rho evidence + **Tavily payee trust check (playbook 2)** → keep/watch/escalate.  
-**Outcome:** Cash-protection triage without tab chaos.  
-**Desirability:** Highest — high-stakes, clearly not decorative Tavily.
-
-#### UC-03 — Hire / substitute competitive pricing
-**Actor:** Founder  
-**Trigger:** Hiring, contractor renew, or “are we overpaying?”  
-**Flow:**  
-1. Rho: current pay to person/role/contractor (if present on ledger).  
-2. Decision Studio: affordability vs runway.  
-3. **Tavily hire comps (playbook 4):** market band + substitute options with citations.  
-4. Compare current vs market vs substitute; optional Stan Hire Memo.  
-**Outcome:** “You’re paying $X; competitive substitutes are $Y–$Z; runway impact if you switch is N days.”  
-**Desirability:** Very high — answers the exact founder question; showcases Rho×Tavily split.
-
-#### UC-04 — Vendor renew / cut war-room
+#### UC-02 — Competitive Spend Context (hero)
 **Actor:** Founder / ops  
-**Trigger:** Recurring charge / renew ask  
-**Flow:** Rho recurring amount → **Tavily renew engine (playbook 3)** alternatives/pricing/news → keep/cut/negotiate → savings → runway days → Stan Vendor Decision Memo.  
-**Outcome:** Quantified savings with citations.  
-**Desirability:** Very high — measurable dollars; Tavily is the feature.
+**Trigger:** “Is what we pay normal?” / renew season / contractor review  
+**Flow:** Rho current pay for top SaaS + role/contractor → Tavily public ranges and alternatives → comparison table + optional runway math → section in Stan brief.  
+**Outcome:** “You pay $X; cited public ranges are $Y–$Z; sources attached.”  
+**Desirability:** Highest — answers the founder question; showcases Rho×Tavily split without advice language.
 
-#### UC-05 — Proactive world-watch on your books
-**Actor:** Founder / accountant  
-**Trigger:** Standup, on-demand, or after Cash Brief generation  
-**Flow:** Watchlist from Rho top merchants + category → **Tavily playbook 5** → only ledger-relevant changes → feed into brief/anomalies.  
-**Outcome:** “Here’s what changed outside that affects *your* vendors.”  
-**Desirability:** Highest for “Tavily isn’t bolted on” narrative.
-
-#### UC-06 — Publish Weekly Cash Brief / Decision Memo to Stan
+#### UC-03 — Publish Weekly Money Brief to Stan
 **Actor:** Founder or accountant  
 **Trigger:** End of agent session  
-**Flow:** Generate PDF + audio (including External Risk / comps) → publish digital product on Stan → share link.  
+**Flow:** Generate PDF + audio (Spend Context + External Risk) → publish digital product on Stan → share link.  
 **Outcome:** Finished artifact, not a chat transcript.  
-**Desirability:** Highest for sponsor completeness and “ship the work.”
+**Desirability:** Highest for “finish the job” and sponsor completeness.
+
+#### UC-04 — Accountant exception walkthrough → Client Close Pack
+**Actor:** Accountant  
+**Trigger:** Period close / client update  
+**Flow:** “Walk anomalies since the 1st” → Rho period view + severity queue → optional payee public-context (P1) → **Client Close Pack** on Stan.  
+**Outcome:** Client-ready pack; Rho partner narrative for adoption.  
+**Desirability:** Highest for Rho adoption / interview-track story.
 
 ---
 
-### 8.2 P1 — Strongly desirable (build if time / phase 2)
+### 8.2 P1 — Strongly desirable (build if time)
 
-#### UC-07 — Accountant exception walkthrough
-Walk pending/anomalies since period start; run payee trust on unknowns; generate **Client Close Pack** on Stan.
+#### UC-05 — Payee public-context triage
+Anomaly queue → “What’s the public footprint?” → dossier + escalate in Rho (no compliance language).
 
-#### UC-08 — Client narrative in plain English
-“Explain the $14k wire to Acme” → Rho detail + Tavily trust/identity → spoken + written narrative.
+#### UC-06 — World-watch delta on your books
+Watchlist from Rho top merchants → thin Tavily news feed → External Risk bullets.
 
-#### UC-09 — Week-over-week cash comparison
-Automated WoW burn, inflows, and category deltas with voice summary (+ world-watch delta).
+#### UC-07 — Client narrative in plain English
+“Explain the $14k wire to Acme” → Rho detail + optional public footprint → spoken + written narrative.
 
-#### UC-10 — Creator money standup (Stan × Rho)
-Creator asks what remained after tools/ads; agent produces keep/set-aside/reinvest narrative and an audio standup reusable as content or a Stan product.
+#### UC-08 — Week-over-week cash comparison
+Automated WoW burn, inflows, and category deltas with voice summary.
 
-#### UC-11 — Board / investor mini-packet
-Cash trajectory + burn + External Risk bullets + ElevenLabs walkthrough → Stan-gated pack.
+#### UC-09 — Creator money standup (Stan × Rho)
+Creator asks what remained after tools/ads; audio standup reusable as content or a Stan product.
+
+#### UC-10 — Board / investor mini-packet
+Cash trajectory + burn + Spend Context bullets + ElevenLabs walkthrough → Stan-gated pack.
 
 ---
 
 ### 8.3 P2 — Aspirational / post-hackathon
 
-#### UC-12 — Slack-native alerts with voice escalation  
-Anomaly → payee trust → ElevenLabs voice note to approver → Stan audit memo.
+#### UC-11 — Slack-native alerts with voice escalation  
+Anomaly → public-context note → ElevenLabs voice note to approver → Stan audit memo.
 
-#### UC-13 — Multi-company accountant portfolio view  
-Switch clients; standardized briefs + external risk.
+#### UC-12 — Multi-company accountant portfolio view  
+Switch clients; standardized briefs + spend context.
 
-#### UC-14 — Continuous vendor scorecards  
-Health, pricing drift, news risk over time (persistent playbook 3/5).
+#### UC-13 — Continuous vendor scorecards  
+Pricing drift and news risk over time.
 
-#### UC-15 — Policy / deadline research assist  
+#### UC-14 — Policy / deadline research assist  
 Informational lookups with hard “not legal advice” framing.
 
-#### UC-16 — Multilingual agent standups  
-ElevenLabs 70+ language strength for international founding teams.
+#### UC-15 — Multilingual agent standups  
+ElevenLabs language strength for international founding teams.
 
 ---
 
@@ -556,26 +537,29 @@ ElevenLabs 70+ language strength for international founding teams.
 ### 9.1 First viewport / brand
 
 - Product name **RhoPilot** as a hero-level brand signal.
+- Tagline on hero: **live liquidity intelligence you can brief in minutes**.
 - One composition: brand, one headline, one supporting line, one CTA (Talk / Start demo), one dominant visual (cockpit or waveform — not a card grid).
 - Avoid generic purple-AI SaaS clichés; finance-trust visual direction (clarity, density with calm hierarchy).
 
 ### 9.2 Core screens
 
-1. **Home / Talk** — Agent + evidence side panel (Rho + Tavily citations).  
-2. **Cash Pulse** — Balances, burn, runway.  
-3. **Anomalies** — Queue with payee-trust actions.  
-4. **Outside Context** — External Risk, world-watch, renew/hire comps panels.  
-5. **Decisions** — Hire / substitute / renew scenarios.  
+1. **Home / Talk** — Agent + evidence side panel (Rho IDs + Tavily citations).  
+2. **Cash Pulse** — Multi-account cash, burn, runway, concentration.  
+3. **Anomalies** — Queue with severity; optional payee-context actions.  
+4. **Spend Context** — Comparison table (Rho vs cited public ranges) + External Risk.  
+5. **Compare** — Runway math + spend tables (decision support).  
 6. **Briefs** — History of generated packs + Stan links.  
 7. **Settings** — API keys (local), demo toggle, persona (Founder / Accountant).
 
-### 9.3 Demo script requirement (&lt;3 minutes)
+### 9.3 Demo script requirement (&lt;3 minutes) — Grand Prize
 
-1. Problem (10s): Dashboards show what happened—not what it means.  
-2. Voice cash standup with Rho numbers (40s).  
-3. **Tavily External Risk / payee trust or hire-comps moment with on-screen citations (50s).**  
-4. Publish Stan brief including Outside Context section + play audio (30s).  
-5. Close: read-only safety + “Rho truth, Tavily context, voice in, Stan out” (15s).
+1. Problem (10s): Dashboards show what happened—not whether spend is in range, and not a brief you can send.  
+2. Voice cash standup with deep Rho numbers + IDs on screen (40s).  
+3. **Competitive Spend Context table with on-screen Tavily citations (50s).**  
+4. Publish Stan Weekly Money Brief (incl. Spend Context + External Risk) + play audio (30s).  
+5. Close: read-only safety + decision support + “Rho truth, market context, brief out” (15s).  
+
+Optional spare 10s: accountant Close Pack mention or one payee public-context beat — not the main act.
 
 ---
 
@@ -586,8 +570,8 @@ ElevenLabs 70+ language strength for international founding teams.
 - **Frontend:** Next.js (App Router) + TypeScript  
 - **Backend/API routes:** Next.js server routes or light Node service  
 - **Agent:** ElevenLabs Agents SDK / ConvAI with webhook tools  
-- **Data:** Rho REST (`/accounts`, `/transactions`, `/statements`)  
-- **Research / Outside Context:** Tavily JS SDK — `search`, `extract`, `research` (playbooks 1–5)  
+- **Data:** Rho REST (`/accounts`, `/transactions`, `/statements`) + normalization/concentration layer  
+- **Research / Spend Context:** Tavily JS SDK — `search`, `extract`, `research` (Playbook A + Risk; trust/watch thin or stubbed)  
 - **Output:** PDF generation + MP3 from ElevenLabs TTS  
 - **Delivery:** Stan digital product publish or demo-integrated storefront link  
 
@@ -606,7 +590,7 @@ ElevenLabs 70+ language strength for international founding teams.
 | Reliability | Demo Mode always works offline of live APIs |
 | Security | Keys server-side; redact PII from Tavily queries |
 | Accessibility | Keyboard chat fallback if mic unavailable |
-| Observability | Tool trace panel for judges |
+| Observability | Tool trace panel for judges (Rho IDs + citations) |
 
 ---
 
@@ -614,22 +598,23 @@ ElevenLabs 70+ language strength for international founding teams.
 
 ### Must ship (P0)
 
-1. Rho connect or Demo Mode → Cash Pulse  
-2. ElevenLabs Agent with Rho tools + Outside Context tools  
-3. Anomaly list + **Payee trust check (playbook 2)**  
-4. **Weekly External Risk Brief (playbook 1)** attached to Cash Brief  
-5. **Renew/cut comps (playbook 3)** OR **Hire/substitute comps (playbook 4)** as hero Decision Studio path (ship both if possible; at least one fully polished + the other stubbed with live Tavily)  
-6. **World-watch (playbook 5)** feeding standup  
-7. Cash Brief PDF + audio including External Risk  
+1. Rho connect or Demo Mode → **deep Cash Pulse** (multi-account, burn/runway, normalization, concentration, period context, Rho IDs)  
+2. ElevenLabs Agent with Rho tools + **`tavily_spend_context`** + brief/publish tools  
+3. Anomaly list (pending / awaiting_approval / new merchants)  
+4. **Competitive Spend Context** table with live citations  
+5. **Thin External Risk** section on Weekly Money Brief  
+6. Weekly Money Brief PDF + ElevenLabs audio including Spend Context + Risk  
+7. **Client Close Pack** path (accountant persona or template)  
 8. Stan publish path (real or guided demo with live store URL)  
-9. Polished UI + README + sample data (include sample contractor pay + SaaS recurrings for comps demos)
+9. Polished UI + tool traces + README + sample data (contractor pay + SaaS recurrings + pending items)  
+10. Decision-support + read-only disclaimers everywhere material
 
 ### Nice if time (P1)
 
-- Accountant persona  
-- Both renew **and** hire comps fully polished  
-- Client Close Pack template  
-- Activity timeline  
+- Payee public-context dossier polished  
+- World-watch feed  
+- Standalone Spend Context memo SKU  
+- Activity timeline / WoW cash comparison  
 
 ### Explicitly cut from weekend
 
@@ -637,7 +622,9 @@ ElevenLabs 70+ language strength for international founding teams.
 - Full accounting sync  
 - Native mobile apps  
 - Multi-tenant SaaS billing for RhoPilot itself  
-- Guaranteeing private salary-database accuracy (public web comps + citations only)  
+- Guaranteeing private salary-database or peer-ledger accuracy  
+- Five fully polished equal Tavily playbooks  
+- Prescriptive “hire/cut/renew” recommendation engine  
 
 ---
 
@@ -646,7 +633,7 @@ ElevenLabs 70+ language strength for international founding teams.
 ### 12.1 Hackathon judging proxies
 
 - Judges complete the hero loop without explanation.  
-- Each sponsor is verbally named with a visible artifact.  
+- Each sponsor is verbally named with a **visible artifact** that passes its kill-test.  
 - Demo video &lt;3 minutes with working product + tech stack narration.  
 - Social post published (LinkedIn/X).  
 - README enables third-party run.
@@ -655,61 +642,61 @@ ElevenLabs 70+ language strength for international founding teams.
 
 | Metric | Definition |
 |---|---|
-| Time-to-standup | Median seconds from open → brief generated |
-| External Risk coverage | % of Weekly Briefs that include ≥3 cited Tavily findings |
-| Judgment citation rate | % of renew/hire/trust answers with ≥1 Tavily source |
-| Comp compare rate | % of hire/substitute sessions that show Rho pay vs Tavily market band |
-| Anomalies resolved | % of flagged items actioned within 24h |
+| Time-to-brief | Median seconds from open → brief generated |
+| Spend Context coverage | % of Weekly Briefs that include ≥1 cited comps row |
+| Citation rate | % of market/spend answers with ≥1 Tavily source |
+| Comp compare rate | % of spend-context sessions that show Rho pay vs cited range |
 | Brief publish rate | % of sessions that export/publish to Stan |
+| Close Pack rate | % of accountant sessions that generate Close Pack |
 | Trust events | Rate of “can’t move money” clarifications without user confusion |
-| Retention proxy | Weekly active standups / user |
+| Retention proxy | Weekly active briefs / user |
 
 ---
 
 ## 13. Strengths
 
-1. **Rho-native and interview-track aligned** — Deep use of the host company’s API and partner narrative (founders + accountants).  
-2. **Read-only safety story** — Matches Rho’s API positioning; reduces catastrophic agent risk vs payment-capable banks APIs.  
-3. **ElevenLabs is the product, not a bolt-on** — Agents with tools/workflows/guardrails vs decorative TTS.  
-4. **Tavily is a named pillar (Outside Context Engine)** — Weekly risk, payee trust, renew comps, hire/substitute comps, and world-watch are required for judgment—not optional Google.  
-5. **Clean Rho×Tavily split for comps** — Rho shows what you pay; Tavily shows competitive substitute rates with citations.  
-6. **Stan completes the job** — Turns chat into a digital product / client deliverable; unique vs “yet another AI dashboard.”  
-7. **Everyday ritual** — Monday standup with External Risk is habitual, not a one-off gimmick.  
-8. **Dual persona leverage** — Founder + accountant modes double demo paths without two codebases.  
-9. **Prize stacking** — Architecture intentionally contends for Grand Prize + Rho + ElevenLabs + Best Tavily (+ content via Stan/story).  
-10. **Demo clarity** — Judges can retell: speak → Rho truth → Tavily meaning → Stan out.  
+1. **Rho-native and adoption-aligned** — Deep use of the host API; framing as a briefing layer Rho could productize (founders + accountants).  
+2. **Read-only safety story** — Matches Rho’s API positioning; reduces catastrophic agent risk.  
+3. **ElevenLabs is agency, not a bolt-on** — Agents with tools/workflows/guardrails + spoken brief audio.  
+4. **Tavily is Spend Context (impressive and honest)** — Public market ranges for *your* stack, not a fake compliance engine.  
+5. **Clean Rho×Tavily split** — Rho shows what you pay; Tavily shows cited public context.  
+6. **Stan completes the job** — Turns chat into a forwardable digital product.  
+7. **Everyday ritual** — Monday money brief is habitual, not a one-off gimmick.  
+8. **Dual persona leverage** — Founder brief + accountant Close Pack without two codebases.  
+9. **Prize stacking from one loop** — Grand Prize story naturally supports Rho / ElevenLabs / Tavily / content.  
+10. **Advice-safe credibility** — Fintech judges can put Rho’s brand next to the disclaimer.
 
 ---
 
 ## 14. Weaknesses and risks
 
-1. **Rho API surface is narrow today** — Read-only accounts/transactions/statements only; no payment actions, limited “wow” of executing finance.  
-2. **Stan integration uncertainty** — Public API depth for programmatic product publish may be limited; weekend may need a guided/manual publish path that feels slightly demo-staged.  
-3. **Heuristic anomalies ≠ ML fraud** — Spike/new-vendor rules will false-positive; credibility risk if not framed as “radar, not verdict.”  
+1. **Rho API surface is narrow today** — Read-only accounts/transactions/statements only; wow must come from analysis depth + briefs.  
+2. **Stan integration uncertainty** — Programmatic publish may be limited; weekend may need guided publish with a live store URL.  
+3. **Heuristic anomalies ≠ fraud ML** — Spike/new-vendor rules will false-positive; frame as radar, not verdict.  
 4. **Voice in noisy hackathon halls** — Mic UX can fail live; chat fallback is mandatory.  
-5. **Latency stacking** — Rho + LLM + multiple Tavily playbooks + TTS can feel slow if not streamed/statused/cached well.  
-6. **Compliance sensitivity** — Investment/tax/employment framing can alarm fintech judges; comps must stay informational.  
-7. **Key/credit dependency** — ElevenLabs + Tavily + Rho sandbox access required for full live demo; Demo Mode mitigates but live path is stronger.  
-8. **Scope creep magnet** — Five Tavily playbooks can blow the weekend; must still polish the hero path.  
-9. **Market comps are public-web approximate** — Tavily cannot access private salary DBs; bands may be incomplete or stale vs reality.  
-10. **Role inference from ledger is fuzzy** — Rho may show “Deel — $9,000” without job title; user/agent must confirm role for good comps.  
-11. **Differentiation risk** — Other teams may also build “AI + Rho”; without Outside Context + Stan deliverable, it blends in.  
-12. **Data realism** — Sandbox/sample data may look toy-like if not carefully designed (include recurrings + contractor pay).
+5. **Latency stacking** — Rho + LLM + Tavily + TTS can feel slow without status/cache.  
+6. **Compliance sensitivity** — Any slip into “advice” or “cleared” language alarms fintech judges.  
+7. **Key/credit dependency** — Live demo needs partner keys; Demo Mode mitigates.  
+8. **Scope creep magnet** — Re-expanding to five full playbooks blows the weekend.  
+9. **Market comps are public-web approximate** — Bands may be incomplete or stale; always cite + label.  
+10. **Role inference from ledger is fuzzy** — Lump-sum payroll providers need a clarifying question.  
+11. **Differentiation risk** — Other teams may build “AI + Rho”; without Spend Context + Stan deliverable, it blends in.  
+12. **Data realism** — Sample data must include recurrings + contractor pay or comps demos fall flat.
 
 ### 14.1 Mitigations
 
 | Weakness | Mitigation |
 |---|---|
-| Narrow Rho API | Lean into analysis + outside context + delivery; market read-only as safety |
+| Narrow Rho API | Lean into depth (normalize, concentration, period, IDs) + spend context + delivery; market read-only as safety |
 | Stan API gaps | Pre-create store + product template; automate file gen; one-click “open publish” |
-| False-positive anomalies | Severity tiers + payee trust before alarm language |
+| False-positive anomalies | Severity tiers; no alarmist compliance language |
 | Noisy room | Big **Chat** CTA; pre-typed demo prompts |
 | Latency | Parallel Tavily calls; session cache; skeleton UI; narrate while fetching |
-| Compliance | Fixed disclaimers; guardrails; no “fire/hire legally” directives; comps ≠ offers |
-| Scope creep | Ship all 5 playbooks at thin-slice depth; polish Risk + (Hire comps **or** Renew) as hero |
+| Compliance / advice slip | Fixed disclaimers; guardrails; compare/cite language only |
+| Scope creep | Hero = Spend Context + deep Rho; Risk thin; trust/watch P1 |
 | Approximate comps | Always show citations + range + “verify before deciding” |
-| Fuzzy role labels | Agent asks one clarifying question (“Is this a senior product designer?”) before Tavily |
-| Sample data | Seed demo ledger with named contractor + 3 SaaS recurrings |
+| Fuzzy role labels | One clarifying question before role comps |
+| Sample data | Seed demo ledger with named contractor + ≥3 SaaS recurrings + pending |
 
 ---
 
@@ -717,12 +704,12 @@ ElevenLabs 70+ language strength for international founding teams.
 
 | Alternative | RhoPilot difference |
 |---|---|
-| Rho dashboard alone | Active voice OS + Outside Context + deliverable |
-| ChatGPT + CSV export | Live Rho tools, required Tavily playbooks, guardrails, Stan publish |
-| Ramp/Brex AI features | Built on Rho stack; accountant + Stan + hire/renew comps angle |
+| Rho dashboard alone | Active money brief + spend context + sendable pack |
+| ChatGPT + CSV export | Live Rho tools, required Tavily citations, guardrails, Stan publish |
+| Ramp/Brex AI features | Built on Rho stack; accountant Close Pack + spend intelligence angle |
 | Pure voice note apps | Ledger-grounded agency, not dictation |
-| “AI that Googles vendors” | Five named playbooks mapped to ledger decisions |
-| Stan alone | Adds banking truth + CFO agent + external risk for creator-operators |
+| “AI that Googles vendors” | Competitive Spend Context mapped to *your* Rho stack |
+| Stan alone | Adds banking truth + brief agent + market context for operators |
 
 ---
 
@@ -730,12 +717,18 @@ ElevenLabs 70+ language strength for international founding teams.
 
 ### Positioning
 
-“Finance frictionless” extension of Rho: the daily layer you talk to, not another login you dread.
+**RhoPilot — live liquidity intelligence you can brief in minutes.**
+
+Retell for judges: *They pull what you actually pay from Rho, research public market context with sources, then publish a Stan brief you can talk through.*
+
+**Language bans in all marketing/UI:** finance OS; CFO that tells you what to do; compliance check; “you should hire/cut”; fiduciary advice claims.
+
+**Preferred language:** liquidity intelligence; money brief; spend context; compare; cite; draft; send; escalate in Rho; decision support.
 
 ### Content angle (Best Content / Stan session)
 
-- Build-in-public posts: voice standup clips, before/after of anomaly triage, Stan brief link.  
-- Founder story: “I don’t want five finance apps — I want one conversation and a client-ready pack.”
+- Build-in-public posts: voice standup clips, Spend Context table screenshot, Stan brief link.  
+- Founder story: “I don’t want five finance apps — I want one conversation and a brief I can forward.”
 
 ### Submission checklist (event rules)
 
@@ -754,8 +747,8 @@ ElevenLabs 70+ language strength for international founding teams.
 2. Preferred ElevenLabs path: hosted Agent config vs fully code-defined tools?  
 3. Will Rho provide sandbox tokens / sample business datasets to all teams?  
 4. Should accountant mode be a toggle or a separate route for demo clarity?  
-5. Should hire-comps or renew-comps be the primary Sunday demo hero if time forces a choice?  
-6. How do we map payroll-provider lump sums (Gusto/Deel) to individual roles in demo data?
+5. How do we map payroll-provider lump sums (Gusto/Deel) to individual roles in demo data?  
+6. Prefer SaaS rows or contractor rows first in the Spend Context demo table if time is tight?
 
 ---
 
@@ -763,25 +756,27 @@ ElevenLabs 70+ language strength for international founding teams.
 
 | When | Outcome |
 |---|---|
-| Saturday afternoon | Repo scaffold, Demo Mode Cash Pulse (with contractor + SaaS sample pay), Rho client stub |
-| Saturday evening | ElevenLabs agent + Rho tools + first two Tavily playbooks live |
-| Late Saturday | Remaining playbooks thin-slice; External Risk on brief |
-| Sunday morning | Hire **or** Renew comps hero polish; Stan path; UI polish |
-| Pre-noon Sunday | Demo video (must show Tavily citations), README, social post, submission |
+| Saturday afternoon | Repo scaffold; Demo Mode deep Cash Pulse (normalize, concentration, contractor + SaaS sample, pending); Rho client stub |
+| Saturday evening | ElevenLabs agent + Rho tools + **Competitive Spend Context** live with citations |
+| Late Saturday | Thin External Risk on brief; Client Close Pack template; tool traces |
+| Sunday morning | Stan publish path; UI polish; disclaimers; optional trust stub |
+| Pre-noon Sunday | Demo video (must show Rho IDs + Spend Context citations), README, social post, submission |
 
 ---
 
 ## 19. Appendix A — Example agent system rules (draft)
 
-- You are RhoPilot, a read-only finance copilot.  
+- You are RhoPilot, a read-only money-brief assistant on Rho.  
 - Never claim you can send payments, issue cards, or change account settings.  
-- Prefer Rho tool data over memory for balances, transactions, and *what the company currently pays*.  
-- Treat Tavily as the Outside Context Engine: for renew, hire/substitute, payee trust, weekly risk, and world-watch, you **must** call the matching playbook before recommending.  
-- Pure math questions (balance, burn) may use Rho only.  
-- For compensation and vendor pricing, compare Rho current pay vs Tavily cited market ranges; show sources; never present comps as guaranteed quotes or employment advice.  
-- If role/title is unclear from the ledger, ask one clarifying question before running hire comps.  
-- Frame runway/hire/renew outputs as decision support, not advice.  
-- After material answers, offer to publish a Stan Cash Brief or Decision Memo.  
+- Prefer Rho tool data over memory for balances, transactions, and *what the company currently pays*; cite Rho IDs when presenting material numbers.  
+- Treat Tavily as the Spend Context Engine: for market ranges, alternatives, external risk headlines, and payee public footprint, you **must** call the matching tool before stating those claims.  
+- Pure math questions (balance, burn, runway arithmetic) may use Rho only.  
+- For compensation and vendor pricing, compare Rho current pay vs Tavily cited public ranges; show sources; never present comps as guaranteed quotes or employment advice.  
+- Never prescribe hire, fire, renew, or cut. Use language like “above / within / below cited public range” and “next step: review in Rho.”  
+- Never claim KYC, sanctions, compliance, or that a payee is “safe,” “approved,” or “cleared.”  
+- If role/title is unclear from the ledger, ask one clarifying question before running role comps.  
+- Frame runway and spend outputs as decision support, not advice.  
+- After material answers, offer to publish a Stan Weekly Money Brief or Client Close Pack.  
 - If mic fails, continue in chat with the same tools.
 
 ---
@@ -790,13 +785,17 @@ ElevenLabs 70+ language strength for international founding teams.
 
 | Term | Meaning |
 |---|---|
-| Cash Pulse | Live snapshot of balances, burn, runway |
-| Anomaly Radar | Heuristic exception detection + payee trust enrichment |
-| Outside Context Engine | Tavily-powered layer: risk brief, trust, renew comps, hire comps, world-watch |
-| External Risk Brief | Weekly Tavily section on top vendors + category + cash context |
-| Hire / substitute comps | Rho current pay vs Tavily researched market/substitute rates |
-| Decision Studio | Scenario modeling (hire, substitute, renew, purchase) |
-| Cash Brief | PDF + audio pack (incl. External Risk) published via Stan |
+| Liquidity intelligence | Live view of cash position, burn, runway, and material spend — briefable fast |
+| Money brief / flash brief | Short sendable update (PDF + audio) of where cash and spend stand |
+| Cash Pulse | Live snapshot of multi-account cash, burn, runway, concentration |
+| Anomaly Radar | Heuristic exception detection (radar, not verdict) |
+| Spend Context Engine | Tavily-powered layer: Competitive Spend Context + light External Risk (+ P1 trust/watch) |
+| Competitive Spend Context | Rho current pay vs cited public market ranges / alternatives for tools and roles |
+| External Risk Brief | Short Tavily section on top vendors’ public headlines |
+| Payee public-context dossier | Public footprint notes for review in Rho — not compliance clearance |
+| Compare / Decision Studio | Scenario math + comparison tables (decision support) |
+| Weekly Money Brief | PDF + audio pack (Spend Context + External Risk) published via Stan |
+| Client Close Pack | Accountant-oriented Stan pack from period exceptions + narrative |
 | Demo Mode | Deterministic sample ledger for reliable judging |
 
 ---
