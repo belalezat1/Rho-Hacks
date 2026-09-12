@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { loadLedgerSnapshot } from "@/lib/ledger/snapshot";
 import { buildSpendContext, buildExternalRisk } from "@/lib/tavily/spend-context";
 import {
-  briefToAudioScript,
   buildClosePackMarkdown,
+  buildClosePackStandupScript,
   buildWeeklyBriefMarkdown,
+  buildWeeklyStandupScript,
   getStanUrl,
   makeBriefRecord,
   synthesizeBriefAudio,
@@ -51,7 +52,21 @@ export async function POST(req: Request) {
 
   const title =
     type === "client_close_pack" ? "Client Close Pack" : "Weekly Money Brief";
-  const audioText = briefToAudioScript(markdown);
+  const audioText =
+    type === "client_close_pack"
+      ? buildClosePackStandupScript({
+          anomalies: snap.anomalies,
+          periodLabel: "since the 1st",
+        })
+      : buildWeeklyStandupScript({
+          cash: snap.cash,
+          burn: snap.burn,
+          concentration: snap.concentration,
+          anomalies: snap.anomalies,
+          spendContext: rows,
+          risk: items,
+          voiceNote: getVoiceNote(),
+        });
   const audio = await synthesizeBriefAudio(audioText);
   const pdfBase64 = markdownToPdfBase64(title, markdown);
   const stanUrl = getStanUrl();

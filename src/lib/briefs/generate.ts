@@ -98,6 +98,128 @@ export function buildClosePackMarkdown(input: {
   return lines.join("\n");
 }
 
+function trimSpoken(s: string, max: number): string {
+  const t = s.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  return `${t.slice(0, max).replace(/[,:\s]+$/, "")}…`;
+}
+
+/**
+ * Spoken standup for ElevenLabs TTS — CFO-style briefing, not a table read-aloud.
+ */
+export function buildWeeklyStandupScript(input: {
+  cash: CashPosition;
+  burn: BurnRunway;
+  concentration: ConcentrationRow[];
+  anomalies: Anomaly[];
+  spendContext: SpendContextRow[];
+  risk: ExternalRiskItem[];
+  voiceNote?: string;
+}): string {
+  const runway =
+    input.burn.runwayDays != null
+      ? `about ${input.burn.runwayDays} days of runway at the current thirty-day burn`
+      : "runway that needs a closer look because burn is thin or uneven";
+
+  const topVendors = input.concentration
+    .slice(0, 3)
+    .map((r) => `${r.displayName} at ${r.pctOfBurn.toFixed(0)} percent of burn`)
+    .join(", ");
+
+  const above = input.spendContext.filter((r) => r.band === "above");
+  const within = input.spendContext.filter((r) => r.band === "within");
+  const below = input.spendContext.filter((r) => r.band === "below");
+
+  let spendLine =
+    "On spend versus public market context, I compared your Rho recurrings to cited public ranges.";
+  if (above.length) {
+    spendLine += ` Sitting above the cited band: ${above
+      .slice(0, 3)
+      .map((r) => r.label)
+      .join(", ")}. That is a review cue, not a cut recommendation.`;
+  }
+  if (within.length) {
+    spendLine += ` Within band: ${within
+      .slice(0, 3)
+      .map((r) => r.label)
+      .join(", ")}.`;
+  }
+  if (below.length) {
+    spendLine += ` Below cited ranges: ${below
+      .slice(0, 2)
+      .map((r) => r.label)
+      .join(", ")}.`;
+  }
+  if (!above.length && !within.length && !below.length) {
+    spendLine +=
+      " Public data was thin on a few items, so treat those as insufficient context.";
+  }
+
+  const highAnoms = input.anomalies.filter(
+    (a) => a.severity === "high" || a.severity === "medium",
+  );
+  let radarLine =
+    input.anomalies.length === 0
+      ? "Anomaly radar is quiet this period."
+      : `Anomaly radar has ${input.anomalies.length} flag${input.anomalies.length === 1 ? "" : "s"}.`;
+  if (highAnoms.length) {
+    radarLine += ` Worth a look first: ${highAnoms
+      .slice(0, 2)
+      .map((a) => a.title)
+      .join("; ")}. These are radar signals to escalate in Rho, not verdicts.`;
+  }
+
+  const riskTops = input.risk.slice(0, 2);
+  const riskLine = riskTops.length
+    ? `External context from the open web: ${riskTops
+        .map((r) => `${r.displayName} — ${trimSpoken(r.headline, 100)}`)
+        .join(". ")}. Informational only.`
+    : "";
+
+  const noteLine = input.voiceNote
+    ? `You also left a voice note: ${trimSpoken(input.voiceNote, 180)}`
+    : "";
+
+  return [
+    "This is your Pilot weekly money standup. Decision support only — not financial advice. Read-only on Rho; I cannot move money.",
+    `Cash pulse: you are sitting on ${formatUsd(input.cash.totalCents)} across accounts, with a thirty-day burn of ${formatUsd(input.burn.burn30Cents)}, which implies ${runway}.`,
+    topVendors
+      ? `Concentration is led by ${topVendors}.`
+      : "Vendor concentration is dispersed this period.",
+    radarLine,
+    spendLine,
+    riskLine,
+    noteLine,
+    "Full evidence, Rho IDs, and citations are in the written brief. Next step: review what jumped out in Rho, then publish the pack to Stan when you are ready.",
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function buildClosePackStandupScript(input: {
+  anomalies: Anomaly[];
+  periodLabel: string;
+}): string {
+  const n = input.anomalies.length;
+  const tops = input.anomalies
+    .slice(0, 3)
+    .map((a) => `${a.title} at ${formatUsd(a.amountCents)}`)
+    .join("; ");
+  return [
+    `This is your Pilot client close pack for ${input.periodLabel}. Decision support only — not advice.`,
+    n === 0
+      ? "No exceptions on the radar for this close window."
+      : `I flagged ${n} exception${n === 1 ? "" : "s"} on the Rho ledger. Highlights: ${tops}.`,
+    "Walk these with your client as review items, not compliance clearance. Full IDs and detail are in the written pack. Confirm in Briefs before you publish to Stan.",
+  ]
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Fallback when only markdown is available. Prefer buildWeeklyStandupScript. */
 export function briefToAudioScript(markdown: string): string {
   return markdown
     .replace(/^#+\s+/gm, "")
@@ -150,7 +272,13 @@ export async function synthesizeBriefAudio(
         },
         body: JSON.stringify({
           text: script,
-          model_id: "eleven_turbo_v2_5",
+          model_id: "eleven_multilingual_v2",
+          voice_settings: {
+            stability: 0.45,
+            similarity_boost: 0.8,
+            style: 0.35,
+            use_speaker_boost: true,
+          },
         }),
       },
     );
