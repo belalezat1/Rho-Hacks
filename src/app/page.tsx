@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { PilotWordmark } from "@/components/PilotWordmark";
+import { PilotBrandMark } from "@/components/landing/PartnerLogos";
 import { LandingDashboardPreview } from "@/components/landing/LandingDashboardPreview";
 import { LandingScrollSections } from "@/components/landing/LandingScrollSections";
-import { ScrollColorBridge } from "@/components/landing/ScrollColorBridge";
 import { ScrollRevealInit } from "@/components/landing/ScrollRevealInit";
 
 export default function HomePage() {
@@ -19,7 +18,7 @@ export default function HomePage() {
 
         <header className="relative z-20 mx-auto grid w-full max-w-6xl grid-cols-[1fr_auto] items-center gap-4 px-6 py-6 md:px-10">
           <div className="justify-self-start">
-            <PilotWordmark size="nav" tone="dark" />
+            <PilotBrandMark tone="dark" size="sm" />
           </div>
           <div className="flex items-center justify-end gap-4">
             <a
@@ -44,8 +43,8 @@ export default function HomePage() {
               Built on Rho, ElevenLabs, Tavily, and Stan
             </p>
 
-            <div className="mt-10 md:mt-12">
-              <PilotWordmark size="hero" tone="dark" href={null} />
+            <div className="mt-10 flex justify-center md:mt-12">
+              <PilotBrandMark tone="dark" size="lg" />
             </div>
 
             <h1 className="mt-8 max-w-2xl text-[2rem] font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl md:text-[3rem] md:leading-[1.1]">
@@ -85,7 +84,12 @@ export default function HomePage() {
         </main>
       </div>
 
-      <ScrollColorBridge />
+      {/* Simple black → white fade (no sticky scroll dead space) */}
+      <div
+        className="pointer-events-none h-28 w-full bg-gradient-to-b from-[#050505] via-[#7a7a7a] to-white md:h-36"
+        aria-hidden
+      />
+
       <LandingScrollSections />
     </div>
   );

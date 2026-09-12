@@ -14,17 +14,25 @@ export function LandingDashboardPreview() {
       {/* App chrome */}
       <div className="flex min-h-[220px] md:min-h-[280px]">
         <aside className="hidden w-48 shrink-0 border-r border-hairline bg-white p-4 sm:block">
-          <div className="wordmark text-xl text-ink">Pilot</div>
+          <div className="text-[15px] font-semibold tracking-tight text-ink">
+            pilot
+          </div>
+          <p className="mt-0.5 text-[10px] text-muted">
+            by{" "}
+            <span className="font-semibold uppercase tracking-wider text-ink">
+              Rho
+            </span>
+          </p>
           <p className="mt-4 text-[11px] font-medium uppercase tracking-wide text-muted">
             Northstar Co.
           </p>
           <nav className="mt-4 space-y-1 text-[13px] text-muted">
             <div className="rounded-md bg-nav-active px-2 py-1.5 text-ink">
-              Talk
+              Briefs
             </div>
-            <div className="px-2 py-1.5">Cash</div>
             <div className="px-2 py-1.5">Spend</div>
-            <div className="px-2 py-1.5">Briefs</div>
+            <div className="px-2 py-1.5">Cash</div>
+            <div className="px-2 py-1.5">Talk</div>
           </nav>
         </aside>
 

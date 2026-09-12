@@ -184,32 +184,6 @@ body {
   );
 }
 
-.scroll-color-track {
-  height: 70vh;
-  margin-top: -12vh;
-  pointer-events: none;
-}
-
-.scroll-color-wash {
-  background: linear-gradient(
-    180deg,
-    #050505 0%,
-    #0c0c0c 12%,
-    #1f1f1f 28%,
-    #4a4a4a 48%,
-    #a8a8a8 68%,
-    #e8e8e8 84%,
-    #ffffff 100%
-  );
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-color-track {
-    height: 28vh;
-    margin-top: -4vh;
-  }
-}
-
 @keyframes landing-rise {
   from {
     opacity: 0;

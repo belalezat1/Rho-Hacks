@@ -2,14 +2,14 @@ import Link from "next/link";
 import { PilotWordmark } from "@/components/PilotWordmark";
 
 const nav = [
-  { href: "/talk", label: "Talk", match: ["/talk"] },
+  { href: "/briefs", label: "Briefs", match: ["/briefs"] },
+  { href: "/spend-context", label: "Spend", match: ["/spend-context"] },
   {
     href: "/cash-pulse",
     label: "Cash",
     match: ["/cash-pulse", "/anomalies"],
   },
-  { href: "/spend-context", label: "Spend", match: ["/spend-context"] },
-  { href: "/briefs", label: "Briefs", match: ["/briefs"] },
+  { href: "/talk", label: "Talk", match: ["/talk"] },
 ];
 
 export function AppShell({
@@ -23,7 +23,7 @@ export function AppShell({
     <div className="flex min-h-screen bg-canvas text-ink">
       <aside className="sticky top-0 flex h-screen w-[260px] shrink-0 flex-col border-r border-hairline bg-surface px-5 py-7">
         <div className="px-1">
-          <PilotWordmark size="nav" />
+          <PilotWordmark size="nav" showByline />
         </div>
 
         <div className="mt-8 rounded-xl border border-hairline bg-canvas/80 px-3.5 py-3">
