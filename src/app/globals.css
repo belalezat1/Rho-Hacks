@@ -148,6 +148,29 @@ body {
   }
 }
 
+/* Sponsor marquee — slow left → right (Rho-style) */
+.partner-marquee {
+  animation: partner-marquee-ltr 42s linear infinite;
+}
+
+@keyframes partner-marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-marquee {
+    animation: none;
+  }
+  .landing-dash-frame {
+    animation: none;
+  }
+}
+
 .chip {
   border: 1px solid var(--hairline);
   background: var(--surface);
