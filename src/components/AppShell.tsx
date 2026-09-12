@@ -23,7 +23,7 @@ export function AppShell({
     <div className="flex min-h-screen bg-canvas text-ink">
       <aside className="sticky top-0 flex h-screen w-[260px] shrink-0 flex-col border-r border-hairline bg-surface px-5 py-7">
         <div className="px-1">
-          <PilotWordmark size="nav" showByline />
+          <PilotWordmark size="nav" />
         </div>
 
         <div className="mt-8 rounded-xl border border-hairline bg-canvas/80 px-3.5 py-3">

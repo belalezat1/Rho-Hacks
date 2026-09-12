@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { PilotBrandMark } from "@/components/landing/PartnerLogos";
+import { PilotWordmark } from "@/components/PilotWordmark";
 import { LandingDashboardPreview } from "@/components/landing/LandingDashboardPreview";
+import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingScrollSections } from "@/components/landing/LandingScrollSections";
 import { ScrollRevealInit } from "@/components/landing/ScrollRevealInit";
 
@@ -9,42 +10,24 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <ScrollRevealInit />
 
-      <div className="landing-root landing-hero-blend relative flex min-h-screen flex-col overflow-hidden bg-rho-black text-white">
+      <div className="landing-root relative flex min-h-screen flex-col bg-rho-black text-white">
         <div className="landing-noise pointer-events-none absolute inset-0" aria-hidden />
         <div
-          className="landing-fade pointer-events-none absolute inset-x-0 bottom-0 h-[55%]"
+          className="landing-fade pointer-events-none absolute inset-x-0 bottom-0 h-[40%]"
           aria-hidden
         />
 
-        <header className="relative z-20 mx-auto grid w-full max-w-6xl grid-cols-[1fr_auto] items-center gap-4 px-6 py-6 md:px-10">
-          <div className="justify-self-start">
-            <PilotBrandMark tone="dark" size="sm" />
-          </div>
-          <div className="flex items-center justify-end gap-4">
-            <a
-              href="#integrations"
-              className="nav-link hidden text-[15px] text-white/75 transition hover:text-white sm:inline"
-            >
-              Integrations
-            </a>
-            <Link
-              href="/talk"
-              className="btn-primary btn-lift px-6 py-3.5 text-[16px] font-medium"
-            >
-              Start briefing
-            </Link>
-          </div>
-        </header>
+        <LandingHeader />
 
         <main className="relative z-10 flex flex-1 flex-col">
-          <section className="reveal mx-auto flex w-full max-w-3xl flex-col items-center px-6 pt-12 text-center md:px-10 md:pt-16">
+          <section className="reveal mx-auto flex w-full max-w-3xl flex-col items-center px-6 pt-10 text-center md:px-10 md:pt-14">
             <p className="landing-pill inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-1.5 text-[13px] tracking-wide text-white/75">
               <span className="inline-block h-1.5 w-1.5 rounded-[2px] bg-mint" />
               Built on Rho, ElevenLabs, Tavily, and Stan
             </p>
 
-            <div className="mt-10 flex justify-center md:mt-12">
-              <PilotBrandMark tone="dark" size="lg" />
+            <div className="mt-10 md:mt-12">
+              <PilotWordmark size="hero" tone="dark" href={null} />
             </div>
 
             <h1 className="mt-8 max-w-2xl text-[2rem] font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl md:text-[3rem] md:leading-[1.1]">
@@ -60,13 +43,13 @@ export default function HomePage() {
             <div className="mt-10 flex w-full max-w-xl flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center">
               <Link
                 href="/talk"
-                className="btn-primary btn-lift px-8 py-4 text-center text-[17px] font-medium"
+                className="btn-primary rounded-full px-8 py-4 text-center text-[17px] font-medium"
               >
                 Start briefing
               </Link>
               <Link
                 href="/briefs"
-                className="btn-ghost-light btn-lift px-8 py-4 text-center text-[17px] font-medium"
+                className="btn-ghost-light rounded-full px-8 py-4 text-center text-[17px] font-medium"
               >
                 Open Brief Studio
               </Link>
@@ -82,11 +65,12 @@ export default function HomePage() {
             <LandingDashboardPreview />
           </div>
         </main>
+
       </div>
 
-      {/* Simple black → white fade (no sticky scroll dead space) */}
+      {/* One continuous black → white wash (no second black restart) */}
       <div
-        className="pointer-events-none h-28 w-full bg-gradient-to-b from-[#050505] via-[#7a7a7a] to-white md:h-36"
+        className="landing-bw-fade pointer-events-none h-36 w-full md:h-44"
         aria-hidden
       />
 

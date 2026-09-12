@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PilotBrandMark } from "@/components/landing/PartnerLogos";
+import { PilotWordmark } from "@/components/PilotWordmark";
 import { ParticleField } from "@/components/landing/ParticleField";
 import { PartnerMarquee } from "@/components/landing/PartnerMarquee";
 
@@ -150,7 +150,7 @@ function AbstractPilotVisual() {
       </svg>
       <div className="absolute inset-0 flex items-center justify-center p-10">
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] px-8 py-10 backdrop-blur-sm">
-          <PilotBrandMark tone="dark" size="lg" />
+          <PilotWordmark size="lg" tone="dark" href={null} />
           <p className="mt-6 max-w-[14rem] text-[14px] leading-relaxed text-white/50">
             Liquidity intelligence you can brief and forward.
           </p>
@@ -165,7 +165,7 @@ function LandingFooter() {
     <footer className="border-t border-hairline bg-[#faf9f6] px-6 py-16 md:px-10 md:py-20">
       <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <PilotBrandMark size="sm" />
+          <PilotWordmark size="sm" />
           <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-muted">
             Built for founders and accountants who want a faster money brief on
             Rho.

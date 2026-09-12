@@ -70,7 +70,7 @@ body {
 .btn-primary {
   background: var(--mint);
   color: #000;
-  border-radius: 10px;
+  border-radius: 9999px;
   font-weight: 500;
   transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -105,7 +105,7 @@ body {
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 8px;
+  border-radius: 9999px;
   font-weight: 500;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
@@ -164,23 +164,15 @@ body {
   animation: landing-rise 0.9s ease-out both;
 }
 
-/* Soft bottom of dark hero so it dissolves into the color bridge */
-.landing-hero-blend {
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 72%,
-    rgba(0, 0, 0, 0.85) 85%,
-    rgba(0, 0, 0, 0.35) 94%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 72%,
-    rgba(0, 0, 0, 0.85) 85%,
-    rgba(0, 0, 0, 0.35) 94%,
-    transparent 100%
+/* Single black → white transition under the dark hero */
+.landing-bw-fade {
+  background: linear-gradient(
+    180deg,
+    #050505 0%,
+    #1a1a1a 28%,
+    #6e6e6e 62%,
+    #d4d4d4 86%,
+    #ffffff 100%
   );
 }
 

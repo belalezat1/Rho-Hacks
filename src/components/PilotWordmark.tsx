@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { PilotBrandMark } from "@/components/landing/PartnerLogos";
 
 type Size = "sm" | "md" | "lg" | "hero" | "nav";
 type Tone = "light" | "dark";
 
-const sizeMap: Record<Size, "sm" | "md" | "lg"> = {
-  sm: "sm",
-  nav: "sm",
-  md: "md",
-  lg: "lg",
-  hero: "lg",
+const sizeClass: Record<Size, string> = {
+  sm: "text-[1.5rem]",
+  nav: "text-[1.85rem]",
+  md: "text-3xl",
+  lg: "text-6xl md:text-7xl",
+  hero: "text-5xl sm:text-6xl md:text-7xl lg:text-8xl",
 };
 
 export function PilotWordmark({
@@ -17,21 +16,22 @@ export function PilotWordmark({
   tone = "light",
   href = "/",
   className = "",
-  showByline = true,
 }: {
   size?: Size;
   tone?: Tone;
   href?: string | null;
   className?: string;
+  /** @deprecated ignored — wordmark is just Pilot */
   showByline?: boolean;
 }) {
+  const color = tone === "dark" ? "text-white" : "text-ink";
+
   const mark = (
-    <span className={className}>
-      <PilotBrandMark
-        tone={tone}
-        size={sizeMap[size]}
-        showByline={showByline}
-      />
+    <span
+      className={`wordmark inline-block ${color} ${sizeClass[size]} ${className}`}
+      aria-label="Pilot"
+    >
+      Pilot
     </span>
   );
 
