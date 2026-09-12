@@ -1,57 +1,60 @@
 # Product Requirements Document: RhoPilot
 
 **Product name:** RhoPilot  
-**Tagline:** RhoPilot — live liquidity intelligence you can brief in minutes  
+**Tagline:** Talk to RhoPilot like a CFO — live liquidity intelligence you can brief in minutes  
+**Mission (marketing):** Users speak to RhoPilot like a CFO: a briefing partner on Rho that compares, cites, and ships the pack — **decision support, never financial advice**.  
 **Document type:** PRD (hackathon → product foundation)  
 **Status:** Draft for weekend build  
-**Last updated:** 2026-09-12 (Grand Prize repositioning: liquidity intelligence + Competitive Spend Context hero + decision-support posture + Rho depth + integration kill-tests)  
+**Last updated:** 2026-09-12 (CFO-style pitch + ElevenLabs Decision Conversation Layer; all features retained; advice-safe posture kept)  
 **Event context:** Rho Lock In Hackathon (NYC) — sponsors: Rho, ElevenLabs, Tavily, Stan  
 
 ---
 
 ## 1. Executive summary
 
-RhoPilot is **live liquidity intelligence** for startups and the accountants who support them — a **money-brief layer on Rho**, not a competing finance platform.
+RhoPilot is the **CFO-style briefing partner** for startups and the accountants who support them — **live liquidity intelligence** as a **money-brief layer on Rho**, not a competing finance platform and **not** a source of financial advice.
 
-**Founder hook:** Ask your Rho account how the week looks, whether your spend is in range for businesses like yours, and leave with a brief you can forward.
+**Founder hook:** Users speak to RhoPilot like a CFO. Ask how the week looks, whether spend is in range vs public market context, dump a voice note from a meeting, and leave with a brief you can forward.
 
 The product:
 
 1. Reads live company money data from the **Rho API** (accounts, balances, transactions, statements) with depth — merchant normalization, multi-account cash position, vendor concentration, period/statement context, claim→Rho ID evidence — *what happened on the books and what you currently pay*.
 2. Runs a load-bearing **Spend Context Engine** on **Tavily** — *public market context for your stack*: what similar businesses typically pay for tools and roles like yours, alternatives and list pricing vs your Rho amounts, plus a thin External Risk section on the weekly brief. Payee context dossiers are supporting, not the star.
-3. Converses through **ElevenLabs Agents** (voice + chat with tool calling, workflows, guardrails) and narrates briefs via ElevenCreative / TTS — agency, not decorative voiceover.
+3. Runs a load-bearing **Decision Conversation Layer** on **ElevenLabs** — guided briefing dialogues (Agents + tools + guardrails), **Brief Production Studio** (ElevenCreative / TTS audio standups for Stan packs), and **Voice Capture** (Scribe) so founders can talk *to* and *into* the brief — agency, not decorative voiceover.
 4. Ships finished work products on **Stan** (Weekly Money Brief with Spend Context + External Risk, Client Close Packs) as PDF + audio.
 
-**Core split:** Rho = ledger truth. Tavily = public market / outside context. ElevenLabs = how you talk. Stan = how you ship the brief.
+**Core split:** Rho = ledger truth. Tavily = public market / outside context. ElevenLabs = where the CFO-style briefing conversation happens. Stan = how you ship the brief.
 
 **One-sentence pitch for judges:**  
-*Live liquidity intelligence on Rho—compare your spend to public market ranges with citations, brief it by voice, and publish the pack to Stan. Decision support, not advice.*
+*Speak to RhoPilot like a CFO—live liquidity intelligence on Rho that compares your spend to cited public ranges, runs the briefing conversation on ElevenLabs, and publishes the pack to Stan. Decision support, not advice.*
 
 ---
 
 ## 1.1 Plain-language overview
 
-**RhoPilot helps you brief your company’s money fast.**
+**Users speak to RhoPilot like a CFO** — then leave with a money brief they can forward.
 
-Instead of logging into a banking dashboard, scrolling transactions, and Googling “is this normal?”, you **talk** to it:
+Instead of logging into a banking dashboard, scrolling transactions, and Googling “is this normal?”, you **run a briefing conversation**:
 
 > “How much cash do we have?”  
 > “Anything weird this week?”  
 > “How does what we pay for Intercom and our designer compare to public market ranges?”  
 > “Draft the Monday update I can send.”  
-> “Walk anomalies since the 1st for the client pack.”
+> “Walk anomalies since the 1st for the client pack.”  
+> “Here’s a voice note from standup — fold that into the brief.”
 
-It answers using your **real Rho bank data**, researches **public market context** when spend comparisons need outside facts (Tavily), speaks back naturally (ElevenLabs), and can turn the answer into a **shareable brief** on Stan.
+It pulls your **real Rho bank data**, researches **public market context** when spend comparisons need outside facts (Tavily), runs the **CFO-style briefing meeting** through ElevenLabs (clarify → evidence → draft → confirm → publish — not “speaks back” alone), and ships a **shareable brief + audio standup** on Stan.
 
 ### How a normal use looks
 
-1. You ask by voice (or chat).  
-2. RhoPilot looks at your Rho accounts and transactions (with IDs you can verify).  
-3. If the question needs market context (spend comps, external risk, payee public footprint), it researches via Tavily and **cites sources**.  
-4. It **compares and explains** in plain language — it does not prescribe hire/cut/renew decisions.  
-5. Optionally it packages that into a short report + audio summary and publishes it on Stan.
+1. You open Talk — or drop in a short voice note (Voice Capture).  
+2. The ElevenLabs agent runs a **guided briefing dialogue** (clarifying questions when labels are fuzzy, then tools).  
+3. It looks at your Rho accounts and transactions (with IDs you can verify).  
+4. If the question needs market context (spend comps, external risk, payee public footprint), it researches via Tavily and **cites sources**.  
+5. It **compares and explains** in plain language — it does not prescribe hire/cut/renew decisions.  
+6. It confirms, then packages a report + **Brief Production Studio** audio and publishes to Stan.
 
-You’re not “using four APIs.” You’re having a money conversation that finishes as a deliverable.
+You’re not “using four APIs.” You’re in a **CFO-style money briefing** that finishes as a deliverable.
 
 ### What each piece is doing (human terms)
 
@@ -59,19 +62,19 @@ You’re not “using four APIs.” You’re having a money conversation that fi
 |---|---|---|
 | **Rho** | Source of truth for balances, spend, and *what you currently pay* | The books |
 | **Tavily** | Spend Context Engine — public market ranges, alternatives, light external risk | The research pass on “is this in range?” |
-| **ElevenLabs** | Conversational agent (listen, tool-call, speak) — not decorative TTS | The teammate who pulls the numbers and briefs you |
+| **ElevenLabs** | **Decision Conversation Layer** — guided briefing dialogues, Brief Production Studio, Voice Capture — not decorative TTS | The CFO-style partner who runs the briefing and records the standup |
 | **Stan** | Delivery layer for finished briefs/packs as digital products | The link you forward instead of a screenshot |
 
-**Shorter still:** RhoPilot doesn’t just read your transactions—it puts them next to public market context so you can brief faster.
+**Shorter still:** Talk to RhoPilot like a CFO. It puts your Rho numbers next to public market context and ships the brief.
 
 ### What it is *not*
 
 - Not a new bank or a “finance OS” that replaces Rho  
 - Not a robot that pays bills for you  
-- Not tax, legal, employment, or investment advice  
+- Not tax, legal, employment, or investment **advice** (and not a substitute for a licensed advisor)  
 - Not KYC, sanctions, or compliance clearance  
-- Not a CFO that tells you what to hire, cut, or renew  
-- Not “AI that replaces your accountant” — it’s a **faster briefing layer** on top of Rho  
+- Not a fiduciary or “AI CFO that decides / tells you what to hire, cut, or renew”  
+- Not “AI that replaces your accountant” — it’s a **faster CFO-style briefing layer** on top of Rho  
 
 ---
 
@@ -103,7 +106,12 @@ Founders, ops leads, and fractional CFOs drown in finance busywork:
 
 Rho’s API is **read-only by design** (accounts, transactions, statements). That is a product strength for AI: agents can analyze without payment authority.
 
-The winning product insight: **a talking dashboard is not enough.** Founders need **liquidity intelligence they can brief** — what’s on the books, whether key spend looks in range vs public market context, and a pack they can forward. Tavily is therefore not optional lookup; it is RhoPilot’s **Spend Context Engine**. Pairing deep Rho truth + cited spend context + ElevenLabs agency + Stan delivery creates a daily briefing tool judges and Rho itself can imagine shipping as a layer—not a rival platform.
+The winning product insight: **a talking dashboard is not enough.** Founders need a **CFO-style briefing partner** with **liquidity intelligence** — what’s on the books, whether key spend looks in range vs public market context, and a pack they can forward — without the product giving regulated financial advice.
+
+- **Tavily** is the **Spend Context Engine** (not optional Google).  
+- **ElevenLabs** is the **Decision Conversation Layer** (not optional TTS): guided dialogues, brief audio studio, voice capture.  
+
+Pairing deep Rho truth + cited spend context + ElevenLabs briefing agency + Stan delivery creates a daily tool judges and Rho itself can imagine shipping as a **layer**—not a rival platform.
 
 ---
 
@@ -118,6 +126,8 @@ The winning product insight: **a talking dashboard is not enough.** Founders nee
 | Sponsor-native depth | Rho, ElevenLabs, Tavily, and Stan each pass their **kill-test** (no decorative logos) |
 | Spend-context quality | Market/spend claims show Rho amount vs cited public ranges |
 | Decision support posture | Answers compare + cite + draft next step in Rho — they do not prescribe |
+| CFO-style pitch clarity | Marketing uses “speak like a CFO”; product never gives financial advice or decides for the user |
+| Briefing conversation quality | Material briefs run through ElevenLabs guided dialogue + spoken standup (not TTS-only) |
 | Shipable output | User leaves with a Stan digital product link (Weekly Money Brief / Close Pack) |
 | Safety posture | Agent never claims it can move money; reinforces read-only Rho access |
 | Hackathon win posture | Contends for Grand Prize; side prizes (Rho / ElevenLabs / Tavily / content) follow from the same loop |
@@ -126,10 +136,10 @@ The winning product insight: **a talking dashboard is not enough.** Founders nee
 
 - Initiating payments, wires, ACH, card issuance, or account modifications via API.
 - Replacing Rho’s full banking dashboard or Rho Close.
-- Providing formal tax, legal, employment, or investment advice.
+- Providing formal tax, legal, employment, or investment **advice** (compliance / lawsuit risk).
 - Prescriptive hire / fire / renew / cut directives as the product promise.
 - KYC, sanctions screening, or compliance / regulatory clearance.
-- Fiduciary or “AI CFO that decides for you” positioning.
+- Fiduciary positioning or “AI CFO that **decides for you** / tells you what to do” (the **CFO-style briefing metaphor** in marketing is allowed; advice behavior is not).
 - Multi-entity enterprise consolidation in v1.
 - Full accounting system of record (QuickBooks/Xero replacement).
 - Building a general consumer banking app.
@@ -162,27 +172,28 @@ The winning product insight: **a talking dashboard is not enough.** Founders nee
 
 ## 5. Product principles
 
-1. **Voice is the interface; numbers are the authority.** ElevenLabs is UX; Rho is ledger truth.
-2. **Rho = what happened / what you pay. Tavily = public market context.** Spend intelligence is a product pillar, not a fallback Google tab.
-3. **Math can be Rho-only. Market/spend claims require Tavily citations.**
-4. **Compare and cite — do not prescribe.** Draft briefs and comparison tables; never “you should hire/cut”; never claim compliance clearance.
-5. **No material claim without evidence.** Rho data and/or Tavily citations for every load-bearing statement.
-6. **Read-only is a feature.** Safe AI for finance; escalation happens in Rho, not in the agent.
-7. **Finish the job.** Analysis without a deliverable is incomplete — publish to Stan.
-8. **One hero loop for Grand Prize.** Speak → deep Rho → Competitive Spend Context → brief → Stan.
-9. **Personas, not sprawl.** Founder mode and Accountant mode share one core; don’t build ten products.
-10. **Every sponsor must be load-bearing.** If removing a sponsor doesn’t break a promise, cut the fake integration.
+1. **CFO-style conversation; not CFO advice.** Marketing: “speak like a CFO.” Product: compare, cite, draft, send — never prescribe or act as a fiduciary.
+2. **Voice is the briefing interface; numbers are the authority.** ElevenLabs runs the Decision Conversation Layer; Rho owns ledger facts.
+3. **Rho = what happened / what you pay. Tavily = public market context.** Spend intelligence is a product pillar, not a fallback Google tab.
+4. **Math can be Rho-only. Market/spend claims require Tavily citations.**
+5. **Compare and cite — do not prescribe.** Draft briefs and comparison tables; never “you should hire/cut”; never claim compliance clearance.
+6. **No material claim without evidence.** Rho data and/or Tavily citations for every load-bearing statement.
+7. **Read-only is a feature.** Safe AI for finance; escalation happens in Rho, not in the agent.
+8. **Finish the job.** Analysis without a deliverable is incomplete — publish to Stan (PDF + Brief Production Studio audio).
+9. **One hero loop for Grand Prize.** Speak / voice-capture → deep Rho → Competitive Spend Context → confirm brief → Stan.
+10. **Personas, not sprawl.** Founder mode and Accountant mode share one core; don’t build ten products.
+11. **Every sponsor must be load-bearing.** If removing a sponsor doesn’t break a promise, cut the fake integration.
 
 ### 5.1 Sponsor kill-tests
 
 | Sponsor | Kill-test (product promise that breaks if removed) |
 |---|---|
 | **Rho** | Cannot truthfully answer what you have, what moved, or what you currently pay — no live ledger IDs |
-| **ElevenLabs** | No interruptible voice/chat agent with tool calling and guardrails; brief has no spoken standup (decorative TTS only fails the test) |
+| **ElevenLabs** | No interruptible voice/chat **Decision Conversation Layer** with tool calling + guardrails + confirm-before-publish; no Brief Production Studio audio on the Stan pack; decorative TTS-only fails the test |
 | **Tavily** | Cannot show cited public market ranges / alternatives for your Rho spend stack; market claims become hallucinations |
 | **Stan** | Session ends as a chat transcript — no forwardable digital product (PDF + audio pack) |
 
-**Anti-patterns (banned):** ElevenLabs = only pre-rendered MP3; Tavily = one README search; Rho = dump txs into an LLM with no structure/IDs; Stan = footer link to a generic storefront.
+**Anti-patterns (banned):** ElevenLabs = only pre-rendered MP3 or “speaks back” with no tools; Tavily = one README search; Rho = dump txs into an LLM with no structure/IDs; Stan = footer link to a generic storefront.
 
 ---
 
@@ -194,7 +205,7 @@ RhoPilot is a web application with:
 
 - A polished **Cash Pulse** cockpit (deep Rho: balances, burn/runway, normalized merchants, concentration, period context).
 - An **Anomaly Radar** (heuristics + optional payee public-context enrichment).
-- An embedded **ElevenLabs Agent** (voice + text) with tools.
+- A **Decision Conversation Layer** powered by **ElevenLabs** (guided briefing dialogues, Brief Production Studio, Voice Capture).
 - A **Spend Context Engine** powered by Tavily (Competitive Spend Context hero; External Risk on briefs; trust/world-watch supporting).
 - A **Compare / Decision Studio** for runway math + spend comparison tables (not a prescription engine).
 - A **Stan publisher** for Weekly Money Briefs and Client Close Packs (PDF + audio).
@@ -202,18 +213,21 @@ RhoPilot is a web application with:
 ### 6.2 High-level architecture
 
 ```
-User (voice/chat)
-    → ElevenLabs Agent (workflows, guardrails, tool calling)
-        → Tool: Rho API (accounts, balances, transactions, statements)
-            → normalize merchants, cash position, concentration, period view
-        → Tool: Spend Context Engine (Tavily search / extract / research)
-            → Competitive Spend Context (hero): Rho pay vs public market ranges
-            → Weekly External Risk (supporting on brief)
-            → Payee public-context dossier (supporting)
-            → World-watch thin feed into Risk / brief
-        → Tool: Brief generator (metrics + narrative + audio via ElevenLabs TTS)
-        → Tool: Stan publish (Weekly Money Brief / Client Close Pack)
+User (voice/chat)  OR  Voice Capture (Scribe note)
+    → ElevenLabs Decision Conversation Layer
+        → Guided briefing dialogue (clarify → tools → draft → confirm → publish)
+        → Brief Production Studio (ElevenCreative / TTS audio standup)
+        → Tools:
+            → Rho API (accounts, balances, transactions, statements)
+                → normalize merchants, cash position, concentration, period view
+            → Spend Context Engine (Tavily search / extract / research)
+                → Competitive Spend Context (hero): Rho pay vs public market ranges
+                → Weekly External Risk (supporting on brief)
+                → Payee public-context dossier (supporting)
+                → World-watch thin feed into Risk / brief
+            → Brief generator + Stan publish (Weekly Money Brief / Client Close Pack)
     → UI cockpit mirrors agent state (Rho IDs, citations, publish link)
+    → Guardrails: read-only; decision support only — no financial advice / prescriptions
 ```
 
 ### 6.3 Sponsor capability mapping
@@ -221,9 +235,21 @@ User (voice/chat)
 | Sponsor | Role in RhoPilot | Concrete surfaces |
 |---|---|---|
 | **Rho** | Source of truth for company money (*what you pay / what moved*) | Accounts, balances, transactions, statements; normalization; concentration; period/close context (read-only REST) |
-| **ElevenLabs** | Conversational agency + brief narration | ElevenAgents (voice/chat, tools, workflows, guardrails); TTS / Creative for brief audio; optional Scribe STT |
+| **ElevenLabs** | **Decision Conversation Layer** (*where the CFO-style briefing happens*) | ElevenAgents (voice/chat, tools, workflows, guardrails); Brief Production Studio (Creative / TTS); Voice Capture (Scribe STT) |
 | **Tavily** | **Spend Context Engine** (*public market context for your stack*) | Search, Extract, Research; `topic: finance` / news; cited comps table + light External Risk |
 | **Stan** | Delivery for finished briefs/packs | Host/deliver Weekly Money Brief (Spend Context + Risk), Client Close Packs |
+
+### 6.3.1 ElevenLabs positioning note (required)
+
+**Framing:** *Dashboards show. Briefing conversations decide what goes in the pack. Audio briefs travel. The product still does not give financial advice.*
+
+“Speaks back naturally” is necessary but not sufficient. ElevenLabs is load-bearing when it:
+
+1. **Runs guided briefing dialogues** (Agents) that clarify, call Rho/Tavily mid-call, and confirm before publish.  
+2. **Produces Brief Production Studio audio** — the Stan pack’s spoken standup is a first-class deliverable.  
+3. **Ingests Voice Capture** (Scribe) so meeting dumps become session context for the brief.  
+
+Without that stack, RhoPilot is a dashboard with a microphone. With it, ElevenLabs is the operating surface of the CFO-style pitch.
 
 ### 6.4 Competitive Spend Context (required product answer)
 
@@ -236,7 +262,7 @@ User (voice/chat)
 |---|---|---|
 | “How much am I paying *now*?” | **Rho** | Recurring SaaS, contractor ACH, Gusto/Deel/Upwork payouts, labeled merchant/payee on the ledger |
 | “What’s in range / what do alternatives list?” | **Tavily** | Public-web Search → Extract → Research (list pricing, packaging, contractor/salary bands) with citations |
-| “So what goes in the brief / runway math?” | **ElevenLabs Agent** | Compares Rho current pay vs cited ranges; models burn/runway impact as **math**; offers Stan Money Brief — **does not prescribe hire/cut** |
+| “So what goes in the brief / runway math?” | **ElevenLabs Decision Conversation Layer** | Compares Rho current pay vs cited ranges; models burn/runway impact as **math**; offers Stan Money Brief — **does not prescribe hire/cut or give financial advice** |
 
 **Table shape (UI + Stan):** `Merchant or role | What you pay (Rho) | Cited public range | Sources | Notes`
 
@@ -291,7 +317,22 @@ This loop is the **P0 Tavily hero** and the primary Grand Prize demo path.
 
 ---
 
-### 7.3 Voice money-brief agent (ElevenLabs)
+### 7.3 Decision Conversation Layer (ElevenLabs) — P0 product pillar
+
+**Framing:**  
+*Users speak to RhoPilot like a CFO. ElevenLabs runs that briefing conversation — it does not turn RhoPilot into a licensed advisor.*
+
+Without this layer, RhoPilot is a dashboard with a mic. With it, the product matches the marketing pitch.
+
+| # | Capability | Priority | Role |
+|---|---|---|---|
+| EL-1 | **Guided briefing dialogues** | **P0** | Clarify → Rho/Tavily tools → draft → confirm → publish |
+| EL-2 | **Brief Production Studio** | **P0** | ElevenCreative / TTS audio standup attached to every Stan pack |
+| EL-3 | **Voice Capture (Scribe)** | **P0** | Ingest founder/accountant voice notes into session context for the brief |
+| EL-4 | Exception voice escalation | **P2** | Proactive spoken alert on high-severity anomalies (stretch) |
+| EL-5 | Hands-free close walkthrough | **P1** | Voice-driven anomaly queue during accountant Close Pack (enhances UC-04) |
+
+All existing Rho / Tavily / Stan features remain unchanged; this section names how ElevenLabs sits on top of them.
 
 | ID | Requirement | Priority |
 |---|---|---|
@@ -299,20 +340,21 @@ This loop is the **P0 Tavily hero** and the primary Grand Prize demo path.
 | VA-2 | Agent tools: `get_balances`, `get_transactions`, `get_anomalies`, `get_concentration` | P0 |
 | VA-3 | Agent tools (Spend Context): `tavily_spend_context` (hero); `tavily_risk_brief` (supporting); `tavily_payee_context`, `tavily_world_watch` (P1) | P0 / P1 |
 | VA-4 | Agent tools: `run_compare_scenario`, `generate_brief`, `publish_to_stan` | P0 |
-| VA-5 | Workflow branching: cash → spend context → draft brief → publish | P0 |
-| VA-6 | Guardrails: refuse payment initiation; disclaim tax/legal/employment/investment advice; refuse compliance-clearance claims; require citations for market/spend claims; never prescribe hire/cut/renew | P0 |
-| VA-7 | Generate spoken brief narration (TTS / Creative) for Stan packs | P0 |
-| VA-8 | Optional: ingest voice notes via Speech-to-Text (Scribe) into session context | P2 |
+| VA-5 | Guided briefing workflow: cash → spend context → draft brief → **user confirm** → publish | P0 |
+| VA-6 | Guardrails: refuse payment initiation; disclaim tax/legal/employment/investment advice; refuse compliance-clearance claims; require citations for market/spend claims; never prescribe hire/cut/renew; never claim to be a fiduciary CFO | P0 |
+| VA-7 | **Brief Production Studio:** spoken brief narration (TTS / Creative) for Stan packs | P0 |
+| VA-8 | **Voice Capture:** ingest voice notes via Speech-to-Text (Scribe) into session context used by `generate_brief` | P0 |
 | VA-9 | Show live tool traces in UI (Rho payloads + Tavily citations) for trust | P0 |
 | VA-10 | Routing rule: spend-context / external-risk / payee-context market claims **must** call Tavily before stating ranges or public footprint | P0 |
+| VA-11 | Marketing/UI may say “CFO-style” / “like a CFO”; agent copy must say **decision support / not advice** on material outputs | P0 |
 
 **Conversation contract**
 
-1. User asks in natural language.  
+1. User asks in natural language (and/or drops a Voice Capture note).  
 2. Agent fetches Rho numbers (*what you pay / what moved*) with IDs.  
 3. For spend/market questions, Spend Context Engine runs with citations.  
-4. Agent answers with Rho evidence + cited public context + plain-language summary + optional runway **math** — not prescriptions.  
-5. Agent offers: “Publish this as a Stan Weekly Money Brief / Client Close Pack?”
+4. Agent answers with Rho evidence + cited public context + plain-language summary + optional runway **math** — not prescriptions or financial advice.  
+5. Agent confirms, then offers: “Publish this as a Stan Weekly Money Brief / Client Close Pack?” and attaches Brief Production Studio audio.
 
 ---
 
@@ -430,7 +472,7 @@ Public footprint for new or large payees — **context for review in Rho**, not 
 | ID | Requirement | Priority |
 |---|---|---|
 | ST-1 | Generate Weekly Money Brief (PDF) from Cash Pulse + anomalies + **Spend Context** + **External Risk** | P0 |
-| ST-2 | Attach ElevenLabs audio standup (MP3) to the brief | P0 |
+| ST-2 | Attach **Brief Production Studio** audio standup (MP3) to the brief | P0 |
 | ST-3 | Publish / attach brief as a Stan digital product (API if available; else guided export + live store URL in demo) | P0 |
 | ST-4 | Support **Client Close Pack** variant for accountant persona | P0 |
 | ST-5 | Optional Spend Context memo template (same publish path, different template) | P1 |
@@ -537,29 +579,30 @@ ElevenLabs language strength for international founding teams.
 ### 9.1 First viewport / brand
 
 - Product name **RhoPilot** as a hero-level brand signal.
-- Tagline on hero: **live liquidity intelligence you can brief in minutes**.
+- Primary headline / hook: **Users speak to RhoPilot like a CFO.**
+- Supporting tagline: **live liquidity intelligence you can brief in minutes** — decision support, not advice.
 - One composition: brand, one headline, one supporting line, one CTA (Talk / Start demo), one dominant visual (cockpit or waveform — not a card grid).
 - Avoid generic purple-AI SaaS clichés; finance-trust visual direction (clarity, density with calm hierarchy).
 
 ### 9.2 Core screens
 
-1. **Home / Talk** — Agent + evidence side panel (Rho IDs + Tavily citations).  
+1. **Home / Talk** — Decision Conversation Layer + evidence side panel (Rho IDs + Tavily citations) + Voice Capture entry.  
 2. **Cash Pulse** — Multi-account cash, burn, runway, concentration.  
 3. **Anomalies** — Queue with severity; optional payee-context actions.  
 4. **Spend Context** — Comparison table (Rho vs cited public ranges) + External Risk.  
 5. **Compare** — Runway math + spend tables (decision support).  
-6. **Briefs** — History of generated packs + Stan links.  
+6. **Briefs** — History of generated packs + Stan links + Brief Production Studio audio.  
 7. **Settings** — API keys (local), demo toggle, persona (Founder / Accountant).
 
 ### 9.3 Demo script requirement (&lt;3 minutes) — Grand Prize
 
-1. Problem (10s): Dashboards show what happened—not whether spend is in range, and not a brief you can send.  
-2. Voice cash standup with deep Rho numbers + IDs on screen (40s).  
+1. Hook (10s): “Users speak to RhoPilot like a CFO — decision support, not advice.” Dashboards don’t brief you.  
+2. Guided voice cash standup with deep Rho numbers + IDs on screen (40s).  
 3. **Competitive Spend Context table with on-screen Tavily citations (50s).**  
-4. Publish Stan Weekly Money Brief (incl. Spend Context + External Risk) + play audio (30s).  
-5. Close: read-only safety + decision support + “Rho truth, market context, brief out” (15s).  
+4. Confirm → publish Stan Weekly Money Brief (Spend Context + External Risk) + play Brief Production Studio audio (30s).  
+5. Close: read-only + “CFO-style briefing partner on Rho” + “not financial advice” (15s).  
 
-Optional spare 10s: accountant Close Pack mention or one payee public-context beat — not the main act.
+Optional spare 10s: Voice Capture note folded into brief, accountant Close Pack, or one payee public-context beat — not the main act.
 
 ---
 
@@ -569,10 +612,11 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 
 - **Frontend:** Next.js (App Router) + TypeScript  
 - **Backend/API routes:** Next.js server routes or light Node service  
-- **Agent:** ElevenLabs Agents SDK / ConvAI with webhook tools  
+- **Agent:** ElevenLabs Agents SDK / ConvAI with webhook tools (Decision Conversation Layer)  
 - **Data:** Rho REST (`/accounts`, `/transactions`, `/statements`) + normalization/concentration layer  
 - **Research / Spend Context:** Tavily JS SDK — `search`, `extract`, `research` (Playbook A + Risk; trust/watch thin or stubbed)  
-- **Output:** PDF generation + MP3 from ElevenLabs TTS  
+- **Output:** PDF generation + Brief Production Studio MP3 from ElevenLabs TTS / Creative  
+- **Voice Capture:** ElevenLabs Scribe STT into session context  
 - **Delivery:** Stan digital product publish or demo-integrated storefront link  
 
 ### 10.2 Constraints
@@ -599,20 +643,22 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 ### Must ship (P0)
 
 1. Rho connect or Demo Mode → **deep Cash Pulse** (multi-account, burn/runway, normalization, concentration, period context, Rho IDs)  
-2. ElevenLabs Agent with Rho tools + **`tavily_spend_context`** + brief/publish tools  
+2. ElevenLabs **Decision Conversation Layer** with Rho tools + **`tavily_spend_context`** + brief/publish tools + confirm-before-publish  
 3. Anomaly list (pending / awaiting_approval / new merchants)  
 4. **Competitive Spend Context** table with live citations  
 5. **Thin External Risk** section on Weekly Money Brief  
-6. Weekly Money Brief PDF + ElevenLabs audio including Spend Context + Risk  
-7. **Client Close Pack** path (accountant persona or template)  
-8. Stan publish path (real or guided demo with live store URL)  
-9. Polished UI + tool traces + README + sample data (contractor pay + SaaS recurrings + pending items)  
-10. Decision-support + read-only disclaimers everywhere material
+6. Weekly Money Brief PDF + **Brief Production Studio** audio including Spend Context + Risk  
+7. **Voice Capture (Scribe)** thin-slice: record/upload note → transcript in session → usable by generate_brief  
+8. **Client Close Pack** path (accountant persona or template)  
+9. Stan publish path (real or guided demo with live store URL)  
+10. Polished UI + tool traces + README + sample data (contractor pay + SaaS recurrings + pending items)  
+11. Decision-support + read-only + “not financial advice” disclaimers everywhere material; CFO-style marketing copy on hero only
 
 ### Nice if time (P1)
 
 - Payee public-context dossier polished  
 - World-watch feed  
+- Hands-free close walkthrough (EL-5)  
 - Standalone Spend Context memo SKU  
 - Activity timeline / WoW cash comparison  
 
@@ -624,7 +670,8 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 - Multi-tenant SaaS billing for RhoPilot itself  
 - Guaranteeing private salary-database or peer-ledger accuracy  
 - Five fully polished equal Tavily playbooks  
-- Prescriptive “hire/cut/renew” recommendation engine  
+- Prescriptive “hire/cut/renew” recommendation engine / financial-advice product behavior  
+- Exception voice escalation as a polished P0 (keep P2)  
 
 ---
 
@@ -657,14 +704,15 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 
 1. **Rho-native and adoption-aligned** — Deep use of the host API; framing as a briefing layer Rho could productize (founders + accountants).  
 2. **Read-only safety story** — Matches Rho’s API positioning; reduces catastrophic agent risk.  
-3. **ElevenLabs is agency, not a bolt-on** — Agents with tools/workflows/guardrails + spoken brief audio.  
-4. **Tavily is Spend Context (impressive and honest)** — Public market ranges for *your* stack, not a fake compliance engine.  
-5. **Clean Rho×Tavily split** — Rho shows what you pay; Tavily shows cited public context.  
-6. **Stan completes the job** — Turns chat into a forwardable digital product.  
-7. **Everyday ritual** — Monday money brief is habitual, not a one-off gimmick.  
-8. **Dual persona leverage** — Founder brief + accountant Close Pack without two codebases.  
-9. **Prize stacking from one loop** — Grand Prize story naturally supports Rho / ElevenLabs / Tavily / content.  
-10. **Advice-safe credibility** — Fintech judges can put Rho’s brand next to the disclaimer.
+3. **CFO-style pitch without advice risk** — “Speak like a CFO” for marketing; product stays decision support.  
+4. **ElevenLabs Decision Conversation Layer** — Guided dialogues + Brief Production Studio + Voice Capture; not decorative TTS.  
+5. **Tavily is Spend Context (impressive and honest)** — Public market ranges for *your* stack, not a fake compliance engine.  
+6. **Clean Rho×Tavily split** — Rho shows what you pay; Tavily shows cited public context.  
+7. **Stan completes the job** — Turns chat into a forwardable digital product.  
+8. **Everyday ritual** — Monday money brief is habitual, not a one-off gimmick.  
+9. **Dual persona leverage** — Founder brief + accountant Close Pack without two codebases.  
+10. **Prize stacking from one loop** — Grand Prize story naturally supports Rho / ElevenLabs / Tavily / content.  
+11. **Advice-safe credibility** — Fintech judges can put Rho’s brand next to the disclaimer.
 
 ---
 
@@ -675,7 +723,7 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 3. **Heuristic anomalies ≠ fraud ML** — Spike/new-vendor rules will false-positive; frame as radar, not verdict.  
 4. **Voice in noisy hackathon halls** — Mic UX can fail live; chat fallback is mandatory.  
 5. **Latency stacking** — Rho + LLM + Tavily + TTS can feel slow without status/cache.  
-6. **Compliance sensitivity** — Any slip into “advice” or “cleared” language alarms fintech judges.  
+6. **Compliance sensitivity** — Any slip into “advice,” “cleared,” or “we decided for you” language alarms fintech judges / lawsuit optics.  
 7. **Key/credit dependency** — Live demo needs partner keys; Demo Mode mitigates.  
 8. **Scope creep magnet** — Re-expanding to five full playbooks blows the weekend.  
 9. **Market comps are public-web approximate** — Bands may be incomplete or stale; always cite + label.  
@@ -692,7 +740,7 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 | False-positive anomalies | Severity tiers; no alarmist compliance language |
 | Noisy room | Big **Chat** CTA; pre-typed demo prompts |
 | Latency | Parallel Tavily calls; session cache; skeleton UI; narrate while fetching |
-| Compliance / advice slip | Fixed disclaimers; guardrails; compare/cite language only |
+| Compliance / advice slip | Fixed disclaimers; guardrails; compare/cite only; allow “CFO-style” marketing, ban “CFO advice” behavior |
 | Scope creep | Hero = Spend Context + deep Rho; Risk thin; trust/watch P1 |
 | Approximate comps | Always show citations + range + “verify before deciding” |
 | Fuzzy role labels | One clarifying question before role comps |
@@ -707,7 +755,8 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 | Rho dashboard alone | Active money brief + spend context + sendable pack |
 | ChatGPT + CSV export | Live Rho tools, required Tavily citations, guardrails, Stan publish |
 | Ramp/Brex AI features | Built on Rho stack; accountant Close Pack + spend intelligence angle |
-| Pure voice note apps | Ledger-grounded agency, not dictation |
+| Pure voice note apps | Decision Conversation Layer grounded in Rho + Spend Context, not dictation |
+| “AI CFO advice bot” | CFO-style briefing metaphor only — compare/cite/send, never prescribe |
 | “AI that Googles vendors” | Competitive Spend Context mapped to *your* Rho stack |
 | Stan alone | Adds banking truth + brief agent + market context for operators |
 
@@ -717,18 +766,20 @@ Optional spare 10s: accountant Close Pack mention or one payee public-context be
 
 ### Positioning
 
-**RhoPilot — live liquidity intelligence you can brief in minutes.**
+**Mission hook:** *Users speak to RhoPilot like a CFO.*  
+**Product line:** *Live liquidity intelligence you can brief in minutes — a money-brief layer on Rho.*  
+**Safety line:** *Decision support with citations. Not financial, tax, legal, or investment advice.*
 
-Retell for judges: *They pull what you actually pay from Rho, research public market context with sources, then publish a Stan brief you can talk through.*
+Retell for judges: *It’s the CFO-style briefing partner—pulls what you actually pay from Rho, researches public market context with sources on ElevenLabs, then publishes a Stan brief you can talk through. It never tells you what to hire or cut.*
 
-**Language bans in all marketing/UI:** finance OS; CFO that tells you what to do; compliance check; “you should hire/cut”; fiduciary advice claims.
+**Language bans in all product/UI copy:** finance OS (as a Rho replacement); “CFO that tells you what to do”; “we advise you to…”; compliance check / cleared / approved payee; “you should hire/cut”; fiduciary advice claims.
 
-**Preferred language:** liquidity intelligence; money brief; spend context; compare; cite; draft; send; escalate in Rho; decision support.
+**Preferred language:** speak like a CFO / CFO-style briefing partner; liquidity intelligence; money brief; spend context; compare; cite; draft; send; escalate in Rho; decision support; not advice.
 
 ### Content angle (Best Content / Stan session)
 
-- Build-in-public posts: voice standup clips, Spend Context table screenshot, Stan brief link.  
-- Founder story: “I don’t want five finance apps — I want one conversation and a brief I can forward.”
+- Build-in-public posts: CFO-style standup clips, Spend Context table screenshot, Stan brief link.  
+- Founder story: “I don’t want five finance apps — I want one CFO-style conversation and a brief I can forward.”
 
 ### Submission checklist (event rules)
 
@@ -757,17 +808,17 @@ Retell for judges: *They pull what you actually pay from Rho, research public ma
 | When | Outcome |
 |---|---|
 | Saturday afternoon | Repo scaffold; Demo Mode deep Cash Pulse (normalize, concentration, contractor + SaaS sample, pending); Rho client stub |
-| Saturday evening | ElevenLabs agent + Rho tools + **Competitive Spend Context** live with citations |
-| Late Saturday | Thin External Risk on brief; Client Close Pack template; tool traces |
-| Sunday morning | Stan publish path; UI polish; disclaimers; optional trust stub |
-| Pre-noon Sunday | Demo video (must show Rho IDs + Spend Context citations), README, social post, submission |
+| Saturday evening | ElevenLabs Decision Conversation Layer + Rho tools + **Competitive Spend Context** live with citations |
+| Late Saturday | Thin External Risk on brief; Brief Production Studio audio; Voice Capture thin-slice; Client Close Pack template; tool traces |
+| Sunday morning | Stan publish path; UI polish; CFO-style hero copy + not-advice disclaimers; optional trust stub |
+| Pre-noon Sunday | Demo video (must show Rho IDs + Spend Context citations + spoken brief), README, social post, submission |
 
 ---
 
 ## 19. Appendix A — Example agent system rules (draft)
 
-- You are RhoPilot, a read-only money-brief assistant on Rho.  
-- Never claim you can send payments, issue cards, or change account settings.  
+- You are RhoPilot, a read-only **CFO-style money-brief** assistant on Rho — **decision support, not financial advice**.  
+- Never claim you are a licensed CFO, fiduciary, or that you can send payments, issue cards, or change account settings.  
 - Prefer Rho tool data over memory for balances, transactions, and *what the company currently pays*; cite Rho IDs when presenting material numbers.  
 - Treat Tavily as the Spend Context Engine: for market ranges, alternatives, external risk headlines, and payee public footprint, you **must** call the matching tool before stating those claims.  
 - Pure math questions (balance, burn, runway arithmetic) may use Rho only.  
@@ -775,8 +826,9 @@ Retell for judges: *They pull what you actually pay from Rho, research public ma
 - Never prescribe hire, fire, renew, or cut. Use language like “above / within / below cited public range” and “next step: review in Rho.”  
 - Never claim KYC, sanctions, compliance, or that a payee is “safe,” “approved,” or “cleared.”  
 - If role/title is unclear from the ledger, ask one clarifying question before running role comps.  
-- Frame runway and spend outputs as decision support, not advice.  
-- After material answers, offer to publish a Stan Weekly Money Brief or Client Close Pack.  
+- If the user provides a Voice Capture note, incorporate relevant facts into the draft brief and show that you used them.  
+- Frame runway and spend outputs as decision support, not advice; include a short not-advice disclaimer on material outputs.  
+- After material answers, confirm, then offer to publish a Stan Weekly Money Brief or Client Close Pack with Brief Production Studio audio.  
 - If mic fails, continue in chat with the same tools.
 
 ---
@@ -785,6 +837,10 @@ Retell for judges: *They pull what you actually pay from Rho, research public ma
 
 | Term | Meaning |
 |---|---|
+| CFO-style briefing partner | Marketing/UX metaphor: talk through money like you would with a CFO — **not** a licensed advisor or fiduciary |
+| Decision Conversation Layer | ElevenLabs pillar: guided dialogues + Brief Production Studio + Voice Capture |
+| Brief Production Studio | ElevenCreative / TTS audio standup attached to Stan packs |
+| Voice Capture | Scribe STT of founder/accountant notes into session context |
 | Liquidity intelligence | Live view of cash position, burn, runway, and material spend — briefable fast |
 | Money brief / flash brief | Short sendable update (PDF + audio) of where cash and spend stand |
 | Cash Pulse | Live snapshot of multi-account cash, burn, runway, concentration |
