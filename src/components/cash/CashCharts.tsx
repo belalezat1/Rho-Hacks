@@ -24,7 +24,7 @@ export function RevenueChart({ series }: { series: number[] }) {
   const focus = points[7] ?? points[points.length - 1];
 
   return (
-    <div className="card p-5">
+    <div className="panel-soft">
       <p className="text-[12px] font-medium text-muted">Collected revenue</p>
       <p className="mt-1 text-2xl font-semibold tracking-tight tabular-nums">
         {formatUsd(total)}
@@ -97,7 +97,7 @@ export function ReceivablesCard({ slices }: { slices: ReceivableSlice[] }) {
   let offset = 0;
 
   return (
-    <div className="card p-5">
+    <div className="panel-soft">
       <p className="text-[12px] font-medium text-muted">Outstanding receivables</p>
       <p className="mt-1 text-2xl font-semibold tracking-tight tabular-nums">
         {formatUsd(total)}

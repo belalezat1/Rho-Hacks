@@ -87,7 +87,7 @@ export function AppShell({
       </aside>
 
       <div className="relative flex min-w-0 flex-1 flex-col">
-        <main className="flex-1 px-8 py-8 pb-28 text-base lg:px-12 lg:py-10">
+        <main className="flex-1 px-8 py-8 pb-36 text-base lg:px-12 lg:py-10">
           <PageEnter>{children}</PageEnter>
         </main>
         <Suspense fallback={null}>

@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
-import { AttentionGrid } from "@/components/cash/AttentionGrid";
 import { ReceivablesCard, RevenueChart } from "@/components/cash/CashCharts";
 import { VendorMark } from "@/components/VendorMark";
 import {
-  buildAttentionBuckets,
   demoReceivables,
   demoRevenueSeries,
 } from "@/lib/cash/demo-metrics";
@@ -19,7 +17,6 @@ function statusTone(status: string) {
 
 export default async function CashPulsePage() {
   const snap = await loadLedgerSnapshot();
-  const buckets = buildAttentionBuckets(snap.anomalies, snap.transactions);
   const pendingCents = snap.transactions
     .filter((t) => t.status === "pending" || t.status === "awaiting_approval")
     .reduce((a, t) => a + Math.abs(t.amountCents), 0);
@@ -28,17 +25,12 @@ export default async function CashPulsePage() {
     .reduce((a, x) => a + Math.abs(x.amountCents), 0);
   const revenue = demoRevenueSeries(snap.cash.totalCents);
   const receivables = demoReceivables(pendingCents, highCents);
+  const dayDelta = Math.round(snap.burn.dailyBurnCents * 0.05);
 
   return (
     <AppShell active="/cash-pulse">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-        <div className="max-w-2xl">
-          <h1 className="page-title">Cash</h1>
-          <p className="meta mt-3">
-            Multi-account cash, burn/runway, concentration - claims tie to
-            Rho-shaped IDs.
-          </p>
-        </div>
+        <h1 className="page-title">Cash</h1>
         <div className="flex flex-wrap items-center gap-2">
           <Link href="/anomalies" className="btn-secondary px-4 text-[13px]">
             Exceptions
@@ -49,22 +41,50 @@ export default async function CashPulsePage() {
         </div>
       </div>
 
-      <AttentionGrid buckets={buckets} />
-
-      <div className="mt-5 grid gap-4 md:grid-cols-3">
-        <div className="card p-5">
-          <p className="text-[12px] font-medium uppercase tracking-[0.06em] text-muted">
-            Cash balance
-          </p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight tabular-nums">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="metric-tile">
+          <p className="metric-tile-label">Balance</p>
+          <p className="metric-tile-value">
             {formatUsd(snap.cash.totalCents)}
           </p>
-          <div className="dot-grid mt-4 h-14 rounded-[var(--radius-control)] border border-hairline" />
-          <ul className="mt-4 space-y-0">
+        </div>
+        <div className="metric-tile">
+          <p className="metric-tile-label">Pending</p>
+          <p className="metric-tile-value">{formatUsd(pendingCents)}</p>
+        </div>
+        <div className="metric-tile">
+          <p className="metric-tile-label">30d burn</p>
+          <p className="metric-tile-value">
+            {formatUsd(snap.burn.burn30Cents)}
+          </p>
+          <p className="metric-tile-delta">
+            <span className="up" aria-hidden>
+              ↑
+            </span>
+            <span className="font-medium text-[color:var(--ok)]">
+              {formatUsd(dayDelta)}
+            </span>
+            <span className="text-muted">since last day</span>
+          </p>
+        </div>
+        <div className="metric-tile">
+          <p className="metric-tile-label">Runway</p>
+          <p className="metric-tile-value">
+            {snap.burn.runwayDays != null
+              ? `${snap.burn.runwayDays} days`
+              : "n/a"}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-3 md:grid-cols-3">
+        <div className="panel-soft">
+          <p className="text-[12px] font-medium text-muted">Accounts</p>
+          <ul className="mt-3 space-y-0">
             {snap.accounts.map((a) => (
               <li
                 key={a.id}
-                className="flex justify-between gap-3 border-t border-hairline py-2.5 text-sm"
+                className="flex justify-between gap-3 border-t border-white/80 py-2.5 text-sm first:border-0 first:pt-0"
               >
                 <span>
                   <span className="font-medium text-ink">{a.name}</span>
@@ -80,11 +100,9 @@ export default async function CashPulsePage() {
           </ul>
         </div>
 
-        <div className="card p-5">
-          <p className="text-[12px] font-medium uppercase tracking-[0.06em] text-muted">
-            30 / 60 / 90 burn
-          </p>
-          <ul className="mt-4 space-y-3 text-sm">
+        <div className="panel-soft">
+          <p className="text-[12px] font-medium text-muted">30 / 60 / 90 burn</p>
+          <ul className="mt-3 space-y-3 text-sm">
             {[
               ["30d", snap.burn.burn30Cents],
               ["60d", snap.burn.burn60Cents],
@@ -98,21 +116,13 @@ export default async function CashPulsePage() {
               </li>
             ))}
           </ul>
-          <p className="meta mt-5 border-t border-hairline pt-4">
-            Approx. runway{" "}
-            <span className="font-semibold text-ink">
-              {snap.burn.runwayDays != null
-                ? `${snap.burn.runwayDays} days`
-                : "n/a"}
-            </span>
-          </p>
         </div>
 
-        <div className="card p-5">
-          <p className="text-[12px] font-medium uppercase tracking-[0.06em] text-muted">
+        <div className="panel-soft">
+          <p className="text-[12px] font-medium text-muted">
             Vendor concentration (30d)
           </p>
-          <ul className="mt-4 space-y-2.5">
+          <ul className="mt-3 space-y-2.5">
             {snap.concentration.slice(0, 6).map((row) => (
               <li
                 key={row.merchantKey}
@@ -135,7 +145,7 @@ export default async function CashPulsePage() {
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+      <div className="mt-5 grid gap-3 lg:grid-cols-2">
         <RevenueChart series={revenue} />
         <ReceivablesCard slices={receivables} />
       </div>
@@ -145,7 +155,7 @@ export default async function CashPulsePage() {
           <h2 className="text-[15px] font-semibold tracking-tight">
             Recent movements
           </h2>
-          <p className="text-[12px] text-muted">Tied to Rho transaction IDs</p>
+          <p className="text-[12px] text-muted">Rho transaction IDs</p>
         </div>
         <ul className="space-y-2">
           {snap.transactions.slice(0, 12).map((tx) => {

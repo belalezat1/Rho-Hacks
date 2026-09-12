@@ -7,17 +7,17 @@ const hubs = [
   {
     href: "/cash-pulse",
     label: "Cash Pulse",
-    blurb: "Balances, burn, runway — Rho-shaped IDs.",
+    blurb: "Balances, burn, runway. Rho-shaped IDs.",
   },
   {
     href: "/anomalies",
     label: "Anomalies",
-    blurb: "Radar since the period open — escalate in Rho.",
+    blurb: "Radar since the period open. Escalate in Rho.",
   },
   {
     href: "/spend-context",
     label: "Spend Context",
-    blurb: "Public-web comps via Tavily — not quotes.",
+    blurb: "Public-web comps via Tavily. Not quotes.",
   },
 ] as const;
 
@@ -29,9 +29,6 @@ export default async function MoneyPage() {
       <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="page-title">Money</h1>
-          <p className="meta mt-1 max-w-lg">
-            Snapshot and deep links. For the living stage, start on Talk.
-          </p>
         </div>
         <span className="chip">{snap.demoMode ? "Demo Mode" : "Live Rho"}</span>
       </div>

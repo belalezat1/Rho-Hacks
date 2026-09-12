@@ -130,7 +130,7 @@ export function TalkPanel() {
             : `${spend.citationCount ?? 0} live cites`;
         reply = `Spend Context (${spend.source}): ${rows || "no rows"}. ${digest}. Public-web estimates for decision support, not quotes.`;
         if (risk.items?.[0]?.headline) {
-          reply += ` Risk: ${risk.items[0].displayName} — ${risk.items[0].headline.slice(0, 100)}`;
+          reply += ` Risk: ${risk.items[0].displayName}: ${risk.items[0].headline.slice(0, 100)}`;
         }
       } else if (
         lower.includes("anomal") ||

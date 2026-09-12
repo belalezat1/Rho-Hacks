@@ -181,13 +181,7 @@ export function BriefStudio() {
   return (
     <div className="mx-auto flex max-w-6xl flex-col">
       <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <div className="max-w-xl">
-          <h1 className="page-title">Briefs</h1>
-          <p className="meta mt-3">
-            Review a money pack, check evidence when you need it, then publish.
-            Decision support - not advice.
-          </p>
-        </div>
+        <h1 className="page-title">Brief Studio</h1>
         <div className="flex flex-wrap items-center gap-2.5">
           <div className="flex rounded-[var(--radius-control)] border border-hairline bg-canvas p-1">
             <button
@@ -248,10 +242,9 @@ export function BriefStudio() {
               <p className="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-[1.75rem]">
                 No pack yet
               </p>
-              <p className="meta mt-3 max-w-md">
-                Start on Talk — ask Pilot to draft a Monday brief — or draft a
-                pack here. Cash, anomalies, and Spend Context land in one review
-                surface.
+              <p className="mt-3 max-w-md text-[15px] leading-relaxed text-muted">
+                Ask Pilot to draft a Monday brief, or draft a pack here. Cash,
+                exceptions, and Spend Context land in one review surface.
               </p>
               <div className="mt-7 flex flex-wrap gap-2.5">
                 <Link

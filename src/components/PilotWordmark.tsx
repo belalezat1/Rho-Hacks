@@ -21,7 +21,7 @@ export function PilotWordmark({
   tone?: Tone;
   href?: string | null;
   className?: string;
-  /** @deprecated ignored — wordmark is just Pilot */
+  /** @deprecated ignored. Wordmark is just Pilot */
   showByline?: boolean;
 }) {
   const color = tone === "dark" ? "text-white" : "text-ink";

@@ -1,5 +1,5 @@
 /**
- * ElevenLabs Speech-to-Text (Scribe) — optional path for voice_capture.
+ * ElevenLabs Speech-to-Text (Scribe). Optional path for voice_capture.
  */
 export async function transcribeWithScribe(input: {
   audioBase64: string;

@@ -46,7 +46,7 @@ export function buildWeeklyBriefMarkdown(input: {
   for (const r of input.spendContext) {
     const range =
       r.citedRangeLowCents != null && r.citedRangeHighCents != null
-        ? `${formatUsd(r.citedRangeLowCents)}–${formatUsd(r.citedRangeHighCents)}`
+        ? `${formatUsd(r.citedRangeLowCents)} to ${formatUsd(r.citedRangeHighCents)}`
         : "insufficient public data";
     lines.push(
       `| ${r.label} | ${formatUsd(r.rhoAmountMonthlyCents)} | ${range} | ${r.band.replace("_", " ")} |`,

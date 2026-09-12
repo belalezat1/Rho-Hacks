@@ -14,13 +14,7 @@ export default async function SpendContextPage() {
   return (
     <AppShell active="/spend-context">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-        <div className="max-w-2xl">
-          <h1 className="page-title">Spend Context</h1>
-          <p className="meta mt-3">
-            What you pay on Rho vs cited public market ranges. Decision support -
-            not a quote or hire/cut prescription.
-          </p>
-        </div>
+        <h1 className="page-title">Spend</h1>
         <span className="chip">
           Comps: {source} · Risk: {riskSource}
         </span>

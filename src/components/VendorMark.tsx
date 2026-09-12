@@ -208,7 +208,7 @@ function VendorGlyph({ id }: { id: string }) {
   }
 }
 
-/** Rho Close–style sparkle chip */
+/** Rho Close style sparkle chip */
 export function SparkleChip({
   children,
   className = "",

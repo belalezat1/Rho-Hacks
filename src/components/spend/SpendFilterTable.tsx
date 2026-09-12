@@ -112,7 +112,7 @@ export function SpendFilterTable({ rows }: { rows: SpendContextRow[] }) {
                   <td className="tabular-nums text-muted">
                     {row.citedRangeLowCents != null &&
                     row.citedRangeHighCents != null
-                      ? `${formatUsd(row.citedRangeLowCents)}–${formatUsd(row.citedRangeHighCents)}`
+                      ? `${formatUsd(row.citedRangeLowCents)} to ${formatUsd(row.citedRangeHighCents)}`
                       : " - "}
                   </td>
                   <td>

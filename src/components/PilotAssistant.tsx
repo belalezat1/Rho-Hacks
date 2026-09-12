@@ -9,7 +9,7 @@ import {
   usePilotBriefing,
 } from "@/hooks/usePilotBriefing";
 
-type Tab = "chat" | "sources" | "note";
+type Tab = "chat" | "voice" | "sources" | "note";
 
 export function PilotAssistant() {
   const searchParams = useSearchParams();
@@ -33,203 +33,265 @@ export function PilotAssistant() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  useEffect(() => {
+    if (open) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        className={`pilot-fab fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full px-5 py-3.5 text-[15px] font-semibold shadow-[0_8px_28px_rgba(15,23,22,0.18)] transition ${
-          open
-            ? "bg-ink text-white"
-            : "bg-mint text-ink hover:brightness-[0.97]"
-        }`}
+        onClick={() => setOpen(true)}
+        className="pilot-fab fixed bottom-8 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-full bg-mint px-10 py-5 text-[18px] font-semibold text-ink shadow-[0_12px_40px_rgba(15,23,22,0.22)] transition hover:brightness-[0.97]"
         aria-expanded={open}
         aria-controls="pilot-assistant-panel"
       >
-        {open ? "Close" : "Pilot"}
+        <span
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-[13px] text-white"
+          aria-hidden
+        >
+          ✦
+        </span>
+        Ask Pilot
       </button>
 
       {open ? (
-        <div
-          id="pilot-assistant-panel"
-          className="pilot-panel fixed bottom-24 right-6 z-50 flex w-[min(100vw-2rem,400px)] flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-[0_24px_64px_rgba(15,23,22,0.18)]"
-          role="dialog"
-          aria-label="Pilot assistant"
-        >
-          <header className="flex items-center justify-between border-b border-hairline px-4 py-3">
-            <div>
-              <p className="text-[15px] font-semibold tracking-tight text-ink">
-                Pilot
-              </p>
-              <p className="text-[12px] text-muted">
-                CFO-style briefing · Read-only
-              </p>
-            </div>
-            <div className="flex rounded-lg bg-canvas p-0.5">
-              {(
-                [
-                  ["chat", "Chat"],
-                  ["sources", "Sources"],
-                  ["note", "Note"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setTab(id)}
-                  className={`rounded-md px-2.5 py-1.5 text-[12px] font-medium transition ${
-                    tab === id
-                      ? "bg-surface text-ink shadow-sm"
-                      : "text-muted hover:text-ink"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </header>
-
-          {tab === "chat" && (
-            <div className="flex min-h-0 flex-1 flex-col">
-              {agentId ? (
-                <iframe
-                  title="ElevenLabs Agent"
-                  src={`https://elevenlabs.io/app/talk-to?agent_id=${agentId}`}
-                  className="h-40 w-full border-b border-hairline bg-canvas"
-                  allow="microphone"
-                />
-              ) : null}
-
-              <div className="max-h-[240px] flex-1 space-y-2.5 overflow-y-auto px-3.5 py-3">
-                {log.map((m, i) => {
-                  const isSystem = i === 0 && m.role === "assistant";
-                  if (isSystem) {
-                    return (
-                      <p
-                        key={`${m.role}-${i}`}
-                        className="rounded-lg bg-canvas px-3 py-2.5 text-[12px] leading-relaxed text-muted"
-                      >
-                        {m.text}
-                      </p>
-                    );
-                  }
-                  return (
-                    <div
-                      key={`${m.role}-${i}`}
-                      className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                    >
-                      <div
-                        className={`max-w-[90%] rounded-xl px-3 py-2 text-[13px] leading-relaxed ${
-                          m.role === "user"
-                            ? "bg-mint-soft text-ink"
-                            : "border border-hairline bg-surface text-ink/90"
-                        }`}
-                      >
-                        {m.text}
-                      </div>
-                    </div>
-                  );
-                })}
-                {busy && (
-                  <p className="text-[12px] text-muted">
-                    Pulling Rho and Tavily…
-                  </p>
-                )}
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8">
+          <button
+            type="button"
+            className="absolute inset-0 bg-ink/40 backdrop-blur-[2px]"
+            aria-label="Close Pilot"
+            onClick={() => setOpen(false)}
+          />
+          <div
+            id="pilot-assistant-panel"
+            className="pilot-modal relative z-10 flex w-[min(90vw,720px)] flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-[0_32px_80px_rgba(15,23,22,0.28)]"
+            style={{ height: "min(80vh, 560px)" }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Pilot assistant"
+          >
+            <header className="flex shrink-0 items-center justify-between border-b border-hairline px-5 py-4">
+              <div>
+                <p className="text-[17px] font-semibold tracking-tight text-ink">
+                  Pilot
+                </p>
+                <p className="text-[12px] text-muted">Read-only on Rho</p>
               </div>
-
-              {lastBriefId && (
-                <div className="border-t border-hairline bg-mint-soft/40 px-3.5 py-2.5">
-                  <p className="text-[12px] text-ink/80">Pack ready.</p>
-                  <Link
-                    href="/briefs"
-                    className="mt-1 inline-block text-[13px] font-semibold text-ink underline-offset-2 hover:underline"
-                  >
-                    Open Brief Studio →
-                  </Link>
-                </div>
-              )}
-
-              <div className="border-t border-hairline px-3 py-3">
-                <div className="mb-2.5 flex flex-wrap gap-1.5">
-                  {PILOT_PROMPTS.map((p) => (
+              <div className="flex items-center gap-3">
+                <div className="flex rounded-lg bg-canvas p-0.5">
+                  {(
+                    [
+                      ["chat", "Chat"],
+                      ["voice", "Voice"],
+                      ["sources", "Sources"],
+                      ["note", "Note"],
+                    ] as const
+                  ).map(([id, label]) => (
                     <button
-                      key={p.label}
+                      key={id}
                       type="button"
-                      disabled={busy}
-                      onClick={() => void runToolChain(p.prompt)}
-                      className="prompt-chip !min-h-8 !px-2.5 !text-[11px]"
+                      onClick={() => setTab(id)}
+                      className={`rounded-md px-3 py-1.5 text-[13px] font-medium transition ${
+                        tab === id
+                          ? "bg-surface text-ink shadow-sm"
+                          : "text-muted hover:text-ink"
+                      }`}
                     >
-                      {p.label}
+                      {label}
                     </button>
                   ))}
                 </div>
-                <form
-                  className="flex items-center gap-2"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    void runToolChain(input || PILOT_PROMPTS[0].prompt);
-                  }}
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted hover:bg-canvas hover:text-ink"
+                  aria-label="Close"
                 >
-                  <input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    className="control-input !min-h-10 flex-1 !px-3 !text-[13px]"
-                    placeholder="Ask Pilot…"
-                    aria-label="Ask Pilot"
-                  />
-                  <button
-                    type="submit"
-                    disabled={busy}
-                    className="btn-icon-mint !h-10 !w-10"
-                    aria-label="Send"
-                  >
-                    {busy ? "…" : "→"}
-                  </button>
-                </form>
+                  ✕
+                </button>
               </div>
-            </div>
-          )}
+            </header>
 
-          {tab === "sources" && (
-            <div className="max-h-[420px] overflow-y-auto p-3.5">
-              <p className="mb-3 text-[12px] text-muted">
-                Tool evidence from this session (Rho + Tavily).
-              </p>
-              {traces.length === 0 ? (
-                <p className="rounded-lg bg-canvas px-3 py-4 text-[13px] text-muted">
-                  No tools called yet. Ask something in Chat.
-                </p>
-              ) : (
-                <ul className="space-y-2">
-                  {traces.map((t) => (
-                    <li
-                      key={t.id}
-                      className="rounded-xl border border-hairline bg-canvas/80 p-3"
-                    >
-                      <div className="flex justify-between gap-2 text-[13px] font-medium">
-                        <span>{t.tool}</span>
-                        <span className="text-[11px] font-normal text-muted">
-                          {new Date(t.at).toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-[12px] leading-relaxed text-muted">
-                        {t.summary}
+            <div className="flex min-h-0 flex-1 flex-col">
+              {tab === "chat" && (
+                <>
+                  <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-5 py-4">
+                    {log.map((m, i) => {
+                      const isSystem = i === 0 && m.role === "assistant";
+                      if (isSystem) {
+                        return (
+                          <p
+                            key={`${m.role}-${i}`}
+                            className="rounded-lg bg-[#f3f4f4] px-3.5 py-3 text-[13px] leading-relaxed text-muted"
+                          >
+                            {m.text}
+                          </p>
+                        );
+                      }
+                      return (
+                        <div
+                          key={`${m.role}-${i}`}
+                          className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                        >
+                          <div
+                            className={`max-w-[88%] rounded-xl px-3.5 py-2.5 text-[14px] leading-relaxed ${
+                              m.role === "user"
+                                ? "bg-mint-soft text-ink"
+                                : "border border-hairline bg-surface text-ink/90"
+                            }`}
+                          >
+                            {m.text}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {busy && (
+                      <p className="text-[13px] text-muted">
+                        Pulling Rho and Tavily…
                       </p>
-                    </li>
-                  ))}
-                </ul>
+                    )}
+                  </div>
+
+                  {lastBriefId && (
+                    <div className="shrink-0 border-t border-hairline bg-mint-soft/40 px-5 py-3">
+                      <p className="text-[13px] text-ink/80">Pack ready.</p>
+                      <Link
+                        href="/briefs"
+                        className="mt-1 inline-block text-[14px] font-semibold text-ink underline-offset-2 hover:underline"
+                      >
+                        Open Brief Studio
+                      </Link>
+                    </div>
+                  )}
+
+                  <div className="shrink-0 border-t border-hairline px-5 py-4">
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {PILOT_PROMPTS.map((p) => (
+                        <button
+                          key={p.label}
+                          type="button"
+                          disabled={busy}
+                          onClick={() => void runToolChain(p.prompt)}
+                          className="prompt-chip"
+                        >
+                          {p.label}
+                        </button>
+                      ))}
+                    </div>
+                    <form
+                      className="flex items-center gap-2.5"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void runToolChain(input || PILOT_PROMPTS[0].prompt);
+                      }}
+                    >
+                      <input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        className="control-input flex-1 text-[15px]"
+                        placeholder="Ask about cash, spend, exceptions, or a brief…"
+                        aria-label="Ask Pilot"
+                      />
+                      <button
+                        type="submit"
+                        disabled={busy}
+                        className="btn-icon-mint"
+                        aria-label="Send"
+                      >
+                        {busy ? "…" : "→"}
+                      </button>
+                    </form>
+                  </div>
+                </>
+              )}
+
+              {tab === "voice" && (
+                <div className="flex min-h-0 flex-1 flex-col p-5">
+                  {agentId ? (
+                    <iframe
+                      title="ElevenLabs Agent"
+                      src={`https://elevenlabs.io/app/talk-to?agent_id=${agentId}`}
+                      className="min-h-0 flex-1 w-full rounded-xl border border-hairline bg-[#f3f4f4]"
+                      allow="microphone"
+                    />
+                  ) : (
+                    <div className="flex flex-1 flex-col items-start justify-center rounded-xl bg-[#f3f4f4] px-8 py-10">
+                      <p className="text-[17px] font-semibold tracking-tight text-ink">
+                        Voice briefing
+                      </p>
+                      <p className="mt-2 max-w-md text-[14px] leading-relaxed text-muted">
+                        Connect an ElevenLabs agent ID to speak with Pilot. Until
+                        then, use Chat for tools or Note to store a transcript
+                        for the next brief.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setTab("note")}
+                        className="btn-primary mt-6 px-5 text-[14px]"
+                      >
+                        Open Note
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {tab === "sources" && (
+                <div className="min-h-0 flex-1 overflow-y-auto p-5">
+                  <p className="mb-3 text-[13px] text-muted">
+                    Tool evidence from this session (Rho and Tavily).
+                  </p>
+                  {traces.length === 0 ? (
+                    <p className="rounded-xl bg-[#f3f4f4] px-4 py-8 text-center text-[14px] text-muted">
+                      No tools called yet. Ask something in Chat.
+                    </p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {traces.map((t) => (
+                        <li
+                          key={t.id}
+                          className="rounded-xl border border-hairline bg-[#f3f4f4]/80 p-3.5"
+                        >
+                          <div className="flex justify-between gap-2 text-[14px] font-medium">
+                            <span>{t.tool}</span>
+                            <span className="text-[12px] font-normal text-muted">
+                              {new Date(t.at).toLocaleTimeString()}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-[13px] leading-relaxed text-muted">
+                            {t.summary}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              {tab === "note" && (
+                <div className="min-h-0 flex-1 overflow-y-auto p-5">
+                  <p className="mb-3 text-[13px] text-muted">
+                    Adds context to the next brief.
+                  </p>
+                  <VoiceCapture />
+                </div>
               )}
             </div>
-          )}
-
-          {tab === "note" && (
-            <div className="max-h-[420px] overflow-y-auto p-3.5">
-              <p className="mb-3 text-[12px] text-muted">
-                Voice Capture adds context to the next brief.
-              </p>
-              <VoiceCapture />
-            </div>
-          )}
+          </div>
         </div>
       ) : null}
     </>

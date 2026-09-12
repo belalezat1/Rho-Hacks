@@ -11,7 +11,7 @@ export default function HomePage() {
       <ScrollRevealInit />
 
       <div className="landing-root relative flex min-h-[min(100vh,920px)] flex-col bg-rho-black text-white">
-        {/* Noise stays in the upper hero only — keeps particles off the gradient seam */}
+        {/* Noise stays in the upper hero only so particles stay off the gradient seam */}
         <div
           className="landing-noise pointer-events-none absolute inset-x-0 top-0 h-[70%]"
           aria-hidden

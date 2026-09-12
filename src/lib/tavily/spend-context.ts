@@ -13,7 +13,7 @@ const DEMO_CITATIONS: Record<string, Citation[]> = {
     {
       title: "Notion pricing",
       url: "https://www.notion.com/pricing",
-      snippet: "Business plan list pricing often cited around $18–$25/user/month.",
+      snippet: "Business plan list pricing often cited around $18 to $25/user/month.",
     },
   ],
   aws: [
@@ -29,7 +29,7 @@ const DEMO_CITATIONS: Record<string, Citation[]> = {
       title: "Figma pricing",
       url: "https://www.figma.com/pricing/",
       snippet:
-        "Organization seats commonly cited from ~$15–$45/editor/month on published plans.",
+        "Organization seats commonly cited from about $15 to $45/editor/month on published plans.",
     },
   ],
   jordan_design: [
@@ -37,7 +37,7 @@ const DEMO_CITATIONS: Record<string, Citation[]> = {
       title: "US product designer contractor rates (public ranges)",
       url: "https://www.levels.fyi/",
       snippet:
-        "Public contractor/day-rate discussions for senior product design often imply roughly $6k–$12k/month depending on hours and seniority.",
+        "Public contractor/day-rate discussions for senior product design often imply roughly $6k to $12k/month depending on hours and seniority.",
     },
   ],
   northpeak: [
@@ -342,7 +342,7 @@ export async function buildSpendContext(
       ? "Live Tavily citations attached. Public-web estimates for decision support - not advice."
       : row.notes;
     if (hint) {
-      notes += ` Snippet dollar hints ~$${(hint.lowCents / 100).toLocaleString()}–$${(hint.highCents / 100).toLocaleString()}/mo (unverified parse; band still uses calibrated fallback).`;
+      notes += ` Snippet dollar hints about $${(hint.lowCents / 100).toLocaleString()} to $${(hint.highCents / 100).toLocaleString()}/mo (unverified parse; band still uses calibrated fallback).`;
     }
 
     return {
@@ -397,7 +397,7 @@ export async function buildExternalRisk(): Promise<{
     if (cites.length) liveHits += cites.length;
     const top = cites[0];
     const headline = top
-      ? `${top.title}${top.snippet ? ` — ${top.snippet.slice(0, 120)}` : ""}`
+      ? `${top.title}${top.snippet ? `: ${top.snippet.slice(0, 120)}` : ""}`
       : demoExternalRisk().find((d) => d.merchantKey === q.merchantKey)
           ?.headline ?? "No fresh headline; review vendor status pages.";
 

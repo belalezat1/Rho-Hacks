@@ -130,7 +130,7 @@ export function buildStudioPayload(input: {
           ...input.spendContext.map((r) => {
             const range =
               r.citedRangeLowCents != null && r.citedRangeHighCents != null
-                ? `${formatUsd(r.citedRangeLowCents)}–${formatUsd(r.citedRangeHighCents)}`
+                ? `${formatUsd(r.citedRangeLowCents)} to ${formatUsd(r.citedRangeHighCents)}`
                 : "insufficient public data";
             return `| ${r.label} | ${formatUsd(r.rhoAmountMonthlyCents)} | ${range} | ${r.band.replace(/_/g, " ")} |`;
           }),

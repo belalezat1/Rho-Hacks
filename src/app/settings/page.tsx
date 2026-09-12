@@ -5,7 +5,7 @@ function present(value: string | undefined) {
   return Boolean(value && value.trim().length > 0);
 }
 
-/** Boolean-only env presence — never echo secret values. */
+/** Boolean-only env presence. Never echo secret values. */
 export default function SettingsPage() {
   const keys = [
     { label: "RHO_API_TOKEN", ok: present(process.env.RHO_API_TOKEN) },
@@ -38,10 +38,6 @@ export default function SettingsPage() {
     <AppShell active="/settings">
       <div className="mb-8">
         <h1 className="page-title">Settings</h1>
-        <p className="meta mt-1 max-w-lg">
-          Integration status for the demo. Values never leave the server as
-          text — only present / missing.
-        </p>
       </div>
 
       <p className="mb-6 text-[15px]">

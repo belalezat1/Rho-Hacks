@@ -21,8 +21,8 @@ export function VoiceCapture() {
   return (
     <div className="card p-5">
       <h3 className="text-base font-semibold">Voice Capture</h3>
-      <p className="meta mt-1">
-        Paste a transcript now; wire ElevenLabs Scribe when the key is available.
+      <p className="mt-1 text-[13px] text-muted">
+        Paste a transcript. Wire ElevenLabs Scribe when the key is available.
       </p>
       <textarea
         value={text}

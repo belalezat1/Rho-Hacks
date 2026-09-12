@@ -11,7 +11,7 @@ function rhoBase(): string {
 }
 
 /**
- * Best-effort live Rho REST. Shape varies by Rho API version — on any failure
+ * Best-effort live Rho REST. Shape varies by Rho API version. On any failure
  * we fall back to demo fixtures so the hackathon demo never blanks.
  */
 async function fetchRhoJson<T>(path: string): Promise<T | null> {
