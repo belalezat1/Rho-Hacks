@@ -46,13 +46,19 @@ body {
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01" on, "cv11" on;
+  letter-spacing: -0.011em;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .wordmark {
-  font-family: var(--font-wordmark), ui-serif, Georgia, "Times New Roman", serif;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 0.9;
+  font-family: var(--font-wordmark), "Libre Caslon Text", ui-serif, Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+  font-feature-settings: "kern" on;
 }
 
 .card {
@@ -64,9 +70,9 @@ body {
 .btn-primary {
   background: var(--mint);
   color: #000;
-  border-radius: 6px;
+  border-radius: 10px;
   font-weight: 500;
-  transition: filter 0.15s ease;
+  transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-primary:hover {
   filter: brightness(0.97);
@@ -76,28 +82,49 @@ body {
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--hairline);
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 500;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.btn-secondary:hover {
+  background: var(--canvas);
 }
 
 .btn-dark {
   background: var(--ink);
   color: #fff;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 500;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+.btn-dark:hover {
+  filter: brightness(1.08);
 }
 
 .btn-ghost-light {
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 500;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 .btn-ghost-light:hover {
   border-color: rgba(255, 255, 255, 0.7);
   background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+.btn-lift:active {
+  transform: translateY(0);
+}
+
+.nav-link {
+  line-height: 1;
+  padding: 0.35rem 0;
 }
 
 /* Rho-style marketing landing */
@@ -137,6 +164,52 @@ body {
   animation: landing-rise 0.9s ease-out both;
 }
 
+/* Soft bottom of dark hero so it dissolves into the color bridge */
+.landing-hero-blend {
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 72%,
+    rgba(0, 0, 0, 0.85) 85%,
+    rgba(0, 0, 0, 0.35) 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 72%,
+    rgba(0, 0, 0, 0.85) 85%,
+    rgba(0, 0, 0, 0.35) 94%,
+    transparent 100%
+  );
+}
+
+.scroll-color-track {
+  height: 70vh;
+  margin-top: -12vh;
+  pointer-events: none;
+}
+
+.scroll-color-wash {
+  background: linear-gradient(
+    180deg,
+    #050505 0%,
+    #0c0c0c 12%,
+    #1f1f1f 28%,
+    #4a4a4a 48%,
+    #a8a8a8 68%,
+    #e8e8e8 84%,
+    #ffffff 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-color-track {
+    height: 28vh;
+    margin-top: -4vh;
+  }
+}
+
 @keyframes landing-rise {
   from {
     opacity: 0;
@@ -148,7 +221,7 @@ body {
   }
 }
 
-/* Sponsor marquee — slow left → right (Rho-style) */
+/* Sponsor marquee  -  slow left → right (Rho-style) */
 .partner-marquee {
   animation: partner-marquee-ltr 42s linear infinite;
 }
@@ -169,6 +242,33 @@ body {
   .landing-dash-frame {
     animation: none;
   }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .btn-lift:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.reveal.is-visible,
+.reveal.reveal-delay.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay {
+  transition-delay: 0.12s;
 }
 
 .chip {
@@ -181,7 +281,7 @@ body {
 }
 
 .page-title {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--ink);
@@ -189,10 +289,23 @@ body {
 
 .meta {
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .dot-grid {
   background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
   background-size: 12px 12px;
+}
+
+/* Calmer studio surfaces */
+.studio-panel {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+}
+
+.studio-soft {
+  background: #fafbfb;
+  border: 1px solid #eef0f0;
+  border-radius: 16px;
 }

@@ -117,7 +117,7 @@ export function buildStudioPayload(input: {
           .slice(0, 10)
           .map(
             (a) =>
-              `- **${a.severity.toUpperCase()}** ${a.title} — ${formatUsd(a.amountCents)}\n  ${a.detail}`,
+              `- **${a.severity.toUpperCase()}** ${a.title} - ${formatUsd(a.amountCents)}\n  ${a.detail}`,
           )
           .join("\n");
 
@@ -144,12 +144,12 @@ export function buildStudioPayload(input: {
           .join("\n");
 
   const narrativeBody = isClose
-    ? `We reviewed exceptions on the Rho ledger for ${input.periodLabel ?? "this period"}. Items above are radar flags for review in Rho — not compliance clearance.\n\n*Decision support only — not financial advice.*`
+    ? `We reviewed exceptions on the Rho ledger for ${input.periodLabel ?? "this period"}. Items above are radar flags for review in Rho - not compliance clearance.\n\n*Decision support only - not financial advice.*`
     : [
         `Monday money brief assembled from live Rho ledger truth and cited public market context.`,
         input.voiceNote ? `\n**Voice Capture note:** ${input.voiceNote}` : "",
         `\nNext step: review exceptions and spend context in Rho. Pilot does not prescribe hire/cut/renew decisions.`,
-        `\n*Decision support only — not financial, tax, legal, or investment advice.*`,
+        `\n*Decision support only - not financial, tax, legal, or investment advice.*`,
       ].join("");
 
   const allRhoIds = [
@@ -229,7 +229,7 @@ export function buildStudioPayload(input: {
       status: input.hasAudio ? "ready" : "pending",
       summary: input.hasAudio
         ? "Brief Production Studio audio ready"
-        : "Script ready — TTS pending or use script",
+        : "Script ready - TTS pending or use script",
       bodyMarkdown: input.hasAudio
         ? "ElevenLabs audio attached to this pack."
         : "Audio script generated. Play script aloud or attach TTS when keys are present.",

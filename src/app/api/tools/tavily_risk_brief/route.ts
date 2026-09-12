@@ -9,7 +9,7 @@ export async function GET() {
     demoMode: isDemoMode(),
     source,
     items,
-    disclaimer: "Informational headlines only — not advice.",
+    disclaimer: "Informational headlines only - not advice.",
   };
   pushTrace("tavily_risk_brief", `${items.length} risk items via ${source}`, payload);
   return NextResponse.json(payload);

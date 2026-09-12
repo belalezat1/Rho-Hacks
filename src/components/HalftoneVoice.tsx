@@ -7,7 +7,7 @@ type Props = {
   className?: string;
 };
 
-/** Abstract organic halftone field — pulses harder when `active` (voice/tool busy). */
+/** Abstract organic halftone field - pulses harder when `active` (voice/tool busy). */
 export function HalftoneVoice({ active = false, className = "" }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const activeRef = useRef(active);

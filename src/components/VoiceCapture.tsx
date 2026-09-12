@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export function VoiceCapture() {
   const [text, setText] = useState(
-    "Investor asked about SaaS concentration and designer spend — include in Monday brief.",
+    "Investor asked about SaaS concentration and designer spend - include in Monday brief.",
   );
   const [status, setStatus] = useState<string | null>(null);
 

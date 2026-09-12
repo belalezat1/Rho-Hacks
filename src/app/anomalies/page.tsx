@@ -16,7 +16,7 @@ export default async function AnomaliesPage() {
       <div className="mb-5">
         <h1 className="page-title">Anomaly Radar</h1>
         <p className="meta mt-1">
-          Heuristic flags only — radar, not verdict. Escalate in Rho. Not compliance clearance.
+          Heuristic flags only - radar, not verdict. Escalate in Rho. Not compliance clearance.
         </p>
       </div>
       <ul className="space-y-3">

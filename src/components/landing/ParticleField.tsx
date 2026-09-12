@@ -65,7 +65,7 @@ export function ParticleField({
       const h = canvas.clientHeight;
       ctx.clearRect(0, 0, w, h);
 
-      // Soft cloud mask — denser toward center-bottom
+      // Soft cloud mask - denser toward center-bottom
       for (const d of dots) {
         if (!reduceMotion) {
           d.x += d.vx;

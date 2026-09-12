@@ -87,7 +87,7 @@ export async function POST(req: Request) {
     pdfAvailable: true,
     confirmRequired: true,
     message:
-      "Brief drafted in Brief Studio (PDF + audio). Complete checklist, then confirm publish_to_stan. Decision support only — not financial advice.",
+      "Brief drafted in Brief Studio (PDF + audio). Complete checklist, then confirm publish_to_stan. Decision support only - not financial advice.",
   };
   pushTrace("generate_brief", brief.title, payload);
   return NextResponse.json(payload);

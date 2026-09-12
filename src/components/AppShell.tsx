@@ -4,12 +4,12 @@ import { PilotWordmark } from "@/components/PilotWordmark";
 const nav = [
   { href: "/talk", label: "Talk", match: ["/talk"] },
   {
-    href: "/money",
-    label: "Money",
-    match: ["/money", "/cash-pulse", "/anomalies", "/spend-context"],
+    href: "/cash-pulse",
+    label: "Cash",
+    match: ["/cash-pulse", "/anomalies"],
   },
+  { href: "/spend-context", label: "Spend", match: ["/spend-context"] },
   { href: "/briefs", label: "Briefs", match: ["/briefs"] },
-  { href: "/settings", label: "Settings", match: ["/settings"] },
 ];
 
 export function AppShell({
@@ -21,26 +21,34 @@ export function AppShell({
 }) {
   return (
     <div className="flex min-h-screen bg-canvas text-ink">
-      <aside className="sticky top-0 flex h-screen w-[200px] shrink-0 flex-col border-r border-hairline bg-surface px-3 py-5">
-        <div className="px-2">
-          <PilotWordmark size="sm" />
-        </div>
-        <div className="mt-5 rounded-lg bg-canvas px-3 py-2 text-sm">
-          <span className="font-medium">Acme, Inc</span>
-          <span className="ml-2 text-[10px] text-muted">Demo</span>
+      <aside className="sticky top-0 flex h-screen w-[260px] shrink-0 flex-col border-r border-hairline bg-surface px-5 py-7">
+        <div className="px-1">
+          <PilotWordmark size="nav" />
         </div>
 
-        <nav className="mt-8 flex flex-col gap-0.5">
+        <div className="mt-8 rounded-xl border border-hairline bg-canvas/80 px-3.5 py-3">
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted">
+            Workspace
+          </p>
+          <p className="mt-1 text-[15px] font-semibold tracking-tight text-ink">
+            Northstar Co.
+          </p>
+          <p className="mt-0.5 text-[12px] text-muted">Demo · Read-only</p>
+        </div>
+
+        <nav className="mt-8 flex flex-col gap-1.5">
           {nav.map((item) => {
             const isActive =
               active != null
-                ? item.match.some((m) => active === m || active.startsWith(m + "/"))
+                ? item.match.some(
+                    (m) => active === m || active.startsWith(m + "/"),
+                  )
                 : false;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-lg px-3 py-2 text-sm transition ${
+                className={`rounded-xl px-3.5 py-3 text-[16px] transition duration-200 ${
                   isActive
                     ? "bg-nav-active font-medium text-ink"
                     : "text-muted hover:bg-canvas hover:text-ink"
@@ -52,13 +60,13 @@ export function AppShell({
           })}
         </nav>
 
-        <p className="mt-auto px-2 pb-1 text-[11px] leading-snug text-muted-soft">
+        <p className="mt-auto px-1 pb-1 text-[12px] leading-snug text-muted-soft">
           Read-only · Not financial advice
         </p>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <main className="flex-1 px-6 py-6 lg:px-8">{children}</main>
+        <main className="flex-1 px-8 py-8 text-base lg:px-12 lg:py-10">{children}</main>
       </div>
     </div>
   );

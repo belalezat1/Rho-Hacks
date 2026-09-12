@@ -7,28 +7,23 @@ const prompts = [
   "Draft Monday brief",
 ];
 
-/** Light Rho-style product chrome peeking under the dark hero — teases the briefing dashboard. */
+/** Light Rho-style product chrome peeking under the dark hero - teases the briefing dashboard. */
 export function LandingDashboardPreview() {
   return (
     <div className="landing-dash-frame relative mx-auto w-full max-w-5xl overflow-hidden rounded-t-2xl border border-b-0 border-white/10 bg-[#f7f8f8] shadow-[0_-24px_80px_rgba(0,0,0,0.45)]">
       {/* App chrome */}
       <div className="flex min-h-[220px] md:min-h-[280px]">
-        <aside className="hidden w-44 shrink-0 border-r border-hairline bg-white p-4 sm:block">
-          <div className="wordmark text-lg text-ink">
-            Pilot
-            <span className="ml-0.5 align-super text-[0.55rem] text-ink/70">
-              rho
-            </span>
-          </div>
+        <aside className="hidden w-48 shrink-0 border-r border-hairline bg-white p-4 sm:block">
+          <div className="wordmark text-xl text-ink">Pilot</div>
           <p className="mt-4 text-[11px] font-medium uppercase tracking-wide text-muted">
-            Acme, Inc
+            Northstar Co.
           </p>
           <nav className="mt-4 space-y-1 text-[13px] text-muted">
             <div className="rounded-md bg-nav-active px-2 py-1.5 text-ink">
-              Money
+              Talk
             </div>
-            <div className="px-2 py-1.5">Spend Context</div>
-            <div className="px-2 py-1.5">Anomalies</div>
+            <div className="px-2 py-1.5">Cash</div>
+            <div className="px-2 py-1.5">Spend</div>
             <div className="px-2 py-1.5">Briefs</div>
           </nav>
         </aside>
@@ -43,7 +38,7 @@ export function LandingDashboardPreview() {
                 Read-only
               </span>
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-[11px] font-medium text-white">
-                AC
+                NS
               </span>
             </div>
           </header>
@@ -76,7 +71,7 @@ export function LandingDashboardPreview() {
               <Stat label="Runway" value="6.9 mo" />
             </div>
 
-            {/* Floating ask bar — Rho AI Demo pattern */}
+            {/* Floating ask bar - Rho AI Demo pattern */}
             <div className="absolute bottom-4 left-1/2 z-10 w-[min(100%-1.5rem,34rem)] -translate-x-1/2 md:bottom-6">
               <div className="rounded-2xl border border-hairline bg-white p-3 shadow-[0_12px_40px_rgba(15,23,22,0.12)]">
                 <div className="flex items-center gap-2">

@@ -1,28 +1,31 @@
+import {
+  LogoElevenLabs,
+  LogoRho,
+  LogoStan,
+  LogoTavily,
+} from "@/components/landing/PartnerLogos";
+
 const PARTNERS = [
-  { name: "Rho", blurb: "Ledger truth" },
-  { name: "ElevenLabs", blurb: "Briefing voice" },
-  { name: "Tavily", blurb: "Spend context" },
-  { name: "Stan", blurb: "Ship the pack" },
+  { name: "Rho", Logo: LogoRho },
+  { name: "ElevenLabs", Logo: LogoElevenLabs },
+  { name: "Tavily", Logo: LogoTavily },
+  { name: "Stan", Logo: LogoStan },
 ] as const;
 
-/** Slow L→R logo marquee — Rho landing pattern, Pilot sponsors. */
+/** Slow L to R logo marquee with real brand lockups. */
 export function PartnerMarquee() {
   const row = [...PARTNERS, ...PARTNERS, ...PARTNERS, ...PARTNERS];
 
   return (
-    <div className="relative overflow-hidden py-2">
-      <div className="partner-marquee flex w-max items-center gap-14 md:gap-20">
+    <div className="relative overflow-hidden py-3">
+      <div className="partner-marquee flex w-max items-center gap-16 md:gap-24">
         {row.map((p, i) => (
           <div
             key={`${p.name}-${i}`}
-            className="flex shrink-0 items-baseline gap-2 text-ink"
+            className="flex shrink-0 items-center text-ink"
+            title={p.name}
           >
-            <span className="text-[1.35rem] font-semibold tracking-tight md:text-[1.6rem]">
-              {p.name}
-            </span>
-            <span className="hidden font-mono text-[10px] uppercase tracking-wider text-muted sm:inline">
-              {p.blurb}
-            </span>
+            <p.Logo className="h-9 w-auto md:h-10" />
           </div>
         ))}
       </div>

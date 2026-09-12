@@ -13,7 +13,7 @@ export function buildWeeklyBriefMarkdown(input: {
   const lines: string[] = [];
   lines.push(`# Weekly Money Brief`);
   lines.push(``);
-  lines.push(`*Decision support only — not financial, tax, legal, or investment advice. Read-only on Rho; cannot move money.*`);
+  lines.push(`*Decision support only - not financial, tax, legal, or investment advice. Read-only on Rho; cannot move money.*`);
   lines.push(``);
   lines.push(`## Cash Pulse`);
   lines.push(`- **Total cash position:** ${formatUsd(input.cash.totalCents)}`);
@@ -36,7 +36,7 @@ export function buildWeeklyBriefMarkdown(input: {
   if (!input.anomalies.length) lines.push(`- None flagged.`);
   for (const a of input.anomalies.slice(0, 8)) {
     lines.push(
-      `- **${a.severity.toUpperCase()}** ${a.title} — ${formatUsd(a.amountCents)} (txs: ${a.transactionIds.join(", ")})`,
+      `- **${a.severity.toUpperCase()}** ${a.title} - ${formatUsd(a.amountCents)} (txs: ${a.transactionIds.join(", ")})`,
     );
   }
   lines.push(``);
@@ -56,7 +56,7 @@ export function buildWeeklyBriefMarkdown(input: {
   lines.push(`### Sources`);
   for (const r of input.spendContext) {
     for (const c of r.citations) {
-      lines.push(`- ${r.label}: [${c.title}](${c.url}) — ${c.snippet}`);
+      lines.push(`- ${r.label}: [${c.title}](${c.url}) - ${c.snippet}`);
     }
   }
   lines.push(``);
@@ -82,7 +82,7 @@ export function buildClosePackMarkdown(input: {
   const lines: string[] = [];
   lines.push(`# Client Close Pack`);
   lines.push(``);
-  lines.push(`*Period: ${input.periodLabel}. Decision support — not advice. Read-only.*`);
+  lines.push(`*Period: ${input.periodLabel}. Decision support - not advice. Read-only.*`);
   lines.push(``);
   lines.push(`## Exceptions since period start`);
   for (const a of input.anomalies) {
@@ -93,7 +93,7 @@ export function buildClosePackMarkdown(input: {
   lines.push(``);
   lines.push(`## Suggested client narrative`);
   lines.push(
-    `We reviewed exceptions on the Rho ledger for ${input.periodLabel}. Items above are radar flags for your review in Rho — not compliance clearance.`,
+    `We reviewed exceptions on the Rho ledger for ${input.periodLabel}. Items above are radar flags for your review in Rho - not compliance clearance.`,
   );
   return lines.join("\n");
 }

@@ -1,28 +1,50 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { HalftoneVoice } from "@/components/HalftoneVoice";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { VoiceCapture } from "@/components/VoiceCapture";
 
-const SUGGESTED = "Give me the week — cash, anomalies, and spend context.";
+const PROMPTS = [
+  {
+    label: "Give me the week",
+    prompt: "Give me the week: cash, anomalies, and spend context.",
+  },
+  {
+    label: "Spend vs market",
+    prompt: "How does our SaaS and contractor spend compare to public market ranges?",
+  },
+  {
+    label: "Draft Monday brief",
+    prompt: "Draft a weekly money brief I can publish to Stan.",
+  },
+  {
+    label: "Client close pack",
+    prompt: "Walk anomalies since the 1st and prepare a client close pack.",
+  },
+] as const;
 
 type Trace = {
   id: string;
   tool: string;
   at: string;
   summary: string;
-  payload: unknown;
 };
 
+type Msg = { role: "user" | "assistant"; text: string };
+
 export function TalkPanel() {
-  const [voiceSession, setVoiceSession] = useState(false);
-  const [showType, setShowType] = useState(false);
-  const [showEvidence, setShowEvidence] = useState(false);
-  const [showNote, setShowNote] = useState(false);
-  const [input, setInput] = useState(SUGGESTED);
-  const [log, setLog] = useState<{ role: "user" | "assistant"; text: string }[]>([]);
+  const [input, setInput] = useState("");
+  const [log, setLog] = useState<Msg[]>([
+    {
+      role: "assistant",
+      text: "Ask about cash, anomalies, spend context, or drafting a brief. Read-only on Rho. Decision support only, not financial advice.",
+    },
+  ]);
   const [traces, setTraces] = useState<Trace[]>([]);
   const [busy, setBusy] = useState(false);
+  const [showEvidence, setShowEvidence] = useState(false);
+  const [showNote, setShowNote] = useState(false);
+  const [lastBriefId, setLastBriefId] = useState<string | null>(null);
   const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
 
   async function refreshTraces() {
@@ -32,217 +54,215 @@ export function TalkPanel() {
   }
 
   useEffect(() => {
-    if (voiceSession) void refreshTraces();
-  }, [voiceSession]);
-
-  const widget = useMemo(() => {
-    if (!agentId || !voiceSession) return null;
-    return (
-      <iframe
-        title="ElevenLabs Agent"
-        src={`https://elevenlabs.io/app/talk-to?agent_id=${agentId}`}
-        className="mt-4 h-48 w-full rounded-xl border border-hairline bg-surface"
-        allow="microphone"
-      />
-    );
-  }, [agentId, voiceSession]);
-
-  function startSession() {
-    setVoiceSession(true);
-    setShowType(false);
-    setLog([
-      {
-        role: "assistant",
-        text: "Session open. Ask about cash, spend context, or a brief — decision support only, not advice.",
-      },
-    ]);
-  }
-
-  function endSession() {
-    setVoiceSession(false);
-    setShowEvidence(false);
-    setShowNote(false);
-    setShowType(false);
-    setBusy(false);
-  }
+    void refreshTraces();
+  }, []);
 
   async function runToolChain(prompt: string) {
+    const q = prompt.trim();
+    if (!q || busy) return;
     setBusy(true);
-    setLog((l) => [...l, { role: "user", text: prompt }]);
+    setInput("");
+    setLog((l) => [...l, { role: "user", text: q }]);
     try {
-      const [balances, anomalies, spend] = await Promise.all([
+      const [balances, anomalies, spend, risk] = await Promise.all([
         fetch("/api/tools/get_balances").then((r) => r.json()),
         fetch("/api/tools/get_anomalies").then((r) => r.json()),
         fetch("/api/tools/tavily_spend_context").then((r) => r.json()),
+        fetch("/api/tools/tavily_risk_brief").then((r) => r.json()),
       ]);
       await refreshTraces();
 
-      const lower = prompt.toLowerCase();
-      let reply = `Cash position ${balances.formatted.total}; ~${balances.formatted.runwayDays ?? "n/a"} days runway. ${anomalies.anomalies.length} radar items. Spend Context: ${spend.rows?.length ?? 0} cited rows (${spend.source}).`;
+      const lower = q.toLowerCase();
+      let reply = `Cash position ${balances.formatted.total}. About ${balances.formatted.runwayDays ?? "n/a"} days runway. ${anomalies.anomalies.length} radar items. Spend Context has ${spend.rows?.length ?? 0} cited rows (${spend.source}). External risk: ${risk.items?.length ?? 0} headlines.`;
 
-      if (lower.includes("brief") || lower.includes("stan") || lower.includes("publish")) {
+      if (
+        lower.includes("brief") ||
+        lower.includes("stan") ||
+        lower.includes("publish") ||
+        lower.includes("monday")
+      ) {
         const brief = await fetch("/api/tools/generate_brief", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ type: "weekly_money_brief" }),
         }).then((r) => r.json());
-        const pub = await fetch("/api/tools/publish_to_stan", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ confirmed: true, briefId: brief.brief?.id }),
-        }).then((r) => r.json());
+        setLastBriefId(brief.brief?.id ?? null);
         await refreshTraces();
-        reply += ` Drafted ${brief.brief?.title}. Stan: ${pub.stanUrl}.`;
+        reply = `Drafted ${brief.brief?.title}. Cash, anomalies, Spend Context, and External Risk are in Brief Studio. Open Briefs to review the checklist, then publish to Stan.`;
       } else if (lower.includes("close") || lower.includes("1st")) {
         const brief = await fetch("/api/tools/generate_brief", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "client_close_pack", persona: "accountant" }),
+          body: JSON.stringify({
+            type: "client_close_pack",
+            persona: "accountant",
+          }),
         }).then((r) => r.json());
+        setLastBriefId(brief.brief?.id ?? null);
         await refreshTraces();
-        reply += ` Prepared ${brief.brief?.title}. Open Briefs to review.`;
+        reply = `Prepared ${brief.brief?.title} with ${anomalies.anomalies.length} exceptions. Open Briefs to review and publish.`;
       } else if (
+        lower.includes("spend") ||
+        lower.includes("range") ||
         lower.includes("intercom") ||
         lower.includes("jordan") ||
-        lower.includes("spend") ||
-        lower.includes("range")
+        lower.includes("market")
       ) {
         const rows = (spend.rows ?? [])
-          .slice(0, 3)
+          .slice(0, 4)
           .map(
-            (r: { label: string; band: string }) =>
-              `${r.label} (${r.band.replace("_", " ")})`,
+            (r: {
+              label: string;
+              band: string;
+              formatted?: { rho?: string; range?: string };
+            }) => {
+              const band = r.band.replace(/_/g, " ");
+              return `${r.label}: ${band}`;
+            },
           )
           .join("; ");
-        reply += ` Compare: ${rows}.`;
+        reply = `Spend Context (${spend.source}): ${rows || "no rows"}. Public-web estimates for decision support, not quotes. Open Spend for the full table.`;
+      } else if (
+        lower.includes("anomal") ||
+        lower.includes("weird") ||
+        lower.includes("radar")
+      ) {
+        const top = (anomalies.anomalies ?? [])
+          .slice(0, 3)
+          .map((a: { title: string; severity: string }) => `${a.severity}: ${a.title}`)
+          .join("; ");
+        reply = `${anomalies.anomalies.length} radar items. ${top || "None flagged."} Radar only, not a verdict. Escalate in Rho.`;
       }
 
       setLog((l) => [...l, { role: "assistant", text: reply }]);
     } catch {
       setLog((l) => [
         ...l,
-        { role: "assistant", text: "Tool chain failed. Check Demo Mode APIs." },
+        {
+          role: "assistant",
+          text: "Tool chain failed. Demo Mode APIs should still respond. Try again.",
+        },
       ]);
     } finally {
       setBusy(false);
     }
   }
 
-  if (!voiceSession) {
-    return (
-      <div className="flex min-h-[70vh] flex-col items-center justify-center px-4 text-center">
-        <p className="text-sm text-muted">Brief your money</p>
-        <button
-          type="button"
-          onClick={startSession}
-          className="btn-primary mt-6 px-10 py-4 text-base"
-        >
-          Talk to Pilot
-        </button>
-        {!showType ? (
-          <button
-            type="button"
-            onClick={() => setShowType(true)}
-            className="mt-4 text-sm text-muted underline-offset-2 hover:underline"
-          >
-            Type instead
-          </button>
-        ) : (
-          <form
-            className="mt-6 flex w-full max-w-md gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const prompt = input;
-              setVoiceSession(true);
-              setShowType(false);
-              setLog([
-                {
-                  role: "assistant",
-                  text: "Session open. Ask about cash, spend context, or a brief — decision support only, not advice.",
-                },
-              ]);
-              void runToolChain(prompt);
-            }}
-          >
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="flex-1 rounded-lg border border-hairline bg-surface px-3 py-2 text-left text-sm outline-none focus:border-ink/30"
-              placeholder="Ask Pilot…"
-              autoFocus
-            />
-            <button type="submit" className="btn-dark px-4 py-2 text-sm">
-              Send
-            </button>
-          </form>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <div className="relative mx-auto max-w-2xl">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm font-medium text-ink">Voice session</p>
-        <div className="flex flex-wrap items-center gap-2 text-sm">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-hairline pb-5">
+        <div>
+          <h1 className="page-title">Talk</h1>
+          <p className="meta mt-2 max-w-lg text-[16px]">
+            CFO-style briefing. Rho for ledger truth, Tavily for spend context.
+            Not financial advice.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => setShowEvidence(true)}
-            className="text-muted underline-offset-2 hover:text-ink hover:underline"
+            className="btn-secondary px-4 py-3 text-[15px]"
           >
             Evidence
           </button>
           <button
             type="button"
             onClick={() => setShowNote((v) => !v)}
-            className="text-muted underline-offset-2 hover:text-ink hover:underline"
+            className="btn-secondary px-4 py-3 text-[15px]"
           >
-            Add note
+            {showNote ? "Hide note" : "Voice note"}
           </button>
-          <button type="button" onClick={endSession} className="btn-secondary px-3 py-1.5 text-sm">
-            End session
-          </button>
+          <Link href="/briefs" className="btn-dark btn-lift px-4 py-3 text-[15px]">
+            Brief Studio
+          </Link>
         </div>
-      </div>
+      </header>
 
-      <HalftoneVoice active={busy || Boolean(agentId)} className="h-64 w-full md:h-72" />
-      {widget}
-
-      <div className="mt-4 max-h-48 space-y-2 overflow-y-auto">
-        {log.map((m, i) => (
-          <div
-            key={`${m.role}-${i}`}
-            className={`rounded-xl px-3 py-2 text-sm ${
-              m.role === "user"
-                ? "ml-8 bg-mint-soft"
-                : "mr-8 border border-hairline bg-surface"
-            }`}
+      <div className="flex flex-wrap gap-2">
+        {PROMPTS.map((p) => (
+          <button
+            key={p.label}
+            type="button"
+            disabled={busy}
+            onClick={() => void runToolChain(p.prompt)}
+            className="rounded-full border border-hairline bg-surface px-4 py-2.5 text-[14px] text-ink transition hover:border-ink/25 hover:bg-canvas disabled:opacity-50"
           >
-            {m.text}
-          </div>
+            {p.label}
+          </button>
         ))}
       </div>
 
-      <form
-        className="mt-4 flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void runToolChain(input);
-        }}
-      >
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 rounded-lg border border-hairline bg-surface px-3 py-2 text-sm outline-none focus:border-ink/30"
-          placeholder="Ask about the week, spend, or a brief…"
+      {agentId ? (
+        <iframe
+          title="ElevenLabs Agent"
+          src={`https://elevenlabs.io/app/talk-to?agent_id=${agentId}`}
+          className="h-56 w-full rounded-2xl border border-hairline bg-surface"
+          allow="microphone"
         />
-        <button type="submit" disabled={busy} className="btn-primary px-4 py-2 text-sm disabled:opacity-50">
-          {busy ? "…" : "Send"}
-        </button>
-      </form>
+      ) : null}
+
+      <div className="studio-panel flex min-h-[320px] flex-col overflow-hidden">
+        <div className="flex-1 space-y-3 overflow-y-auto px-5 py-5">
+          {log.map((m, i) => (
+            <div
+              key={`${m.role}-${i}`}
+              className={`max-w-[92%] rounded-2xl px-4 py-3 text-[16px] leading-relaxed ${
+                m.role === "user"
+                  ? "ml-auto bg-mint-soft text-ink"
+                  : "mr-auto border border-hairline bg-canvas/60 text-ink/90"
+              }`}
+            >
+              {m.text}
+            </div>
+          ))}
+          {busy && (
+            <p className="text-[14px] text-muted">Pulling Rho and Tavily…</p>
+          )}
+        </div>
+
+        <form
+          className="flex gap-3 border-t border-hairline p-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void runToolChain(input || PROMPTS[0].prompt);
+          }}
+        >
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="flex-1 rounded-xl border border-hairline bg-surface px-4 py-3.5 text-[16px] outline-none focus:border-ink/30"
+            placeholder="Ask about cash, spend, anomalies, or a brief…"
+          />
+          <button
+            type="submit"
+            disabled={busy}
+            className="btn-primary btn-lift px-6 py-3.5 text-[16px] disabled:opacity-50"
+          >
+            {busy ? "…" : "Send"}
+          </button>
+        </form>
+      </div>
+
+      {lastBriefId && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-mint-soft/50 px-5 py-4">
+          <p className="text-[15px] text-ink/85">
+            A pack is ready in Brief Studio.
+          </p>
+          <Link
+            href="/briefs"
+            className="btn-primary btn-lift px-5 py-3 text-[15px]"
+          >
+            Review and publish
+          </Link>
+        </div>
+      )}
 
       {showNote && (
-        <div className="mt-4">
+        <div className="studio-soft p-5">
+          <p className="mb-3 text-[14px] font-medium text-muted">
+            Voice Capture (adds context to the next brief)
+          </p>
           <VoiceCapture />
         </div>
       )}
@@ -255,30 +275,33 @@ export function TalkPanel() {
             aria-label="Close evidence"
             onClick={() => setShowEvidence(false)}
           />
-          <aside className="flex h-full w-full max-w-sm flex-col border-l border-hairline bg-ink text-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-              <h3 className="text-sm font-semibold">Evidence</h3>
+          <aside className="flex h-full w-full max-w-md flex-col border-l border-hairline bg-surface shadow-xl">
+            <div className="flex items-center justify-between border-b border-hairline px-5 py-4">
+              <h3 className="text-[17px] font-semibold">Tool evidence</h3>
               <button
                 type="button"
                 onClick={() => setShowEvidence(false)}
-                className="text-sm text-white/60 hover:text-white"
+                className="btn-secondary px-3 py-2 text-[14px]"
               >
                 Close
               </button>
             </div>
-            <ul className="flex-1 space-y-2 overflow-y-auto p-3 font-mono text-[11px]">
+            <ul className="flex-1 space-y-2 overflow-y-auto p-4 text-[13px]">
               {traces.length === 0 && (
-                <li className="text-white/40">No tools called yet.</li>
+                <li className="text-muted">No tools called yet. Send a prompt.</li>
               )}
               {traces.map((t) => (
-                <li key={t.id} className="rounded-lg border border-white/10 bg-white/5 p-2.5">
-                  <div className="flex justify-between gap-2 text-mint">
+                <li
+                  key={t.id}
+                  className="rounded-xl border border-hairline bg-canvas/80 p-3"
+                >
+                  <div className="flex justify-between gap-2 font-medium text-ink">
                     <span>{t.tool}</span>
-                    <span className="text-white/40">
+                    <span className="text-muted">
                       {new Date(t.at).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p className="mt-1 text-white/85">{t.summary}</p>
+                  <p className="mt-1 text-muted">{t.summary}</p>
                 </li>
               ))}
             </ul>

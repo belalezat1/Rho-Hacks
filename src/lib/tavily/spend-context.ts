@@ -56,7 +56,7 @@ function bandFor(
   return "within";
 }
 
-/** Demo / fallback Spend Context — replaced by live Tavily when key present. */
+/** Demo / fallback Spend Context - replaced by live Tavily when key present. */
 export function demoSpendContext(
   recurrings: {
     merchant: { key: string; displayName: string; category: string; roleHint?: string };
@@ -81,7 +81,7 @@ export function demoSpendContext(
       return {
         label:
           r.merchant.category === "contractor"
-            ? `${r.merchant.displayName} — ${r.merchant.roleHint ?? "contractor"}`
+            ? `${r.merchant.displayName} - ${r.merchant.roleHint ?? "contractor"}`
             : r.merchant.displayName,
         kind: r.merchant.category === "contractor" ? "contractor" : "saas",
         rhoAmountMonthlyCents: r.rhoAmountMonthlyCents,
@@ -90,7 +90,7 @@ export function demoSpendContext(
         citedRangeHighCents: high,
         band: bandFor(r.rhoAmountMonthlyCents, low, high),
         notes:
-          "Public-web estimate for decision support — not a quote or employment advice. Verify before deciding.",
+          "Public-web estimate for decision support - not a quote or employment advice. Verify before deciding.",
         citations: DEMO_CITATIONS[r.merchant.key] ?? [],
       };
     });
@@ -101,14 +101,14 @@ export function demoExternalRisk(): ExternalRiskItem[] {
     {
       merchantKey: "aws",
       displayName: "Amazon Web Services",
-      headline: "Ongoing public pricing and regional capacity headlines — review if spend concentration is high.",
+      headline: "Ongoing public pricing and regional capacity headlines - review if spend concentration is high.",
       severity: "low",
       citations: DEMO_CITATIONS.aws,
     },
     {
       merchantKey: "intercom",
       displayName: "Intercom",
-      headline: "Public packaging/pricing pages updated periodically — useful when comparing list rates to your Rho amount.",
+      headline: "Public packaging/pricing pages updated periodically - useful when comparing list rates to your Rho amount.",
       severity: "low",
       citations: DEMO_CITATIONS.intercom,
     },
@@ -183,7 +183,7 @@ export async function buildSpendContext(
     citations: citations[i]?.length ? citations[i] : row.citations,
     notes:
       citations[i]?.length
-        ? "Live Tavily citations attached. Public-web estimates for decision support — not advice."
+        ? "Live Tavily citations attached. Public-web estimates for decision support - not advice."
         : row.notes,
   }));
 

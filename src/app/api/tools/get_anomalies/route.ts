@@ -7,7 +7,7 @@ export async function GET() {
   const payload = {
     demoMode: snap.demoMode,
     anomalies: snap.anomalies,
-    note: "Radar flags only — not compliance clearance or a verdict.",
+    note: "Radar flags only - not compliance clearance or a verdict.",
   };
   pushTrace("get_anomalies", `${snap.anomalies.length} anomalies`, payload);
   return NextResponse.json(payload);

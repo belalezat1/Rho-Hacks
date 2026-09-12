@@ -11,7 +11,7 @@ export default async function CashPulsePage() {
         <div>
           <h1 className="page-title">Cash Pulse</h1>
           <p className="meta mt-1">
-            Multi-account cash, burn/runway, concentration — claims tie to Rho-shaped IDs.
+            Multi-account cash, burn/runway, concentration - claims tie to Rho-shaped IDs.
           </p>
         </div>
         <span className="chip">{snap.demoMode ? "Demo Mode" : "Live Rho"}</span>
@@ -98,7 +98,7 @@ export default async function CashPulsePage() {
                     </td>
                     <td>
                       <span className="font-mono text-xs text-muted">{tx.rawDescriptor}</span>
-                      <span className="mt-0.5 block">{m?.displayName ?? "—"}</span>
+                      <span className="mt-0.5 block">{m?.displayName ?? " - "}</span>
                     </td>
                     <td>{tx.type}</td>
                     <td>{tx.status}</td>

@@ -149,7 +149,7 @@ export function buildDemoTransactions(): RhoTransaction[] {
       merchantKey: "jordan_design",
       type: "ach",
       status: "posted",
-      memo: "Contract design — Jordan Lee",
+      memo: "Contract design - Jordan Lee",
     });
     push({
       accountId: "acc_checking_001",

@@ -16,7 +16,7 @@ export default async function SpendContextPage() {
         <div>
           <h1 className="page-title">Spend Context</h1>
           <p className="meta mt-1 max-w-2xl">
-            What you pay on Rho vs cited public market ranges. Decision support — not a quote or
+            What you pay on Rho vs cited public market ranges. Decision support - not a quote or
             hire/cut prescription.
           </p>
         </div>
@@ -45,11 +45,11 @@ export default async function SpendContextPage() {
                 <td>
                   {row.citedRangeLowCents != null && row.citedRangeHighCents != null
                     ? `${formatUsd(row.citedRangeLowCents)}–${formatUsd(row.citedRangeHighCents)}`
-                    : "—"}
+                    : " - "}
                 </td>
                 <td className="capitalize">{row.band.replaceAll("_", " ")}</td>
                 <td className="font-mono text-xs text-muted">
-                  {row.rhoTransactionIds.join(", ") || "—"}
+                  {row.rhoTransactionIds.join(", ") || " - "}
                 </td>
                 <td className="max-w-xs text-xs text-muted">
                   {row.citations.map((c) => (
