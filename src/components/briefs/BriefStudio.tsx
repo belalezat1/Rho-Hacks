@@ -179,24 +179,24 @@ export function BriefStudio() {
   }
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-8">
-      <header className="flex flex-col gap-5 border-b border-hairline pb-6 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <div className="mx-auto flex max-w-6xl flex-col">
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-xl">
           <h1 className="page-title">Briefs</h1>
-          <p className="meta mt-2 max-w-lg">
+          <p className="meta mt-3">
             Review a money pack, check evidence when you need it, then publish.
             Decision support - not advice.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex rounded-xl bg-canvas p-1">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex rounded-[var(--radius-control)] border border-hairline bg-canvas p-1">
             <button
               type="button"
               onClick={() => setPackType("weekly_money_brief")}
-              className={`rounded-lg px-3.5 py-2 text-[13px] transition ${
+              className={`rounded-[8px] px-3.5 py-2 text-[13px] transition ${
                 packType === "weekly_money_brief"
                   ? "bg-surface font-medium text-ink shadow-sm"
-                  : "text-muted"
+                  : "text-muted hover:text-ink"
               }`}
             >
               Weekly brief
@@ -204,10 +204,10 @@ export function BriefStudio() {
             <button
               type="button"
               onClick={() => setPackType("client_close_pack")}
-              className={`rounded-lg px-3.5 py-2 text-[13px] transition ${
+              className={`rounded-[8px] px-3.5 py-2 text-[13px] transition ${
                 packType === "client_close_pack"
                   ? "bg-surface font-medium text-ink shadow-sm"
-                  : "text-muted"
+                  : "text-muted hover:text-ink"
               }`}
             >
               Close pack
@@ -217,7 +217,7 @@ export function BriefStudio() {
             type="button"
             disabled={busy}
             onClick={() => void draft()}
-            className="btn-primary btn-lift px-4 py-2.5 text-sm disabled:opacity-60"
+            className="btn-primary px-4 text-sm disabled:opacity-60"
           >
             {busy ? "Working…" : "Draft"}
           </button>
@@ -225,7 +225,7 @@ export function BriefStudio() {
             type="button"
             disabled={busy || !canPublish}
             onClick={() => void publish()}
-            className="btn-dark btn-lift px-4 py-2.5 text-sm disabled:opacity-35"
+            className="btn-dark px-4 text-sm disabled:opacity-35"
           >
             Publish to Stan
           </button>
@@ -233,35 +233,77 @@ export function BriefStudio() {
       </header>
 
       {status && (
-        <p className="rounded-xl bg-mint-soft/40 px-4 py-3 text-sm text-ink/80">
+        <p className="mt-5 rounded-[var(--radius-panel)] bg-mint-soft/50 px-4 py-3 text-sm text-ink/80">
           {status}
         </p>
       )}
 
       {!active ? (
-        <div className="studio-soft flex flex-col items-start px-8 py-16">
-          <p className="text-xl font-semibold tracking-tight text-ink">
-            No pack yet
-          </p>
-          <p className="meta mt-2 max-w-md">
-            Start on Talk — ask Pilot to draft a Monday brief — or draft a pack
-            here. Cash, anomalies, and Spend Context land in one review surface.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/talk" className="btn-primary btn-lift px-4 py-2.5 text-sm">
-              Talk to Pilot
-            </Link>
-            <button
-              type="button"
-              onClick={() => void draft()}
-              className="btn-secondary px-4 py-2.5 text-sm"
-            >
-              Draft pack here
-            </button>
+        <div className="card mt-7 overflow-hidden">
+          <div className="grid gap-0 md:grid-cols-[1.2fr_0.9fr]">
+            <div className="flex flex-col justify-center px-8 py-12 md:px-10 md:py-14">
+              <span className="w-fit rounded-md bg-mint px-2.5 py-1 text-[11px] font-semibold tracking-wide text-ink">
+                Featured
+              </span>
+              <p className="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-[1.75rem]">
+                No pack yet
+              </p>
+              <p className="meta mt-3 max-w-md">
+                Start on Talk — ask Pilot to draft a Monday brief — or draft a
+                pack here. Cash, anomalies, and Spend Context land in one review
+                surface.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-2.5">
+                <Link
+                  href="/talk"
+                  className="btn-primary px-5 text-sm"
+                >
+                  Talk to Pilot
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => void draft()}
+                  className="btn-secondary px-5 text-sm"
+                >
+                  Draft pack here
+                </button>
+              </div>
+            </div>
+            <div className="relative min-h-[220px] bg-[#0f1110] p-8 md:min-h-full">
+              <div
+                className="absolute inset-0 opacity-30"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(rgba(255,255,255,0.55) 1px, transparent 1.2px)",
+                  backgroundSize: "16px 16px",
+                }}
+              />
+              <div className="relative flex h-full flex-col justify-between">
+                <p className="wordmark text-3xl text-white">Pilot</p>
+                <div className="space-y-2">
+                  {["Cash Pulse", "Spend Context", "Ready to publish"].map(
+                    (label, i) => (
+                      <span
+                        key={label}
+                        className="flex w-fit items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-ink shadow-sm"
+                        style={{
+                          transform: `rotate(${i === 1 ? -2 : i === 2 ? 1.5 : 0}deg)`,
+                        }}
+                      >
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-ok text-[10px] text-white">
+                          ✓
+                        </span>
+                        {label}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
-        <>
+        <div className="mt-7 flex flex-col gap-6">
           {studio && (
             <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
               <QuietStat
@@ -295,9 +337,9 @@ export function BriefStudio() {
                   key={s.id}
                   type="button"
                   onClick={() => setSectionId(s.id)}
-                  className={`flex w-full flex-col rounded-xl px-3 py-2.5 text-left transition ${
+                  className={`flex w-full flex-col rounded-[var(--radius-control)] px-3 py-2.5 text-left transition ${
                     activeSection?.id === s.id
-                      ? "bg-surface font-medium text-ink ring-1 ring-hairline"
+                      ? "bg-surface font-medium text-ink ring-1 ring-hairline shadow-sm"
                       : "text-muted hover:bg-surface/70 hover:text-ink"
                   }`}
                 >
@@ -473,7 +515,7 @@ export function BriefStudio() {
               </ul>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

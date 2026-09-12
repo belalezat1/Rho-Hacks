@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PilotWordmark } from "@/components/PilotWordmark";
+import { PageEnter } from "@/components/PageEnter";
 
 const nav = [
   { href: "/briefs", label: "Briefs", match: ["/briefs"] },
@@ -72,7 +73,7 @@ export function AppShell({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <main className="flex-1 px-8 py-8 text-base lg:px-12 lg:py-10">
-          {children}
+          <PageEnter>{children}</PageEnter>
         </main>
       </div>
     </div>

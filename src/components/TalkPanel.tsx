@@ -150,7 +150,6 @@ export function TalkPanel() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col">
-      {/* Header — title → meta = 12px */}
       <header>
         <h1 className="page-title">Talk</h1>
         <p className="meta mt-3 max-w-xl">
@@ -159,7 +158,6 @@ export function TalkPanel() {
         </p>
       </header>
 
-      {/* Tool row — equal height, header → tools = 28px */}
       <div className="mt-7 flex flex-wrap items-center gap-2.5">
         <button
           type="button"
