@@ -25,5 +25,6 @@ Tools available (HTTP):
 - GET /api/tools/tavily_risk_brief
 - POST /api/tools/generate_brief
 - POST /api/tools/publish_to_stan  body: { "confirmed": true, "briefId"?: string }
-- POST /api/tools/voice_capture   body: { "transcript": "..." }
+- POST /api/tools/voice_capture   body: { "transcript": "..." } or { "audioBase64": "..." }
+If the host sets TOOL_WEBHOOK_SECRET, send header x-tool-secret (or Authorization Bearer).
 `.trim();

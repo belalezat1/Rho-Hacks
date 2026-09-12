@@ -124,14 +124,19 @@ export function getStanUrl(): string {
   return process.env.STAN_PRODUCT_URL || "https://stan.store/";
 }
 
-/** TTS: returns null if no key; client can use browser speech or show script. */
+/** TTS: returns script always; audioBase64 when ELEVENLABS_API_KEY succeeds. */
 export async function synthesizeBriefAudio(
   text: string,
-): Promise<{ audioBase64?: string; mime?: string; script: string }> {
+): Promise<{
+  audioBase64?: string;
+  mime?: string;
+  script: string;
+  error?: string;
+}> {
   const key = process.env.ELEVENLABS_API_KEY;
   const voice = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM";
   const script = text.slice(0, 2500);
-  if (!key) return { script };
+  if (!key) return { script, error: "ELEVENLABS_API_KEY missing" };
 
   try {
     const res = await fetch(
@@ -149,10 +154,19 @@ export async function synthesizeBriefAudio(
         }),
       },
     );
-    if (!res.ok) return { script };
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      return {
+        script,
+        error: `TTS ${res.status}${detail ? `: ${detail.slice(0, 160)}` : ""}`,
+      };
+    }
     const buf = Buffer.from(await res.arrayBuffer());
     return { audioBase64: buf.toString("base64"), mime: "audio/mpeg", script };
-  } catch {
-    return { script };
+  } catch (e) {
+    return {
+      script,
+      error: e instanceof Error ? e.message : "TTS request failed",
+    };
   }
 }

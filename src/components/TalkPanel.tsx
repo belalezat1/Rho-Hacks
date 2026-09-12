@@ -114,14 +114,24 @@ export function TalkPanel() {
             (r: {
               label: string;
               band: string;
-              formatted?: { rho?: string; range?: string };
+              citations?: { title: string; url: string }[];
             }) => {
               const band = r.band.replace(/_/g, " ");
-              return `${r.label}: ${band}`;
+              const cite = r.citations?.[0];
+              return cite
+                ? `${r.label}: ${band} [${cite.title}](${cite.url})`
+                : `${r.label}: ${band}`;
             },
           )
           .join("; ");
-        reply = `Spend Context (${spend.source}): ${rows || "no rows"}. Public-web estimates for decision support, not quotes. Open Spend for the full table.`;
+        const digest =
+          typeof spend.summary === "string"
+            ? spend.summary
+            : `${spend.citationCount ?? 0} live cites`;
+        reply = `Spend Context (${spend.source}): ${rows || "no rows"}. ${digest}. Public-web estimates for decision support, not quotes.`;
+        if (risk.items?.[0]?.headline) {
+          reply += ` Risk: ${risk.items[0].displayName} — ${risk.items[0].headline.slice(0, 100)}`;
+        }
       } else if (
         lower.includes("anomal") ||
         lower.includes("weird") ||

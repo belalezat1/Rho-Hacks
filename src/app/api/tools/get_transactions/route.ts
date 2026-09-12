@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import { loadLedgerSnapshot } from "@/lib/ledger/snapshot";
 import { resolveMerchant } from "@/lib/ledger/analytics";
 import { pushTrace } from "@/lib/session-store";
+import { assertToolAccess } from "@/lib/api/tool-auth";
 
 export async function GET(req: Request) {
+  const denied = assertToolAccess(req);
+  if (denied) return denied;
+
   const url = new URL(req.url);
   const limit = Number(url.searchParams.get("limit") ?? "25");
   const snap = await loadLedgerSnapshot();
@@ -16,7 +20,11 @@ export async function GET(req: Request) {
         : { key: null, displayName: t.rawDescriptor, raw: t.rawDescriptor },
     };
   });
-  const payload = { demoMode: snap.demoMode, transactions: txs };
+  const payload = {
+    demoMode: snap.demoMode,
+    transactions: txs,
+    summary: `${txs.length} transactions (limit ${limit}).`,
+  };
   pushTrace("get_transactions", `${txs.length} transactions`, payload);
   return NextResponse.json(payload);
 }

@@ -12,20 +12,26 @@ import {
 import { buildStudioPayload } from "@/lib/briefs/studio";
 import { markdownToPdfBase64 } from "@/lib/briefs/pdf";
 import { getVoiceNote, pushTrace, saveBrief } from "@/lib/session-store";
+import { assertToolAccess } from "@/lib/api/tool-auth";
 
 export async function POST(req: Request) {
+  const denied = assertToolAccess(req);
+  if (denied) return denied;
+
   const body = (await req.json().catch(() => ({}))) as {
     type?: "weekly_money_brief" | "client_close_pack";
     persona?: "founder" | "accountant";
   };
   const type = body.type ?? "weekly_money_brief";
-  const persona = body.persona ?? (type === "client_close_pack" ? "accountant" : "founder");
+  const persona =
+    body.persona ?? (type === "client_close_pack" ? "accountant" : "founder");
 
   const snap = await loadLedgerSnapshot();
-  const [{ rows }, { items }] = await Promise.all([
-    buildSpendContext(snap.recurrings),
-    buildExternalRisk(),
-  ]);
+  const [{ rows, source: spendSource }, { items, source: riskSource }] =
+    await Promise.all([
+      buildSpendContext(snap.recurrings),
+      buildExternalRisk(),
+    ]);
 
   const markdown =
     type === "client_close_pack"
@@ -84,8 +90,12 @@ export async function POST(req: Request) {
     brief: { ...brief, hasPdf: true, studio },
     studio,
     audioAvailable: Boolean(audio.audioBase64),
+    audioError: audio.error ?? null,
     pdfAvailable: true,
+    spendSource,
+    riskSource,
     confirmRequired: true,
+    summary: `Drafted ${title}. Audio=${Boolean(audio.audioBase64)}; spend=${spendSource}; risk=${riskSource}.`,
     message:
       "Brief drafted in Brief Studio (PDF + audio). Complete checklist, then confirm publish_to_stan. Decision support only - not financial advice.",
   };

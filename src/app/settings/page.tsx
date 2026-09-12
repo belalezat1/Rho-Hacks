@@ -15,12 +15,20 @@ export default function SettingsPage() {
       ok: present(process.env.ELEVENLABS_API_KEY),
     },
     {
+      label: "ELEVENLABS_VOICE_ID",
+      ok: present(process.env.ELEVENLABS_VOICE_ID),
+    },
+    {
       label: "NEXT_PUBLIC_ELEVENLABS_AGENT_ID",
       ok: present(process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID),
     },
     {
       label: "STAN_PRODUCT_URL",
       ok: present(process.env.STAN_PRODUCT_URL),
+    },
+    {
+      label: "TOOL_WEBHOOK_SECRET",
+      ok: present(process.env.TOOL_WEBHOOK_SECRET),
     },
   ];
 
@@ -65,6 +73,14 @@ export default function SettingsPage() {
         ) keeps fixtures. Restart{" "}
         <code className="rounded bg-canvas px-1">npm run dev</code> after editing{" "}
         <code className="rounded bg-canvas px-1">.env.local</code>.
+      </p>
+      <p className="mt-4 max-w-md text-[13px] leading-relaxed text-muted">
+        ElevenLabs Agent: paste the system prompt from{" "}
+        <code className="rounded bg-canvas px-1">src/lib/elevenlabs/prompt.ts</code>{" "}
+        into the hosted Agent. Point server tools at{" "}
+        <code className="rounded bg-canvas px-1">/api/tools/*</code> (public URL or
+        tunnel). Brief TTS uses the API key; the Talk iframe uses the public Agent
+        ID.
       </p>
     </AppShell>
   );

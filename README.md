@@ -116,11 +116,41 @@ Open [http://localhost:3000](http://localhost:3000). **Demo Mode works with empt
 
 | Variable | Purpose |
 |---|---|
-| `RHO_API_TOKEN` | Live Rho; leave empty for Demo Mode |
-| `TAVILY_API_KEY` | Live Spend Context citations |
-| `ELEVENLABS_API_KEY` / `ELEVENLABS_VOICE_ID` | Brief TTS |
-| `NEXT_PUBLIC_ELEVENLABS_AGENT_ID` | Embedded voice agent |
+| `RHO_API_TOKEN` | Live Rho REST attempt; leave empty (or `NEXT_PUBLIC_DEMO_MODE=true`) for fixtures |
+| `RHO_API_BASE_URL` | Rho API base (default `https://api.rho.co`) |
+| `TAVILY_API_KEY` | Live Spend Context Search (+ Extract); without it, demo citations |
+| `ELEVENLABS_API_KEY` | Brief TTS + optional Scribe STT + signed-url API |
+| `ELEVENLABS_VOICE_ID` | TTS voice (optional) |
+| `NEXT_PUBLIC_ELEVENLABS_AGENT_ID` | Talk iframe agent (public ID) |
+| `ELEVENLABS_AGENT_ID` | Alias for docs / signed-url fallback |
 | `STAN_PRODUCT_URL` | Guided publish destination |
+| `TOOL_WEBHOOK_SECRET` | If set, `/api/tools/*` require `x-tool-secret` or `Authorization: Bearer` |
+
+**Tavily live vs demo:** `source` on spend/risk tools is `"tavily"` only when at least one live citation succeeds; otherwise `"demo"` (calibrated ranges still fill the table).
+
+**TTS on brief:** `POST /api/tools/generate_brief` sets `audioAvailable` when TTS succeeds; `audioError` explains misses.
+
+**Agent wiring:** Paste [`src/lib/elevenlabs/prompt.ts`](src/lib/elevenlabs/prompt.ts) into the hosted ElevenLabs Agent. Point server tools at your public `/api/tools/*` (tunnel if local). The Talk iframe uses the Agent ID only — it does not auto-call tools unless you configure them in the Agent console.
+
+### Backend smoke checklist
+
+```bash
+# Spend Context (expect source tavily + citationCount > 0 when key set)
+curl -s http://localhost:3000/api/tools/tavily_spend_context | jq '{source,citationCount,errors}'
+
+# External risk (live headlines when keyed)
+curl -s http://localhost:3000/api/tools/tavily_risk_brief | jq '{source,items:[.items[].headline]}'
+
+# Brief + TTS
+curl -s -X POST http://localhost:3000/api/tools/generate_brief \
+  -H 'content-type: application/json' \
+  -d '{"type":"weekly_money_brief"}' | jq '{audioAvailable,audioError,spendSource,riskSource}'
+
+# Optional signed URL (for later SDK / private agents)
+curl -s http://localhost:3000/api/elevenlabs/signed-url | jq '{ok,agentId}'
+```
+
+Open `/settings` to confirm keys show **Present** (values never displayed).
 
 ---
 
@@ -132,11 +162,12 @@ Open [http://localhost:3000](http://localhost:3000). **Demo Mode works with empt
 | `GET /api/tools/get_transactions` | Normalized transactions |
 | `GET /api/tools/get_anomalies` | Anomaly radar |
 | `GET /api/tools/get_concentration` | Vendor concentration |
-| `GET /api/tools/tavily_spend_context` | Competitive Spend Context |
+| `GET /api/tools/tavily_spend_context` | Competitive Spend Context (`summary` + cites) |
 | `GET /api/tools/tavily_risk_brief` | Thin External Risk |
-| `POST /api/tools/generate_brief` | Draft weekly brief or close pack |
+| `POST /api/tools/generate_brief` | Draft weekly brief or close pack (+ TTS) |
 | `POST /api/tools/publish_to_stan` | `{ "confirmed": true }` → Stan URL |
-| `POST /api/tools/voice_capture` | Store transcript for brief |
+| `POST /api/tools/voice_capture` | `{ transcript }` or `{ audioBase64 }` (Scribe) |
+| `GET /api/elevenlabs/signed-url` | ConvAI signed URL (API only) |
 | `GET /api/session` | Tool traces + briefs |
 
 System prompt for a hosted ElevenLabs agent: [`src/lib/elevenlabs/prompt.ts`](src/lib/elevenlabs/prompt.ts).

@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { listBriefs, pushTrace } from "@/lib/session-store";
 import { publishBriefToStan } from "@/lib/stan/publish";
+import { assertToolAccess } from "@/lib/api/tool-auth";
 
 export async function POST(req: Request) {
+  const denied = assertToolAccess(req);
+  if (denied) return denied;
+
   const body = (await req.json().catch(() => ({}))) as {
     confirmed?: boolean;
     briefId?: string;
@@ -20,10 +24,13 @@ export async function POST(req: Request) {
   const brief =
     (body.briefId ? briefs.find((b) => b.id === body.briefId) : briefs[0]) ??
     null;
-  const payload = publishBriefToStan({
-    briefId: brief?.id,
-    title: brief?.title,
-  });
+  const payload = {
+    ...publishBriefToStan({
+      briefId: brief?.id,
+      title: brief?.title,
+    }),
+    summary: `Guided Stan publish for ${brief?.title ?? "brief"}.`,
+  };
   pushTrace("publish_to_stan", `Published guided link ${payload.stanUrl}`, payload);
   return NextResponse.json(payload);
 }
