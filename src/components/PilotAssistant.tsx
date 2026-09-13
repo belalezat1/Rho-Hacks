@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { ElevenLabsConvaiEmbed } from "@/components/ElevenLabsConvaiEmbed";
 import { VoiceCapture } from "@/components/VoiceCapture";
 import {
   PILOT_PROMPTS,
@@ -78,8 +79,8 @@ export function PilotAssistant() {
           />
           <div
             id="pilot-assistant-panel"
-            className="pilot-modal relative z-10 flex w-[min(90vw,720px)] flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-[0_32px_80px_rgba(15,23,22,0.28)]"
-            style={{ height: "min(80vh, 560px)" }}
+            className="pilot-modal relative z-10 flex w-[75vw] max-w-[1200px] flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-[0_32px_80px_rgba(15,23,22,0.28)] max-md:w-[min(96vw,720px)]"
+            style={{ height: "75vh", minHeight: "min(92vh, 520px)" }}
             role="dialog"
             aria-modal="true"
             aria-label="Pilot assistant"
@@ -222,21 +223,19 @@ export function PilotAssistant() {
               {tab === "voice" && (
                 <div className="flex min-h-0 flex-1 flex-col p-5">
                   {agentId ? (
-                    <iframe
-                      title="ElevenLabs Agent"
-                      src={`https://elevenlabs.io/app/talk-to?agent_id=${agentId}`}
-                      className="min-h-0 flex-1 w-full rounded-xl border border-hairline bg-[#f3f4f4]"
-                      allow="microphone"
-                    />
+                    <ElevenLabsConvaiEmbed agentId={agentId} />
                   ) : (
                     <div className="flex flex-1 flex-col items-start justify-center rounded-xl bg-[#f3f4f4] px-8 py-10">
                       <p className="text-[17px] font-semibold tracking-tight text-ink">
                         Voice briefing
                       </p>
                       <p className="mt-2 max-w-md text-[14px] leading-relaxed text-muted">
-                        Connect an ElevenLabs agent ID to speak with Pilot. Until
-                        then, use Chat for tools or Note to store a transcript
-                        for the next brief.
+                        Set{" "}
+                        <code className="rounded bg-canvas px-1 text-[12px]">
+                          NEXT_PUBLIC_ELEVENLABS_AGENT_ID
+                        </code>{" "}
+                        and restart the dev server. Until then, use Chat for
+                        tools or Note for a transcript.
                       </p>
                       <button
                         type="button"

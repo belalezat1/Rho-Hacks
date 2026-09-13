@@ -8,20 +8,18 @@ Wordmark: **Pilot** with a tiny **rho** mark. Built as a money-brief layer on **
 
 ## Demo flow (&lt;3 minutes)
 
-Use **Demo Mode** (empty keys) or live partner keys. Path: landing → **Talk**.
+Use **Demo Mode** (empty keys) or live partner keys. Path: landing → **Ask Pilot**.
 
 | Step | Time | What you do | What judges see |
 |---|---|---|---|
 | 1. Problem | ~10s | Open `/` | Calm Pilot wordmark + one-liner |
-| 2. Commit | ~5s | **Talk** → click **Talk to Pilot** | Idle is one CTA. Button drops; stage opens |
-| 3. Peak | ~40s | Speak/type *“Give me the week…”* | Bubble + side **halftone**; pulses while tools run; ask → brief path |
-| 4. Spend Context | ~50s | *“Intercom and Jordan vs public ranges…”* **or** **Money → Spend Context** | Cited comps table; open **Evidence** only if you want tool traces |
-| 5. Ship | ~30s | *“Draft the Weekly Money Brief…”* **or** **Briefs** | PDF → Confirm → Stan |
-| 6. Close | ~15s | End session / safety line | Read-only · Not financial advice |
+| 2. Commit | ~5s | **Ask Pilot** (or `/talk` → cash + pilot) | Large Pilot panel: Chat / Voice / Sources / Note |
+| 3. Peak | ~40s | Chat *“Give me the week…”* or Voice tab | Tool replies with Rho + Tavily; Sources shows traces |
+| 4. Spend Context | ~50s | *“Intercom vs public ranges…”* **or** nav **Spend** | Cited comps table + External Risk |
+| 5. Ship | ~30s | *“Draft the Weekly Money Brief…”* **or** **Brief Studio** | PDF + standup audio → Confirm → Stan |
+| 6. Close | ~15s | Safety line | Read-only · Not financial advice |
 
-**Optional:** *“Walk anomalies since the 1st…”* → Close Pack, or **Add note** inside the session before drafting.
-
-Idle Talk has no always-on halftone, traces, or prompt chips — progressive disclosure only.
+**Optional:** *“Walk anomalies since the 1st…”* → Close Pack, or **Note** tab before drafting.
 
 ---
 
@@ -30,9 +28,10 @@ Idle Talk has no always-on halftone, traces, or prompt chips — progressive dis
 ```mermaid
 flowchart TB
   subgraph ui [Pilot UI]
-    Talk[Talk idle CTA then voice session]
-    Money[Money hub]
-    Briefs[Briefs]
+    Pilot[Ask Pilot panel]
+    Cash[Cash Pulse]
+    Spend[Spend Context]
+    Briefs[Brief Studio]
   end
 
   subgraph api [Next.js Route Handlers]
@@ -48,12 +47,13 @@ flowchart TB
 
   subgraph sponsors [Sponsors]
     Tavily[Tavily Spend Context + Risk]
-    EL[ElevenLabs Agent / TTS]
+    EL[ElevenLabs ConvAI widget + TTS]
     Stan[Stan guided publish]
   end
 
-    Talk --> Tools
-    Money --> Analytics
+    Pilot --> Tools
+    Cash --> Analytics
+    Spend --> Tavily
     Briefs --> Tools
     Tools --> Analytics
     Tools --> Tavily
@@ -62,10 +62,12 @@ flowchart TB
     Analytics --> Demo
     Analytics --> RhoAPI
     Tools --> Session
-    Session --> Talk
+    Session --> Pilot
 ```
 
-**Hero loop:** Click **Talk to Pilot** → button drops → speech bubble + side halftone → ask → draft brief → Stan. Evidence stays behind a drawer until asked.
+**Hero loop:** Ask Pilot → Rho + Tavily tools → draft brief (standup TTS) → Stan. Sources tab shows tool evidence.
+
+**Nav:** Cash · Spend · Exceptions · Brief Studio. Floating **Ask Pilot** on every app page.
 
 ---
 
@@ -78,8 +80,8 @@ flowchart TB
 | Fonts | **Bodoni Moda** (wordmark) · **Hanken Grotesk** (UI) · **IBM Plex Mono** (IDs) | Brand + product chrome |
 | Ledger | Rho-shaped **Demo Mode** fixtures (+ optional live `RHO_API_TOKEN`) | Cash Pulse, anomalies, recurrings |
 | Research | **Tavily** Search (`topic: finance`) | Competitive Spend Context + thin External Risk |
-| Conversation | **ElevenLabs** Agents (iframe when configured) + chat tool-chain | Decision conversation |
-| Audio | ElevenLabs **TTS** when keyed | Brief Production Studio standup |
+| Conversation | **ElevenLabs** ConvAI widget + local chat tool-chain | Decision conversation |
+| Audio | ElevenLabs **TTS** when keyed | Brief standup (not a markdown read-aloud) |
 | Output | **jsPDF** + markdown brief | Weekly Money Brief / Close Pack |
 | Delivery | **Stan** storefront URL (guided publish) | Finish the job |
 | Runtime | **Node ≥ 20.9** (`.nvmrc` → 24) | Required by Next 16 |
@@ -88,13 +90,11 @@ flowchart TB
 
 ## What it does
 
-1. **Cash Pulse** — multi-account cash, burn/runway, merchant normalization, concentration, claim→ID evidence  
-2. **Anomaly Radar** — pending / awaiting_approval / first-time / spikes (radar, not verdict)  
-3. **Competitive Spend Context** — what you pay vs cited public market ranges (Tavily or demo citations)  
-4. **Talk** — idle = one **Talk to Pilot** CTA; click reveals animated **halftone** + session (chat fallback / ElevenLabs)  
-5. **Money** — hub for Cash Pulse, Anomalies, Spend Context  
-6. **Briefs → Stan** — PDF + TTS when keyed; confirm before guided publish  
-7. **Add note** — progressive Voice Capture inside an open session only
+1. **Cash Pulse** — multi-account cash, burn/runway, concentration, claim→ID evidence  
+2. **Exceptions** — pending / awaiting_approval / first-time / spikes (radar, not verdict)  
+3. **Competitive Spend Context** — what you pay vs cited public market ranges (Tavily or demo)  
+4. **Ask Pilot** — Chat tool-chain + Voice (ConvAI widget) + Sources + Note  
+5. **Brief Studio → Stan** — PDF + standup TTS; confirm before guided publish  
 
 ---
 
@@ -121,16 +121,16 @@ Open [http://localhost:3000](http://localhost:3000). **Demo Mode works with empt
 | `TAVILY_API_KEY` | Live Spend Context Search (+ Extract); without it, demo citations |
 | `ELEVENLABS_API_KEY` | Brief TTS + optional Scribe STT + signed-url API |
 | `ELEVENLABS_VOICE_ID` | TTS voice (optional) |
-| `NEXT_PUBLIC_ELEVENLABS_AGENT_ID` | Talk iframe agent (public ID) |
-| `ELEVENLABS_AGENT_ID` | Alias for docs / signed-url fallback |
+| `NEXT_PUBLIC_ELEVENLABS_AGENT_ID` | Voice tab ConvAI widget (public agent ID) |
+| `ELEVENLABS_AGENT_ID` | Alias / signed-url fallback |
 | `STAN_PRODUCT_URL` | Guided publish destination |
 | `TOOL_WEBHOOK_SECRET` | If set, `/api/tools/*` require `x-tool-secret` or `Authorization: Bearer` |
 
-**Tavily live vs demo:** `source` on spend/risk tools is `"tavily"` only when at least one live citation succeeds; otherwise `"demo"` (calibrated ranges still fill the table).
+**Tavily live vs demo:** `source` on spend/risk tools is `"tavily"` only when at least one live citation succeeds; otherwise `"demo"`.
 
 **TTS on brief:** `POST /api/tools/generate_brief` sets `audioAvailable` when TTS succeeds; `audioError` explains misses.
 
-**Agent wiring:** Paste [`src/lib/elevenlabs/prompt.ts`](src/lib/elevenlabs/prompt.ts) into the hosted ElevenLabs Agent. Point server tools at your public `/api/tools/*` (tunnel if local). The Talk iframe uses the Agent ID only — it does not auto-call tools unless you configure them in the Agent console.
+**Agent wiring:** Paste [`src/lib/elevenlabs/prompt.ts`](src/lib/elevenlabs/prompt.ts) into the hosted ElevenLabs Agent. In Agent → Advanced, **turn authentication off** (public) so the Voice widget can connect. Point server tools at your public `/api/tools/*` (tunnel if local).
 
 ### Backend smoke checklist
 
@@ -146,11 +146,9 @@ curl -s -X POST http://localhost:3000/api/tools/generate_brief \
   -H 'content-type: application/json' \
   -d '{"type":"weekly_money_brief"}' | jq '{audioAvailable,audioError,spendSource,riskSource}'
 
-# Optional signed URL (for later SDK / private agents)
+# Optional signed URL (Voice widget / private agents)
 curl -s http://localhost:3000/api/elevenlabs/signed-url | jq '{ok,agentId}'
 ```
-
-Open `/settings` to confirm keys show **Present** (values never displayed).
 
 ---
 
@@ -167,7 +165,7 @@ Open `/settings` to confirm keys show **Present** (values never displayed).
 | `POST /api/tools/generate_brief` | Draft weekly brief or close pack (+ TTS) |
 | `POST /api/tools/publish_to_stan` | `{ "confirmed": true }` → Stan URL |
 | `POST /api/tools/voice_capture` | `{ transcript }` or `{ audioBase64 }` (Scribe) |
-| `GET /api/elevenlabs/signed-url` | ConvAI signed URL (API only) |
+| `GET /api/elevenlabs/signed-url` | ConvAI signed URL |
 | `GET /api/session` | Tool traces + briefs |
 
 System prompt for a hosted ElevenLabs agent: [`src/lib/elevenlabs/prompt.ts`](src/lib/elevenlabs/prompt.ts).

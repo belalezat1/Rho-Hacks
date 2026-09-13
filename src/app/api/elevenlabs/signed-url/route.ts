@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 
 /**
  * Signed conversation URL for private ElevenLabs Agents.
- * Public agents can use agentId directly in the client SDK later.
- * Not wired into TalkPanel in the backend-only plan.
+ * Used by ElevenLabsConvaiEmbed when available; public agents can use agentId alone.
  */
 export async function GET() {
   const key = process.env.ELEVENLABS_API_KEY?.trim();
