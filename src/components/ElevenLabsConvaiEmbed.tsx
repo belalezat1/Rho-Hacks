@@ -45,50 +45,13 @@ export function ElevenLabsConvaiEmbed({ agentId, className = "" }: Props) {
   return (
     <ConversationProvider
       clientTools={pilotClientTools}
-      onDisconnect={() => {
-        // #region agent log
-        fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "cb3dba",
-          },
-          body: JSON.stringify({
-            sessionId: "cb3dba",
-            runId: "post-fix",
-            hypothesisId: "A",
-            location: "ElevenLabsConvaiEmbed.tsx:onDisconnect",
-            message: "provider onDisconnect fired",
-            data: {},
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
-      }}
-      onError={(err) => {
+      onError={(err: unknown) => {
         const msg =
           typeof err === "string"
             ? err
             : err && typeof err === "object" && "message" in err
               ? String((err as { message: unknown }).message)
               : "Voice error";
-        // #region agent log
-        fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "cb3dba",
-          },
-          body: JSON.stringify({
-            sessionId: "cb3dba",
-            hypothesisId: "A",
-            location: "ElevenLabsConvaiEmbed.tsx:onError",
-            message: "ConversationProvider onError",
-            data: { msg: String(msg).slice(0, 300) },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
         setError(msg);
       }}
       onMessage={onMessage}
@@ -131,43 +94,6 @@ function VoicePanel({
 
   const connected = status === "connected";
 
-  // #region agent log
-  useEffect(() => {
-    fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "cb3dba",
-      },
-      body: JSON.stringify({
-        sessionId: "cb3dba",
-        hypothesisId: "D",
-        location: "ElevenLabsConvaiEmbed.tsx:status",
-        message: "voice status changed",
-        data: {
-          status,
-          message: message?.slice?.(0, 160) ?? message,
-          starting,
-          isSpeaking,
-          isListening,
-          contextReady,
-          hasAgentId: Boolean(agentId),
-          toolKeys: Object.keys(pilotClientTools),
-          runId: "post-fix",
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-  }, [
-    status,
-    message,
-    starting,
-    isSpeaking,
-    isListening,
-    contextReady,
-    agentId,
-  ]);
-  // #endregion
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -177,43 +103,7 @@ function VoicePanel({
   }, [lines, isSpeaking, isListening]);
 
   useEffect(() => {
-    // #region agent log
-    fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "cb3dba",
-      },
-      body: JSON.stringify({
-        sessionId: "cb3dba",
-        runId: "post-fix",
-        hypothesisId: "C",
-        location: "ElevenLabsConvaiEmbed.tsx:endSessionEffect",
-        message: "endSession cleanup effect mounted (unmount-only)",
-        data: {},
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
     return () => {
-      // #region agent log
-      fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Debug-Session-Id": "cb3dba",
-        },
-        body: JSON.stringify({
-          sessionId: "cb3dba",
-          runId: "post-fix",
-          hypothesisId: "C",
-          location: "ElevenLabsConvaiEmbed.tsx:endSessionCleanup",
-          message: "endSession cleanup RUNNING — may kill session",
-          data: {},
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       try {
         endSession();
       } catch {
@@ -231,24 +121,6 @@ function VoicePanel({
       try {
         const ctx = await loadPilotWorkspaceContext();
         if (cancelled) return;
-        // #region agent log
-        fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "cb3dba",
-          },
-          body: JSON.stringify({
-            sessionId: "cb3dba",
-            runId: "post-fix-2",
-            hypothesisId: "E",
-            location: "ElevenLabsConvaiEmbed.tsx:pushContext",
-            message: "sending contextual update",
-            data: { ctxLen: ctx.length, isFallback: ctx.includes("about $2.4M") },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
         sendContextualUpdate(ctx);
         setContextReady(true);
         setLines((prev) =>
@@ -257,31 +129,11 @@ function VoicePanel({
             : [
                 {
                   role: "agent",
-                  text: "Workspace loaded — Northstar demo ledger is available. Ask about cash, anomalies, spend vs market, or a Monday brief.",
+                  text: "Workspace loaded. Northstar demo ledger is available. Ask about cash, anomalies, spend vs market, or a Monday brief.",
                 },
               ],
         );
-      } catch (err) {
-        // #region agent log
-        fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "cb3dba",
-          },
-          body: JSON.stringify({
-            sessionId: "cb3dba",
-            runId: "post-fix-2",
-            hypothesisId: "E",
-            location: "ElevenLabsConvaiEmbed.tsx:pushContextError",
-            message: "contextual update failed",
-            data: {
-              err: err instanceof Error ? err.message : String(err),
-            },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
+      } catch {
         if (!cancelled) {
           try {
             sendContextualUpdate(
@@ -290,7 +142,7 @@ function VoicePanel({
             setContextReady(true);
           } catch {
             setLocalError(
-              "Voice is live; workspace snapshot delayed. Ask for cash — tools still work.",
+              "Voice is live; workspace snapshot delayed. Ask for cash - tools still work.",
             );
           }
         }
@@ -303,35 +155,15 @@ function VoicePanel({
   }, [connected, contextReady, sendContextualUpdate, setLines]);
 
   async function connect() {
-    // #region agent log
-    fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "cb3dba",
-      },
-      body: JSON.stringify({
-        sessionId: "cb3dba",
-        runId: "post-fix",
-        hypothesisId: "A",
-        location: "ElevenLabsConvaiEmbed.tsx:connect",
-        message: "Start voice clicked",
-        data: { agentIdPrefix: agentId?.slice(0, 12), status },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
     clearError();
     setLocalError(null);
     setContextReady(false);
     setStarting(true);
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
-      // Prefetch in background; never block or throw into connect
       void loadPilotWorkspaceContext().catch(() => {});
 
-      // Prefer public agentId. Signed URL + overrides caused instant disconnect
-      // after connected (debug session cb3dba). Keep signed URL as fallback only.
+      // Prefer public agentId; signed URL as fallback only.
       let startMode: "agentId" | "signedUrl" = "agentId";
       let signedUrl: string | undefined;
       try {
@@ -341,28 +173,6 @@ function VoicePanel({
           signedUrl?: string;
           error?: string;
         };
-        // #region agent log
-        fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "cb3dba",
-          },
-          body: JSON.stringify({
-            sessionId: "cb3dba",
-            runId: "post-fix",
-            hypothesisId: "A",
-            location: "ElevenLabsConvaiEmbed.tsx:signedUrl",
-            message: "signed-url available but preferring agentId",
-            data: {
-              signedAvailable: Boolean(data.ok && data.signedUrl),
-              error: data.error ?? null,
-              using: "agentId",
-            },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
         if (!agentId && data.ok && data.signedUrl) {
           signedUrl = data.signedUrl;
           startMode = "signedUrl";
@@ -371,72 +181,12 @@ function VoicePanel({
         /* ignore */
       }
 
-      // #region agent log
-      fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Debug-Session-Id": "cb3dba",
-        },
-        body: JSON.stringify({
-          sessionId: "cb3dba",
-          runId: "post-fix",
-          hypothesisId: "A",
-          location: "ElevenLabsConvaiEmbed.tsx:beforeStartSession",
-          message: "calling startSession without overrides",
-          data: {
-            mode: startMode,
-            hasOverrides: false,
-            hasClientTools: true,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
-
       if (startMode === "signedUrl" && signedUrl) {
         startSession({ signedUrl });
       } else {
         startSession({ agentId });
       }
-
-      // #region agent log
-      fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Debug-Session-Id": "cb3dba",
-        },
-        body: JSON.stringify({
-          sessionId: "cb3dba",
-          runId: "post-fix",
-          hypothesisId: "A",
-          location: "ElevenLabsConvaiEmbed.tsx:afterStartSession",
-          message: "startSession returned (void API)",
-          data: {},
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
     } catch (e) {
-      // #region agent log
-      fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Debug-Session-Id": "cb3dba",
-        },
-        body: JSON.stringify({
-          sessionId: "cb3dba",
-          runId: "post-fix",
-          hypothesisId: "A",
-          location: "ElevenLabsConvaiEmbed.tsx:connectCatch",
-          message: "connect threw",
-          data: { err: e instanceof Error ? e.message : String(e) },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       setLocalError(e instanceof Error ? e.message : "Could not start voice");
     } finally {
       setStarting(false);
@@ -451,16 +201,31 @@ function VoicePanel({
         ? "Listening"
         : mode || "Connected";
 
+  const orbHint = connected
+    ? isSpeaking
+      ? "Pilot is speaking"
+      : "Your turn - speak naturally"
+    : "Start when ready";
+
   return (
     <div
       className={`relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-hairline bg-[#f3f4f4] ${className}`}
     >
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-hairline bg-surface px-5 py-3.5">
-        <div>
+      <div className="flex shrink-0 items-center gap-3 border-b border-hairline bg-surface px-4 py-2.5">
+        <div className="flex h-[88px] w-[88px] shrink-0 items-center justify-center rounded-xl bg-gradient-to-b from-white to-[#f3f4f4]">
+          <PilotOrb
+            active={connected}
+            speaking={isSpeaking}
+            listening={isListening && !isSpeaking}
+            size={connected ? 72 : 56}
+          />
+        </div>
+        <div className="min-w-0 flex-1">
           <p className="text-[15px] font-semibold tracking-tight text-ink">
             {statusLabel}
           </p>
-          <p className="text-[12px] text-muted">
+          <p className="text-[12px] text-muted">{orbHint}</p>
+          <p className="mt-0.5 text-[11px] text-muted-soft">
             {contextReady
               ? "Rho workspace context loaded"
               : connected
@@ -491,22 +256,6 @@ function VoicePanel({
         )}
       </div>
 
-      <div className="flex shrink-0 flex-col items-center justify-center gap-2 border-b border-hairline bg-gradient-to-b from-white to-[#f3f4f4] px-4 py-6">
-        <PilotOrb
-          active={connected}
-          speaking={isSpeaking}
-          listening={isListening && !isSpeaking}
-          size={connected ? 168 : 140}
-        />
-        <p className="text-[12px] text-muted">
-          {connected
-            ? isSpeaking
-              ? "Pilot is speaking"
-              : "Your turn — speak naturally"
-            : "Orb lights up when the session is live"}
-        </p>
-      </div>
-
       <div
         ref={scrollRef}
         className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 py-4"
@@ -514,7 +263,7 @@ function VoicePanel({
         {lines.length === 0 && (
           <p className="rounded-xl bg-surface px-4 py-3 text-[14px] leading-relaxed text-muted">
             {connected
-              ? "Speak when Listening — cash, anomalies, spend vs market, or draft a brief."
+              ? "Speak when Listening - cash, anomalies, spend vs market, or draft a brief."
               : "Start voice to load the Northstar demo ledger into the session for judges."}
           </p>
         )}

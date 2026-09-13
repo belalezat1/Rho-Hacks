@@ -20,8 +20,31 @@ function badgeClass(a: Anomaly) {
   if (a.kind === "awaiting_approval") return "bg-[#E8F1F8] text-[#2E6D92]";
   if (a.kind === "failed" || a.severity === "high")
     return "bg-[#FDE8EA] text-[#C91829]";
-  if (a.kind === "pending") return "bg-[#FEF3E2] text-[#9A5B12]";
+  if (a.kind === "pending" || a.severity === "medium")
+    return "bg-[#FEF3E2] text-[#9A5B12]";
   return "bg-canvas text-muted";
+}
+
+function rowAccent(a: Anomaly) {
+  if (a.kind === "awaiting_approval") {
+    return {
+      edge: "border-l-[3px] border-l-[#2E6D92]",
+      amount: "text-[#2E6D92]",
+    };
+  }
+  if (a.kind === "failed" || a.severity === "high") {
+    return {
+      edge: "border-l-[3px] border-l-[var(--danger)]",
+      amount: "text-[var(--danger)]",
+    };
+  }
+  if (a.severity === "medium" || a.kind === "pending") {
+    return {
+      edge: "border-l-[3px] border-l-[var(--warn)]",
+      amount: "text-ink",
+    };
+  }
+  return { edge: "border-l-[3px] border-l-transparent", amount: "text-ink" };
 }
 
 export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
@@ -84,53 +107,71 @@ export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
             No items in this filter.
           </li>
         )}
-        {visible.map((a) => (
-          <li
-            key={a.id}
-            className="flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-white px-4 py-3.5 shadow-[0_1px_2px_rgba(15,23,22,0.03)]"
-          >
-            <span className="min-w-[88px] text-[15px] font-semibold tabular-nums text-ink">
-              {formatUsd(a.amountCents)}
-            </span>
-            <span
-              className={`rounded-full px-2.5 py-1 text-[11px] font-medium capitalize ${badgeClass(a)}`}
+        {visible.map((a) => {
+          const accent = rowAccent(a);
+          const isHot =
+            a.kind === "failed" ||
+            a.severity === "high" ||
+            a.kind === "awaiting_approval";
+          return (
+            <li
+              key={a.id}
+              className={`flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-white py-3.5 pr-4 pl-3.5 shadow-[0_1px_2px_rgba(15,23,22,0.03)] ${accent.edge}`}
             >
-              {statusLabel(a)}
-            </span>
-            <VendorMark
-              name={a.merchantKey ?? a.title}
-              vendorKey={a.merchantKey}
-              size={32}
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[14px] font-medium text-ink">
-                {a.title}
-              </p>
-              <p className="mt-0.5 truncate text-[12px] text-muted">
-                {a.detail}
-              </p>
-              <p className="mt-0.5 font-mono text-[11px] text-muted">
-                {a.transactionIds.join(", ")}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href="/cash-pulse"
-                className="btn-secondary !min-h-9 px-3 text-[12px]"
+              <span
+                className={`min-w-[88px] text-[15px] font-semibold tabular-nums ${accent.amount}`}
               >
-                Open Cash
-              </Link>
-              <a
-                href="https://rho.co"
-                target="_blank"
-                rel="noreferrer"
-                className="btn-dark !min-h-9 px-3 text-[12px]"
+                {formatUsd(a.amountCents)}
+              </span>
+              <span
+                className={`rounded-full px-2.5 py-1 text-[11px] font-medium capitalize ${badgeClass(a)}`}
               >
-                Review in Rho
-              </a>
-            </div>
-          </li>
-        ))}
+                {statusLabel(a)}
+              </span>
+              {a.kind === "awaiting_approval" && (
+                <span className="rounded-full bg-[#E8F1F8] px-2.5 py-1 text-[11px] font-semibold text-[#2E6D92]">
+                  Needs action
+                </span>
+              )}
+              <VendorMark
+                name={a.merchantKey ?? a.title}
+                vendorKey={a.merchantKey}
+                size={32}
+              />
+              <div className="min-w-0 flex-1">
+                <p
+                  className={`truncate text-[14px] font-medium ${
+                    isHot ? "text-ink" : "text-ink/90"
+                  }`}
+                >
+                  {a.title}
+                </p>
+                <p className="mt-0.5 truncate text-[12px] text-muted">
+                  {a.detail}
+                </p>
+                <p className="mt-0.5 font-mono text-[11px] text-muted">
+                  {a.transactionIds.join(", ")}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href="/cash-pulse"
+                  className="btn-secondary !min-h-9 px-3 text-[12px]"
+                >
+                  Open Cash
+                </Link>
+                <a
+                  href="https://rho.co"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-dark !min-h-9 px-3 text-[12px]"
+                >
+                  Review in Rho
+                </a>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

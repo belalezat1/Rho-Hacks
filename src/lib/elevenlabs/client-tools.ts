@@ -98,24 +98,7 @@ async function safeJson(
 
 /** Snapshot injected at session start. Never throws — voice must stay up. */
 export async function loadPilotWorkspaceContext(): Promise<string> {
-  // #region agent log
-  fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "cb3dba",
-    },
-    body: JSON.stringify({
-      sessionId: "cb3dba",
-      runId: "post-fix-2",
-      hypothesisId: "E",
-      location: "client-tools.ts:loadPilotWorkspaceContext",
-      message: "loading workspace context (resilient)",
-      data: {},
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
+
 
   try {
     // Ledger first (fast, local). Tavily optional — can fail/timeout.
@@ -128,32 +111,6 @@ export async function loadPilotWorkspaceContext(): Promise<string> {
         safeJson("/api/tools/tavily_risk_brief"),
       ]);
 
-    // #region agent log
-    fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "cb3dba",
-      },
-      body: JSON.stringify({
-        sessionId: "cb3dba",
-        runId: "post-fix-2",
-        hypothesisId: "E",
-        location: "client-tools.ts:loadResults",
-        message: "workspace fetch results",
-        data: {
-          balances: balancesR.ok,
-          anomalies: anomaliesR.ok,
-          concentration: concentrationR.ok,
-          spend: spendR.ok,
-          risk: riskR.ok,
-          spendErr: spendR.ok ? null : spendR.error,
-          riskErr: riskR.ok ? null : riskR.error,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
 
     if (!balancesR.ok && !anomaliesR.ok) {
       return FALLBACK_CONTEXT;
@@ -245,25 +202,7 @@ export async function loadPilotWorkspaceContext(): Promise<string> {
       "",
       "Rules: decision support only, not advice; never claim you can move money; cite Rho IDs when tools return them.",
     ].join("\n");
-  } catch (e) {
-    // #region agent log
-    fetch("http://127.0.0.1:7435/ingest/337cbcb5-4535-4001-b783-55a87b5e182d", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "cb3dba",
-      },
-      body: JSON.stringify({
-        sessionId: "cb3dba",
-        runId: "post-fix-2",
-        hypothesisId: "E",
-        location: "client-tools.ts:loadCatch",
-        message: "workspace context fell back",
-        data: { err: e instanceof Error ? e.message : String(e) },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
+  } catch {
     return FALLBACK_CONTEXT;
   }
 }

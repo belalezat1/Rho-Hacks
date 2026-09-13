@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { SectionBody } from "@/components/briefs/SectionBody";
 import { formatUsd } from "@/lib/ledger/analytics";
 import {
   checklistComplete,
@@ -20,60 +21,6 @@ function statusTone(status: BriefSection["status"]) {
   return "text-muted-soft";
 }
 
-function renderBody(md: string) {
-  const blocks = md.split("\n");
-  const tableLines = blocks.filter((l) => l.startsWith("|"));
-  const other = blocks.filter((l) => !l.startsWith("|"));
-
-  return (
-    <div className="space-y-3 text-[15px] leading-relaxed text-ink/90">
-      {other.map((line, i) => {
-        if (line.startsWith("- ")) {
-          return (
-            <p key={i} className="text-muted">
-              <span className="mr-2 text-ink/40">•</span>
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: inlineFormat(line.slice(2)),
-                }}
-              />
-            </p>
-          );
-        }
-        if (!line.trim()) return null;
-        return (
-          <p
-            key={i}
-            dangerouslySetInnerHTML={{ __html: inlineFormat(line) }}
-          />
-        );
-      })}
-      {tableLines.length > 0 && (
-        <div className="overflow-x-auto rounded-xl bg-canvas/80 p-3">
-          <pre className="font-mono text-[11px] leading-5 text-muted">
-            {tableLines.join("\n")}
-          </pre>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function inlineFormat(s: string) {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(
-      /\*\*(.+?)\*\*/g,
-      "<strong class='font-semibold text-ink'>$1</strong>",
-    )
-    .replace(
-      /`([^`]+)`/g,
-      "<code class='rounded bg-canvas px-1 text-[12px] text-muted'>$1</code>",
-    );
-}
-
 export function BriefStudio() {
   const [packType, setPackType] = useState<PackType>("weekly_money_brief");
   const [briefs, setBriefs] = useState<StudioBriefRecord[]>([]);
@@ -83,7 +30,7 @@ export function BriefStudio() {
   const [status, setStatus] = useState<string | null>(null);
   const [checklist, setChecklist] = useState<ChecklistState | null>(null);
   const [showPdf, setShowPdf] = useState(false);
-  const [showEvidence, setShowEvidence] = useState(false);
+  const [showSources, setShowSources] = useState(false);
 
   const active = useMemo(
     () =>
@@ -120,7 +67,7 @@ export function BriefStudio() {
     setChecklist(checklistDefaults(active.studio, active));
     const first = active.studio?.sections[0]?.id;
     if (first) setSectionId(first);
-    setShowEvidence(false);
+    setShowSources(false);
     setShowPdf(false);
   }, [active?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -179,7 +126,7 @@ export function BriefStudio() {
   }
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col">
+    <div className="mx-auto flex max-w-6xl flex-col pb-28">
       <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <h1 className="page-title">Brief Studio</h1>
         <div className="flex flex-wrap items-center gap-2.5">
@@ -214,14 +161,6 @@ export function BriefStudio() {
             className="btn-primary px-4 text-sm disabled:opacity-60"
           >
             {busy ? "Working…" : "Draft"}
-          </button>
-          <button
-            type="button"
-            disabled={busy || !canPublish}
-            onClick={() => void publish()}
-            className="btn-dark px-4 text-sm disabled:opacity-35"
-          >
-            Publish to Stan
           </button>
         </div>
       </header>
@@ -332,7 +271,7 @@ export function BriefStudio() {
                   onClick={() => setSectionId(s.id)}
                   className={`flex w-full flex-col rounded-[var(--radius-control)] px-3 py-2.5 text-left transition ${
                     activeSection?.id === s.id
-                      ? "bg-surface font-medium text-ink ring-1 ring-hairline shadow-sm"
+                      ? "bg-surface font-medium text-ink shadow-sm ring-1 ring-hairline"
                       : "text-muted hover:bg-surface/70 hover:text-ink"
                   }`}
                 >
@@ -360,10 +299,10 @@ export function BriefStudio() {
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => setShowEvidence((v) => !v)}
+                    onClick={() => setShowSources(true)}
                     className="btn-secondary px-3 py-1.5 text-[12px] xl:hidden"
                   >
-                    {showEvidence ? "Hide evidence" : "Evidence"}
+                    Sources
                   </button>
                   {active.pdfBase64 && (
                     <>
@@ -394,7 +333,10 @@ export function BriefStudio() {
                     src={`data:application/pdf;base64,${active.pdfBase64}`}
                   />
                 ) : activeSection ? (
-                  renderBody(activeSection.bodyMarkdown)
+                  <SectionBody
+                    sectionId={activeSection.id}
+                    bodyMarkdown={activeSection.bodyMarkdown}
+                  />
                 ) : (
                   <p className="text-muted">Select a section.</p>
                 )}
@@ -418,18 +360,11 @@ export function BriefStudio() {
                   )}
                 </div>
               )}
-
-              {/* Mobile evidence */}
-              {showEvidence && activeSection && (
-                <div className="border-t border-hairline px-5 py-4 xl:hidden">
-                  <EvidenceBlock section={activeSection} />
-                </div>
-              )}
             </section>
 
             <aside className="hidden space-y-4 xl:block">
               <div className="studio-soft p-4">
-                <p className="text-[12px] font-medium text-muted">Evidence</p>
+                <p className="text-[12px] font-medium text-muted">Sources</p>
                 {activeSection ? (
                   <div className="mt-3">
                     <EvidenceBlock section={activeSection} />
@@ -437,77 +372,98 @@ export function BriefStudio() {
                 ) : null}
               </div>
 
-              <div className="studio-soft p-4">
-                <p className="text-[12px] font-medium text-muted">
-                  Before you publish
-                </p>
-                {checklist && (
-                  <ul className="mt-3 space-y-2.5">
-                    <Check
-                      label="Cash attached"
-                      checked={checklist.cashAttached}
-                      locked
-                    />
-                    <Check
-                      label="Anomalies reviewed"
-                      checked={checklist.anomaliesReviewed}
-                      onChange={() => toggleCheck("anomaliesReviewed")}
+              {checklist && (
+                <div className="studio-soft p-4">
+                  <p className="text-[12px] font-medium text-muted">Readiness</p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    <ReadyChip
+                      label="Cash"
+                      ok={checklist.cashAttached}
                     />
                     {active.type === "weekly_money_brief" && (
                       <>
-                        <Check
-                          label="Spend context"
-                          checked={checklist.spendAttached}
-                          locked
+                        <ReadyChip
+                          label="Spend"
+                          ok={checklist.spendAttached}
                         />
-                        <Check
-                          label="External risk"
-                          checked={checklist.riskAttached}
-                          locked
+                        <ReadyChip
+                          label="Risk"
+                          ok={checklist.riskAttached}
                         />
                       </>
                     )}
-                    <Check
-                      label="Audio / PDF ready"
-                      checked={checklist.audioReady && checklist.pdfReady}
-                      locked
+                    <ReadyChip
+                      label="Audio / PDF"
+                      ok={checklist.audioReady && checklist.pdfReady}
                     />
-                    <Check
-                      label="Confirm - not advice"
-                      checked={checklist.confirmPublish}
-                      onChange={() => toggleCheck("confirmPublish")}
-                    />
-                  </ul>
-                )}
-                <p className="mt-3 text-[11px] leading-snug text-muted-soft">
-                  {canPublish
-                    ? "Ready to publish."
-                    : "Publish unlocks when the checklist is complete."}
-                </p>
-              </div>
+                  </div>
+                </div>
+              )}
             </aside>
           </div>
+        </div>
+      )}
 
-          {/* Checklist on smaller screens */}
-          {checklist && (
-            <div className="studio-soft p-5 xl:hidden">
-              <p className="text-[12px] font-medium text-muted">
-                Before you publish
-              </p>
-              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                <Check
-                  label="Anomalies reviewed"
-                  checked={checklist.anomaliesReviewed}
-                  onChange={() => toggleCheck("anomaliesReviewed")}
-                />
-                <Check
-                  label="Confirm - not advice"
-                  checked={checklist.confirmPublish}
-                  onChange={() => toggleCheck("confirmPublish")}
-                />
-              </ul>
+      {showSources && activeSection && (
+        <div
+          className="fixed inset-0 z-40 flex justify-end bg-ink/20 xl:hidden"
+          onClick={() => setShowSources(false)}
+          role="presentation"
+        >
+          <aside
+            className="flex h-full w-full max-w-sm flex-col bg-surface shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-label="Sources"
+          >
+            <div className="flex items-center justify-between border-b border-hairline px-5 py-4">
+              <p className="text-[15px] font-semibold text-ink">Sources</p>
+              <button
+                type="button"
+                onClick={() => setShowSources(false)}
+                className="btn-secondary px-3 py-1.5 text-[12px]"
+              >
+                Close
+              </button>
             </div>
-          )}
+            <div className="flex-1 overflow-y-auto px-5 py-4">
+              <EvidenceBlock section={activeSection} />
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {active && checklist && (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-hairline bg-surface/95 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-8 py-3.5 sm:flex-row sm:items-center sm:justify-between lg:px-12">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <Check
+                label="Anomalies reviewed"
+                checked={checklist.anomaliesReviewed}
+                onChange={() => toggleCheck("anomaliesReviewed")}
+              />
+              <Check
+                label="Confirm - not advice"
+                checked={checklist.confirmPublish}
+                onChange={() => toggleCheck("confirmPublish")}
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <p className="hidden text-[12px] text-muted sm:block">
+                {canPublish
+                  ? "Ready to publish."
+                  : "Complete checks to unlock."}
+              </p>
+              <button
+                type="button"
+                disabled={busy || !canPublish}
+                onClick={() => void publish()}
+                className="btn-dark px-5 text-sm disabled:opacity-35"
+              >
+                Publish to Stan
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -522,6 +478,19 @@ function QuietStat({ label, value }: { label: string; value: string }) {
         {value}
       </p>
     </div>
+  );
+}
+
+function ReadyChip({ label, ok }: { label: string; ok: boolean }) {
+  return (
+    <span
+      className={`rounded-md px-2 py-1 text-[11px] font-medium ${
+        ok ? "bg-mint-soft text-ink" : "bg-canvas text-muted-soft"
+      }`}
+    >
+      {ok ? "✓ " : ""}
+      {label}
+    </span>
   );
 }
 
@@ -579,7 +548,7 @@ function Check({
   locked?: boolean;
 }) {
   return (
-    <li className="flex items-start gap-2 text-[13px]">
+    <label className="flex cursor-pointer items-start gap-2 text-[13px]">
       <input
         type="checkbox"
         className="mt-0.5 accent-[var(--mint)]"
@@ -588,6 +557,6 @@ function Check({
         onChange={onChange}
       />
       <span className={checked ? "text-ink" : "text-muted"}>{label}</span>
-    </li>
+    </label>
   );
 }
