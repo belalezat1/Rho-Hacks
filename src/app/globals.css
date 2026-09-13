@@ -89,11 +89,12 @@ body {
 .metric-tile {
   background: #f3f4f4;
   border-radius: 12px;
-  padding: 1.25rem 1.35rem;
-  min-height: 108px;
+  padding: 1.1rem 1.25rem;
+  min-height: 96px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 0.4rem;
 }
 
 .metric-tile-label {
@@ -106,7 +107,7 @@ body {
 }
 
 .metric-tile-value {
-  margin-top: 1rem;
+  margin-top: 0;
   font-size: clamp(1.35rem, 2vw, 1.75rem);
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -116,7 +117,7 @@ body {
 }
 
 .metric-tile-delta {
-  margin-top: 0.5rem;
+  margin-top: 0.15rem;
   display: inline-flex;
   align-items: center;
   gap: 6px;

@@ -27,38 +27,45 @@ export async function GET() {
     );
   }
 
+  const paths = [
+    "https://api.elevenlabs.io/v1/convai/conversation/get-signed-url",
+    "https://api.elevenlabs.io/v1/convai/conversation/get_signed_url",
+  ];
+
   try {
-    const url = new URL(
-      "https://api.elevenlabs.io/v1/convai/conversation/get_signed_url",
+    let lastDetail = "";
+    for (const base of paths) {
+      const url = new URL(base);
+      url.searchParams.set("agent_id", agentId);
+      const res = await fetch(url, {
+        headers: { "xi-api-key": key },
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        lastDetail = (await res.text().catch(() => "")).slice(0, 300);
+        continue;
+      }
+      const data = (await res.json()) as { signed_url?: string };
+      if (!data.signed_url) {
+        return NextResponse.json(
+          { ok: false, error: "No signed_url in response" },
+          { status: 502 },
+        );
+      }
+      return NextResponse.json({
+        ok: true,
+        signedUrl: data.signed_url,
+        agentId,
+      });
+    }
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "signed-url failed",
+        detail: lastDetail,
+      },
+      { status: 502 },
     );
-    url.searchParams.set("agent_id", agentId);
-    const res = await fetch(url, {
-      headers: { "xi-api-key": key },
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      const detail = await res.text().catch(() => "");
-      return NextResponse.json(
-        {
-          ok: false,
-          error: `signed-url ${res.status}`,
-          detail: detail.slice(0, 300),
-        },
-        { status: 502 },
-      );
-    }
-    const data = (await res.json()) as { signed_url?: string };
-    if (!data.signed_url) {
-      return NextResponse.json(
-        { ok: false, error: "No signed_url in response" },
-        { status: 502 },
-      );
-    }
-    return NextResponse.json({
-      ok: true,
-      signedUrl: data.signed_url,
-      agentId,
-    });
   } catch (e) {
     return NextResponse.json(
       {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { VendorMark } from "@/components/VendorMark";
 import { formatUsd } from "@/lib/ledger/analytics";
 import type { Anomaly } from "@/lib/types";
@@ -16,39 +16,10 @@ function statusLabel(a: Anomaly) {
   return a.kind.replaceAll("_", " ");
 }
 
-function badgeClass(a: Anomaly) {
-  if (a.kind === "awaiting_approval") return "bg-[#E8F1F8] text-[#2E6D92]";
-  if (a.kind === "failed" || a.severity === "high")
-    return "bg-[#FDE8EA] text-[#C91829]";
-  if (a.kind === "pending" || a.severity === "medium")
-    return "bg-[#FEF3E2] text-[#9A5B12]";
-  return "bg-canvas text-muted";
-}
-
-function rowAccent(a: Anomaly) {
-  if (a.kind === "awaiting_approval") {
-    return {
-      edge: "border-l-[3px] border-l-[#2E6D92]",
-      amount: "text-[#2E6D92]",
-    };
-  }
-  if (a.kind === "failed" || a.severity === "high") {
-    return {
-      edge: "border-l-[3px] border-l-[var(--danger)]",
-      amount: "text-[var(--danger)]",
-    };
-  }
-  if (a.severity === "medium" || a.kind === "pending") {
-    return {
-      edge: "border-l-[3px] border-l-[var(--warn)]",
-      amount: "text-ink",
-    };
-  }
-  return { edge: "border-l-[3px] border-l-transparent", amount: "text-ink" };
-}
-
 export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
   const [filter, setFilter] = useState<Filter>("all");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const awaiting = anomalies.filter((a) => a.kind === "awaiting_approval");
   const high = anomalies.filter((a) => a.severity === "high");
@@ -71,6 +42,25 @@ export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
     { id: "other", label: "Other" },
   ];
 
+  const activeLabel =
+    filters.find((f) => f.id === filter)?.label ?? "All";
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    function onPointer(e: MouseEvent) {
+      if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onPointer);
+    };
+  }, [menuOpen]);
+
   return (
     <div>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -83,22 +73,49 @@ export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
         <MetricTile label="Flagged amount" value={formatUsd(flaggedCents)} />
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        {filters.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            onClick={() => setFilter(f.id)}
-            className={`rounded-lg px-3.5 py-2 text-[13px] font-medium transition ${
-              filter === f.id
-                ? "bg-ink text-white"
-                : "bg-[#f3f4f4] text-ink hover:bg-[#ebecec]"
-            }`}
-            aria-pressed={filter === f.id}
+      <div className="relative mt-6" ref={menuRef}>
+        <button
+          type="button"
+          onClick={() => setMenuOpen((v) => !v)}
+          className="inline-flex items-center gap-2 rounded-lg border border-hairline bg-white px-3.5 py-2 text-[13px] font-medium text-ink shadow-[0_1px_2px_rgba(15,23,22,0.04)] transition hover:bg-canvas"
+          aria-expanded={menuOpen}
+          aria-haspopup="listbox"
+        >
+          Filter: {activeLabel}
+          <span
+            className={`text-muted transition ${menuOpen ? "rotate-180" : ""}`}
+            aria-hidden
           >
-            {f.label}
-          </button>
-        ))}
+            ▾
+          </span>
+        </button>
+        <div
+          className={`absolute left-0 z-20 mt-1.5 w-56 origin-top overflow-hidden rounded-lg border border-hairline bg-white shadow-[0_8px_24px_rgba(15,23,22,0.08)] transition ${
+            menuOpen
+              ? "pointer-events-auto scale-100 opacity-100"
+              : "pointer-events-none scale-95 opacity-0"
+          }`}
+          role="listbox"
+          aria-hidden={!menuOpen}
+        >
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              role="option"
+              aria-selected={filter === f.id}
+              onClick={() => {
+                setFilter(f.id);
+                setMenuOpen(false);
+              }}
+              className={`block w-full px-3.5 py-2.5 text-left text-[13px] transition hover:bg-canvas ${
+                filter === f.id ? "font-medium text-ink" : "text-muted"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <ul className="mt-4 space-y-2">
@@ -108,42 +125,32 @@ export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
           </li>
         )}
         {visible.map((a) => {
-          const accent = rowAccent(a);
-          const isHot =
-            a.kind === "failed" ||
-            a.severity === "high" ||
-            a.kind === "awaiting_approval";
+          const needsAction = a.kind === "awaiting_approval";
           return (
             <li
               key={a.id}
-              className={`flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-white py-3.5 pr-4 pl-3.5 shadow-[0_1px_2px_rgba(15,23,22,0.03)] ${accent.edge}`}
+              className="grid grid-cols-1 items-center gap-3 rounded-2xl border border-hairline bg-white px-4 py-3.5 shadow-[0_1px_2px_rgba(15,23,22,0.03)] md:grid-cols-[7rem_9.5rem_2.5rem_minmax(0,1fr)_auto]"
             >
-              <span
-                className={`min-w-[88px] text-[15px] font-semibold tabular-nums ${accent.amount}`}
-              >
+              <span className="text-[15px] font-semibold tabular-nums text-ink">
                 {formatUsd(a.amountCents)}
               </span>
-              <span
-                className={`rounded-full px-2.5 py-1 text-[11px] font-medium capitalize ${badgeClass(a)}`}
-              >
-                {statusLabel(a)}
-              </span>
-              {a.kind === "awaiting_approval" && (
-                <span className="rounded-full bg-[#E8F1F8] px-2.5 py-1 text-[11px] font-semibold text-[#2E6D92]">
-                  Needs action
+              <div className="flex flex-wrap items-center gap-1.5 md:flex-col md:items-start md:gap-1">
+                <span className="rounded-md bg-[#f3f4f4] px-2.5 py-1 text-[11px] font-medium capitalize text-ink/80">
+                  {statusLabel(a)}
                 </span>
-              )}
+                {needsAction && (
+                  <span className="rounded-md bg-mint-soft px-2 py-0.5 text-[10px] font-semibold text-ink">
+                    Needs action
+                  </span>
+                )}
+              </div>
               <VendorMark
                 name={a.merchantKey ?? a.title}
                 vendorKey={a.merchantKey}
                 size={32}
               />
-              <div className="min-w-0 flex-1">
-                <p
-                  className={`truncate text-[14px] font-medium ${
-                    isHot ? "text-ink" : "text-ink/90"
-                  }`}
-                >
+              <div className="min-w-0">
+                <p className="truncate text-[14px] font-medium text-ink">
                   {a.title}
                 </p>
                 <p className="mt-0.5 truncate text-[12px] text-muted">
@@ -153,7 +160,7 @@ export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
                   {a.transactionIds.join(", ")}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 md:justify-end">
                 <Link
                   href="/cash-pulse"
                   className="btn-secondary !min-h-9 px-3 text-[12px]"

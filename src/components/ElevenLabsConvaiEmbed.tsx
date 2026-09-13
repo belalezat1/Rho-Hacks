@@ -93,7 +93,13 @@ function VoicePanel({
   const [contextReady, setContextReady] = useState(false);
 
   const connected = status === "connected";
+  const connecting = starting || status === "connecting";
 
+  useEffect(() => {
+    if (connected || status === "error" || status === "disconnected") {
+      setStarting(false);
+    }
+  }, [connected, status]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -163,9 +169,8 @@ function VoicePanel({
       await navigator.mediaDevices.getUserMedia({ audio: true });
       void loadPilotWorkspaceContext().catch(() => {});
 
-      // Prefer public agentId; signed URL as fallback only.
-      let startMode: "agentId" | "signedUrl" = "agentId";
       let signedUrl: string | undefined;
+      let signedError: string | undefined;
       try {
         const res = await fetch("/api/elevenlabs/signed-url");
         const data = (await res.json()) as {
@@ -173,39 +178,64 @@ function VoicePanel({
           signedUrl?: string;
           error?: string;
         };
-        if (!agentId && data.ok && data.signedUrl) {
+        if (data.ok && data.signedUrl) {
           signedUrl = data.signedUrl;
-          startMode = "signedUrl";
+        } else if (data.error) {
+          signedError = data.error;
         }
       } catch {
-        /* ignore */
+        /* public agentId path still available */
       }
 
-      if (startMode === "signedUrl" && signedUrl) {
-        startSession({ signedUrl });
-      } else {
-        startSession({ agentId });
+      try {
+        if (signedUrl) {
+          await Promise.resolve(startSession({ signedUrl }));
+        } else {
+          await Promise.resolve(startSession({ agentId }));
+        }
+      } catch (startErr) {
+        const msg =
+          startErr instanceof Error
+            ? startErr.message
+            : "Could not start ElevenLabs session";
+        setLocalError(
+          signedError
+            ? `${msg}. Signed URL: ${signedError}`
+            : msg,
+        );
+        setStarting(false);
       }
     } catch (e) {
-      setLocalError(e instanceof Error ? e.message : "Could not start voice");
-    } finally {
+      setLocalError(
+        e instanceof Error
+          ? e.name === "NotAllowedError"
+            ? "Microphone permission denied. Allow mic access, or use Chat."
+            : e.message
+          : "Could not start voice",
+      );
       setStarting(false);
     }
   }
 
-  const statusLabel = !connected
-    ? "Ready"
-    : isSpeaking
-      ? "Speaking"
-      : isListening
-        ? "Listening"
-        : mode || "Connected";
+  const statusLabel = connecting
+    ? "Connecting"
+    : !connected
+      ? "Ready"
+      : isSpeaking
+        ? "Speaking"
+        : isListening
+          ? "Listening"
+          : mode || "Connected";
 
-  const orbHint = connected
-    ? isSpeaking
-      ? "Pilot is speaking"
-      : "Your turn - speak naturally"
-    : "Start when ready";
+  const orbHint = connecting
+    ? "Starting session…"
+    : connected
+      ? isSpeaking
+        ? "Pilot is speaking"
+        : "Your turn - speak naturally"
+      : "Start when ready";
+
+  const banner = localError || error || (!connected && message ? message : null);
 
   return (
     <div
@@ -247,11 +277,11 @@ function VoicePanel({
         ) : (
           <button
             type="button"
-            disabled={starting || status === "connecting"}
+            disabled={connecting}
             onClick={() => void connect()}
             className="btn-primary px-5 py-2.5 text-[14px] disabled:opacity-50"
           >
-            {starting || status === "connecting" ? "Connecting…" : "Start voice"}
+            {connecting ? "Connecting…" : "Start voice"}
           </button>
         )}
       </div>
@@ -285,15 +315,18 @@ function VoicePanel({
         ))}
       </div>
 
-      {(error || localError || message) && (
-        <p className="shrink-0 border-t border-hairline bg-surface px-4 py-2 text-[12px] text-muted">
-          {localError || error || message}
-          {!connected && (
-            <>
-              {" "}
-              Agent must be <span className="font-medium text-ink">public</span>{" "}
-              (auth off) for hosted demos.
-            </>
+      {banner && (
+        <p className="shrink-0 border-t border-hairline bg-[#fef3e2] px-4 py-2.5 text-[12px] leading-snug text-ink/85">
+          {banner}
+          {!connected && !localError?.includes("Microphone") && (
+            <span className="mt-1 block text-muted">
+              Needs mic permission,{" "}
+              <code className="rounded bg-canvas px-1 text-[11px]">
+                ELEVENLABS_API_KEY
+              </code>
+              , and a public agent (auth off) or a working signed URL. Restart
+              the dev server after changing env.
+            </span>
           )}
         </p>
       )}

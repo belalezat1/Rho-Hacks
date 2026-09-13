@@ -172,20 +172,20 @@ export function BriefStudio() {
       )}
 
       {!active ? (
-        <div className="card mt-7 overflow-hidden">
-          <div className="grid gap-0 md:grid-cols-[1.2fr_0.9fr]">
-            <div className="flex flex-col justify-center px-8 py-12 md:px-10 md:py-14">
+        <div className="card mt-7 flex min-h-[calc(100vh-11rem)] overflow-hidden">
+          <div className="grid min-h-full w-full flex-1 gap-0 md:grid-cols-[1.15fr_0.95fr]">
+            <div className="flex flex-col justify-center px-8 py-14 md:px-12 md:py-16">
               <span className="w-fit rounded-md bg-mint px-2.5 py-1 text-[11px] font-semibold tracking-wide text-ink">
                 Featured
               </span>
-              <p className="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-[1.75rem]">
+              <p className="mt-5 text-2xl font-semibold tracking-tight text-ink md:text-[1.85rem]">
                 No pack yet
               </p>
               <p className="mt-3 max-w-md text-[15px] leading-relaxed text-muted">
                 Ask Pilot to draft a Monday brief, or draft a pack here. Cash,
                 exceptions, and Spend Context land in one review surface.
               </p>
-              <div className="mt-7 flex flex-wrap gap-2.5">
+              <div className="mt-8 flex flex-wrap gap-2.5">
                 <Link
                   href="/cash-pulse?pilot=1"
                   className="btn-primary px-5 text-sm"
@@ -200,8 +200,13 @@ export function BriefStudio() {
                   Draft pack here
                 </button>
               </div>
+              <ul className="mt-10 space-y-2 text-[13px] text-muted">
+                <li>Cash Pulse and burn attached from Rho</li>
+                <li>Exceptions + Spend Context in one review</li>
+                <li>Publish to Stan when the checklist is done</li>
+              </ul>
             </div>
-            <div className="relative min-h-[220px] bg-[#0f1110] p-8 md:min-h-full">
+            <div className="relative min-h-[280px] bg-[#0f1110] p-8 md:min-h-full md:p-10">
               <div
                 className="absolute inset-0 opacity-30"
                 style={{
@@ -210,14 +215,16 @@ export function BriefStudio() {
                   backgroundSize: "16px 16px",
                 }}
               />
-              <div className="relative flex h-full flex-col justify-between">
-                <p className="wordmark text-3xl text-white">Pilot</p>
-                <div className="space-y-2">
+              <div className="relative flex h-full min-h-[280px] flex-col justify-between md:min-h-full">
+                <p className="wordmark text-3xl text-white md:text-4xl">
+                  Pilot
+                </p>
+                <div className="space-y-3">
                   {["Cash Pulse", "Spend Context", "Ready to publish"].map(
                     (label, i) => (
                       <span
                         key={label}
-                        className="flex w-fit items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-ink shadow-sm"
+                        className="flex w-fit items-center gap-2 rounded-full bg-white px-3.5 py-2 text-[13px] font-medium text-ink shadow-sm"
                         style={{
                           transform: `rotate(${i === 1 ? -2 : i === 2 ? 1.5 : 0}deg)`,
                         }}

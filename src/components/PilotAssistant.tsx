@@ -15,7 +15,7 @@ type Tab = "chat" | "voice" | "sources" | "note";
 export function PilotAssistant() {
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<Tab>("chat");
+  const [tab, setTab] = useState<Tab>("voice");
   const {
     input,
     setInput,
@@ -30,7 +30,7 @@ export function PilotAssistant() {
   useEffect(() => {
     if (searchParams.get("pilot") === "1") {
       setOpen(true);
-      setTab("chat");
+      setTab("voice");
     }
   }, [searchParams]);
 
@@ -56,7 +56,7 @@ export function PilotAssistant() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="pilot-fab fixed bottom-8 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-full bg-mint px-10 py-5 text-[18px] font-semibold text-ink shadow-[0_12px_40px_rgba(15,23,22,0.22)] transition hover:brightness-[0.97]"
+        className="pilot-fab fixed bottom-8 right-8 z-50 flex items-center gap-3 rounded-full bg-mint px-10 py-5 text-[18px] font-semibold text-ink shadow-[0_12px_40px_rgba(15,23,22,0.22)] transition hover:brightness-[0.97]"
         aria-expanded={open}
         aria-controls="pilot-assistant-panel"
       >
@@ -96,8 +96,8 @@ export function PilotAssistant() {
                 <div className="flex rounded-lg bg-canvas p-0.5">
                   {(
                     [
-                      ["chat", "Chat"],
                       ["voice", "Voice"],
+                      ["chat", "Chat"],
                       ["sources", "Sources"],
                       ["note", "Note"],
                     ] as const
@@ -230,20 +230,37 @@ export function PilotAssistant() {
                         Voice briefing
                       </p>
                       <p className="mt-2 max-w-md text-[14px] leading-relaxed text-muted">
-                        Set{" "}
+                        Add{" "}
                         <code className="rounded bg-canvas px-1 text-[12px]">
                           NEXT_PUBLIC_ELEVENLABS_AGENT_ID
                         </code>{" "}
-                        and restart the dev server. Until then, use Chat for
+                        and{" "}
+                        <code className="rounded bg-canvas px-1 text-[12px]">
+                          ELEVENLABS_API_KEY
+                        </code>{" "}
+                        to{" "}
+                        <code className="rounded bg-canvas px-1 text-[12px]">
+                          .env.local
+                        </code>
+                        , then restart the dev server. Until then, use Chat for
                         tools or Note for a transcript.
                       </p>
-                      <button
-                        type="button"
-                        onClick={() => setTab("note")}
-                        className="btn-primary mt-6 px-5 text-[14px]"
-                      >
-                        Open Note
-                      </button>
+                      <div className="mt-6 flex flex-wrap gap-2.5">
+                        <button
+                          type="button"
+                          onClick={() => setTab("chat")}
+                          className="btn-primary px-5 text-[14px]"
+                        >
+                          Open Chat
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setTab("note")}
+                          className="btn-secondary px-5 text-[14px]"
+                        >
+                          Open Note
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
