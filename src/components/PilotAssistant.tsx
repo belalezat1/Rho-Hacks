@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { BriefText } from "@/components/BriefText";
 import { ElevenLabsConvaiEmbed } from "@/components/ElevenLabsConvaiEmbed";
 import { VoiceCapture } from "@/components/VoiceCapture";
 import {
@@ -155,7 +156,11 @@ export function PilotAssistant() {
                                 : "border border-hairline bg-surface text-ink/90"
                             }`}
                           >
-                            {m.text}
+                            {m.role === "assistant" ? (
+                              <BriefText text={m.text} />
+                            ) : (
+                              m.text
+                            )}
                           </div>
                         </div>
                       );

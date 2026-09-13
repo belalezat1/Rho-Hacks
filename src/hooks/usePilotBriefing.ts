@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { formatUsd } from "@/lib/ledger/analytics";
 
 export const PILOT_PROMPTS = [
   {
@@ -36,6 +37,52 @@ const INTRO: PilotMsg = {
   text: "Ask about cash, anomalies, spend context, or drafting a brief. Read-only on Rho. Decision support only, not financial advice.",
 };
 
+function formatMorningBrief(input: {
+  total: string;
+  burn: string;
+  runway: string | number | null | undefined;
+  concentration: { displayName?: string; pctOfBurn?: number }[];
+  anomalies: {
+    title: string;
+    severity: string;
+    amountCents?: number;
+  }[];
+}): string {
+  const conc = (input.concentration ?? [])
+    .slice(0, 3)
+    .map(
+      (c) =>
+        `- ${c.displayName ?? "Vendor"} — ${(c.pctOfBurn ?? 0).toFixed(1)}%`,
+    )
+    .join("\n");
+  const items = input.anomalies ?? [];
+  const top = items.slice(0, 4);
+  const extra = Math.max(0, items.length - top.length);
+  const anomLines = top
+    .map((a) => {
+      const amt =
+        typeof a.amountCents === "number" ? formatUsd(a.amountCents) : "";
+      return `- ${amt} · ${a.severity} · ${a.title}`;
+    })
+    .join("\n");
+  return [
+    "Cash",
+    `- Total: ${input.total} · Burn 30d: ${input.burn} · Runway: ${input.runway ?? "n/a"}d`,
+    "",
+    "Top burn",
+    conc || "- n/a",
+    "",
+    "Exceptions",
+    anomLines || "- None flagged",
+    ...(extra > 0 ? [`- +${extra} more`] : []),
+    "",
+    "Next",
+    "- Review high / awaiting items in Rho.",
+    "",
+    "Draft a Weekly Money Brief?",
+  ].join("\n");
+}
+
 export function usePilotBriefing() {
   const [input, setInput] = useState("");
   const [log, setLog] = useState<PilotMsg[]>([INTRO]);
@@ -61,16 +108,22 @@ export function usePilotBriefing() {
     setInput("");
     setLog((l) => [...l, { role: "user", text: q }]);
     try {
-      const [balances, anomalies, spend, risk] = await Promise.all([
+      const [balances, anomalies, spend, concentration] = await Promise.all([
         fetch("/api/tools/get_balances").then((r) => r.json()),
         fetch("/api/tools/get_anomalies").then((r) => r.json()),
         fetch("/api/tools/tavily_spend_context").then((r) => r.json()),
-        fetch("/api/tools/tavily_risk_brief").then((r) => r.json()),
+        fetch("/api/tools/get_concentration").then((r) => r.json()),
       ]);
       await refreshTraces();
 
       const lower = q.toLowerCase();
-      let reply = `Cash position ${balances.formatted.total}. About ${balances.formatted.runwayDays ?? "n/a"} days runway. ${anomalies.anomalies.length} radar items. Spend Context has ${spend.rows?.length ?? 0} cited rows (${spend.source}). External risk: ${risk.items?.length ?? 0} headlines.`;
+      let reply = formatMorningBrief({
+        total: balances.formatted?.total ?? "n/a",
+        burn: balances.formatted?.burn30 ?? "n/a",
+        runway: balances.formatted?.runwayDays,
+        concentration: concentration.concentration ?? [],
+        anomalies: anomalies.anomalies ?? [],
+      });
 
       if (
         lower.includes("brief") ||
@@ -85,7 +138,19 @@ export function usePilotBriefing() {
         }).then((r) => r.json());
         setLastBriefId(brief.brief?.id ?? null);
         await refreshTraces();
-        reply = `Drafted ${brief.brief?.title}. Cash, anomalies, Spend Context, and External Risk are in Brief Studio. Open Brief Studio to review the checklist, then publish to Stan.`;
+        reply = [
+          "Pack",
+          `- Drafted ${brief.brief?.title ?? "Weekly Money Brief"}`,
+          "",
+          "Includes",
+          "- Cash Pulse",
+          "- Exceptions",
+          "- Spend Context",
+          "- External Risk",
+          "",
+          "Next",
+          "- Open Brief Studio → checklist → publish to Stan.",
+        ].join("\n");
       } else if (lower.includes("close") || lower.includes("1st")) {
         const brief = await fetch("/api/tools/generate_brief", {
           method: "POST",
@@ -97,7 +162,14 @@ export function usePilotBriefing() {
         }).then((r) => r.json());
         setLastBriefId(brief.brief?.id ?? null);
         await refreshTraces();
-        reply = `Prepared ${brief.brief?.title} with ${anomalies.anomalies.length} exceptions. Open Brief Studio to review and publish.`;
+        reply = [
+          "Client close pack",
+          `- ${brief.brief?.title ?? "Client Close Pack"}`,
+          `- ${(anomalies.anomalies ?? []).length} exceptions attached`,
+          "",
+          "Next",
+          "- Open Brief Studio to review and publish.",
+        ].join("\n");
       } else if (
         lower.includes("spend") ||
         lower.includes("range") ||
@@ -106,15 +178,20 @@ export function usePilotBriefing() {
         lower.includes("market")
       ) {
         const rows = (spend.rows ?? [])
-          .slice(0, 4)
+          .slice(0, 5)
           .map(
-            (r: {
-              label: string;
-              band: string;
-            }) => `${r.label}: ${r.band.replace(/_/g, " ")}`,
+            (r: { label: string; band: string }) =>
+              `- ${r.label}: ${r.band.replace(/_/g, " ")}`,
           )
-          .join("; ");
-        reply = `Spend Context (${spend.source}): ${rows || "no rows"}. Public-web estimates for decision support, not quotes. Open Spend for the full table.`;
+          .join("\n");
+        reply = [
+          "Spend Context",
+          `- Source: ${spend.source ?? "tavily"}`,
+          rows || "- no rows",
+          "",
+          "Next",
+          "- Open Spend for full cited ranges.",
+        ].join("\n");
       } else if (
         lower.includes("anomal") ||
         lower.includes("weird") ||
@@ -122,13 +199,29 @@ export function usePilotBriefing() {
         lower.includes("exception")
       ) {
         const top = (anomalies.anomalies ?? [])
-          .slice(0, 3)
+          .slice(0, 5)
           .map(
-            (a: { title: string; severity: string }) =>
-              `${a.severity}: ${a.title}`,
+            (a: {
+              title: string;
+              severity: string;
+              amountCents?: number;
+            }) => {
+              const amt =
+                typeof a.amountCents === "number"
+                  ? formatUsd(a.amountCents)
+                  : "";
+              return `- ${amt} · ${a.severity} · ${a.title}`;
+            },
           )
-          .join("; ");
-        reply = `${anomalies.anomalies.length} radar items. ${top || "None flagged."} Radar only, not a verdict. Escalate in Rho.`;
+          .join("\n");
+        reply = [
+          "Exceptions",
+          `- ${(anomalies.anomalies ?? []).length} radar items`,
+          top || "- None flagged",
+          "",
+          "Next",
+          "- Escalate in Rho. Radar only, not a verdict.",
+        ].join("\n");
       }
 
       setLog((l) => [...l, { role: "assistant", text: reply }]);

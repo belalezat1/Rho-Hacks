@@ -201,6 +201,7 @@ export async function loadPilotWorkspaceContext(): Promise<string> {
       riskLines || "- n/a",
       "",
       "Rules: decision support only, not advice; never claim you can move money; cite Rho IDs when tools return them.",
+      "FORMAT: CFO bullets only. Cash / Top burn / Exceptions / Next. Numerals ($788,450). Max ~8 bullets. No essay. No spelled-out dollar amounts.",
     ].join("\n");
   } catch {
     return FALLBACK_CONTEXT;

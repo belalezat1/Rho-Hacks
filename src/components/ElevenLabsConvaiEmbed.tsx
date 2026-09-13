@@ -8,6 +8,7 @@ import {
   useConversationStatus,
 } from "@elevenlabs/react";
 import { PilotOrb } from "@/components/PilotOrb";
+import { BriefText } from "@/components/BriefText";
 import {
   loadPilotWorkspaceContext,
   pilotClientTools,
@@ -309,7 +310,11 @@ function VoicePanel({
                   : "rounded-bl-md border border-hairline bg-surface text-ink/90"
               }`}
             >
-              {line.text}
+              {line.role === "agent" ? (
+                <BriefText text={line.text} />
+              ) : (
+                line.text
+              )}
             </div>
           </div>
         ))}
