@@ -33,11 +33,8 @@ function bandClass(band: string) {
   return "";
 }
 
-function severityClass(sev: string) {
-  const s = sev.toLowerCase();
-  if (s === "high" || s === "failed") return "bg-[#FDE8EA] text-[#C91829]";
-  if (s === "medium") return "bg-[#FEF3E2] text-[#9A5B12]";
-  return "bg-canvas text-muted";
+function severityClass(_sev: string) {
+  return "bg-[#f3f4f4] text-ink/80";
 }
 
 function parsePipeTable(md: string) {
@@ -170,29 +167,17 @@ function AnomaliesBody({ md }: { md: string }) {
       {items.map((item, i) => (
         <li
           key={`${item.title}-${i}`}
-          className={`flex flex-wrap items-start gap-3 rounded-xl border border-hairline bg-white px-3.5 py-3 ${
-            item.severity.toLowerCase() === "high"
-              ? "border-l-[3px] border-l-[var(--danger)]"
-              : item.severity.toLowerCase() === "medium"
-                ? "border-l-[3px] border-l-[var(--warn)]"
-                : ""
-          }`}
+          className="grid grid-cols-1 items-start gap-3 rounded-xl border border-hairline bg-white px-3.5 py-3 sm:grid-cols-[7rem_6.5rem_minmax(0,1fr)]"
         >
-          <span
-            className={`text-[15px] font-semibold tabular-nums ${
-              item.severity.toLowerCase() === "high"
-                ? "text-[var(--danger)]"
-                : "text-ink"
-            }`}
-          >
+          <span className="text-[15px] font-semibold tabular-nums text-ink">
             {item.amount}
           </span>
           <span
-            className={`rounded-full px-2.5 py-1 text-[11px] font-medium capitalize ${severityClass(item.severity)}`}
+            className={`w-fit rounded-md px-2.5 py-1 text-[11px] font-medium capitalize ${severityClass(item.severity)}`}
           >
             {item.severity.toLowerCase()}
           </span>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <p className="text-[14px] font-medium text-ink">{item.title}</p>
             {item.detail && (
               <p className="mt-0.5 text-[12px] text-muted">{item.detail}</p>
