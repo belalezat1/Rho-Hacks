@@ -130,7 +130,15 @@ Open [http://localhost:3000](http://localhost:3000). **Demo Mode works with empt
 
 **TTS on brief:** `POST /api/tools/generate_brief` sets `audioAvailable` when TTS succeeds; `audioError` explains misses.
 
-**Agent wiring:** Paste [`src/lib/elevenlabs/prompt.ts`](src/lib/elevenlabs/prompt.ts) into the hosted ElevenLabs Agent. In Agent → Advanced, **turn authentication off** (public) so the Voice widget can connect. Point server tools at your public `/api/tools/*` (tunnel if local).
+**Agent wiring (for judges / hosted demo):**
+
+1. Paste [`src/lib/elevenlabs/prompt.ts`](src/lib/elevenlabs/prompt.ts) into the ElevenLabs Agent system prompt.
+2. Agent → **Advanced**: turn **authentication off** (public).
+3. Agent → **Tools**: add **Client tools** with these exact names (blocking / wait for result): `get_balances`, `get_anomalies`, `tavily_spend_context`, `tavily_risk_brief`, `generate_brief`, `publish_to_stan` (plus optional `get_transactions`, `get_concentration`).
+4. Set `NEXT_PUBLIC_ELEVENLABS_AGENT_ID` (and API key) in the host env; redeploy.
+5. Voice tab loads workspace context automatically from demo Rho + Tavily so Pilot can answer even before a tool call.
+
+**Deploy tip:** Same-origin `/api/tools/*` power client tools on Vercel/etc. Do not set `TOOL_WEBHOOK_SECRET` unless Agent server tools send that header.
 
 ### Backend smoke checklist
 

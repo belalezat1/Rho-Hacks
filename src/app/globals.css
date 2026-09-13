@@ -575,3 +575,22 @@ body {
     }
   }
 }
+
+@keyframes orbBreath {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes orbBreath {
+    0%,
+    100% {
+      transform: none;
+    }
+  }
+}
