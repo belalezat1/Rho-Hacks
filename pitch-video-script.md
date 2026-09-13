@@ -56,13 +56,13 @@ Positioning: Monday money brief for founders, sitting on top of Rho.
 
 ---
 
-## Brief to Stan (1:45-2:10)
+## Brief Studio (1:45-2:10)
 
 | Visuals & Audio Cues | Narration / Dialogue |
 |---|---|
 | Brief Studio. Draft weekly money brief. Sections fill. | **B:** Brief Studio rolls all of that into a weekly pack from the same data. |
-| Play standup audio (~4s). | **B:** Hit play and you get a short standup you can actually listen to on the way into the meeting. |
-| Publish to Stan. Browser opens Stan URL. | **A:** Confirm it, publish to Stan, and that Monday habit starts living inside the Rho story. |
+| Play standup audio (~4s) if it works; otherwise skip straight to PDF. | **B:** Hit play and you get a short standup you can listen to on the way into the meeting. |
+| Toggle PDF preview. Hold on the generated brief (cash, spend, narrative). | **A:** Then open the PDF. That's the pack you'd hand the team or drop into Stan when you're ready to ship. |
 
 ---
 
@@ -70,7 +70,7 @@ Positioning: Monday money brief for founders, sitting on top of Rho.
 
 | Visuals & Audio Cues | Narration / Dialogue |
 |---|---|
-| Quick montage: Rho IDs, Tavily cite, voice orb, Stan link. | **A:** If you pull Rho, there's no ledger underneath. If you pull Tavily, the comps go soft. If you pull ElevenLabs, you lose the voice brief. If you pull Stan, the pack never lands with the team. |
+| Quick montage: Rho IDs, Tavily cite, voice orb, Brief PDF. | **A:** If you pull Rho, there's no ledger underneath. If you pull Tavily, the comps go soft. If you pull ElevenLabs, you lose the voice brief. If you skip Brief Studio, there's no pack to share. |
 | Hold Pilot wordmark. | **A:** Pilot is Rho with a briefing habit on top, the kind of feature founders would actually open on Monday. |
 
 ---
@@ -79,7 +79,7 @@ Positioning: Monday money brief for founders, sitting on top of Rho.
 
 | Visuals & Audio Cues | Narration / Dialogue |
 |---|---|
-| Live URL on screen. Path: Ask Pilot, Spend, Brief, Stan. | **B:** Open the live app and give yourself three minutes through Ask Pilot, Spend, Brief, and Stan. |
+| Live URL on screen. Path: Ask Pilot, Spend, Brief Studio PDF. | **B:** Open the live app and give yourself three minutes through Ask Pilot, Spend, and Brief Studio. |
 | End card: Pilot + "Monday briefs on Rho." | **A:** That's Pilot: your Monday money brief, built on Rho. |
 
 ---
@@ -92,7 +92,7 @@ Positioning: Monday money brief for founders, sitting on top of Rho.
 - Cash pulse metrics + one concrete number
 - Exceptions radar row
 - Spend table + citation click + External Risk
-- Brief Studio draft, audio scrub, Publish to Stan
+- Brief Studio draft, audio scrub (optional), PDF preview held on screen
 - Short montage proving each sponsor in product, not logo wallpaper
 - End card with live URL
 
@@ -105,7 +105,7 @@ Positioning: Monday money brief for founders, sitting on top of Rho.
 | Ask Pilot | 35-60 |
 | Cash + Exceptions | 60-80 |
 | Spend / Tavily | 80-105 |
-| Brief to Stan | 105-130 |
+| Brief Studio | 105-130 |
 | Why it sticks | 130-145 |
 | CTA | 145-155 |
 | **Total** | **~2:35** |
@@ -116,5 +116,6 @@ Positioning: Monday money brief for founders, sitting on top of Rho.
 - Let sentences breathe. Connect the idea to the click instead of punching out short claims.
 - Say the Rho-feature frame in the hook and again near the end. Don't repeat "second CFO" after the open.
 - If Voice flakes on camera, stay on Chat and keep moving.
-- Prefer one concrete Cash number on camera for credibility.
+- Prefer one concrete Cash number on camera for credibility (~$788k cash / ~94d runway).
 - Read-only stays true: say it once in intro, then show the product.
+- Do not click Publish to Stan on camera. Land on the generated PDF preview as the shareable pack.
