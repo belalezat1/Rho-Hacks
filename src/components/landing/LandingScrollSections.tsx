@@ -16,7 +16,7 @@ export function LandingScrollSections() {
       >
         <div className="mx-auto max-w-6xl px-6 md:px-10">
           <p className="mx-auto w-fit rounded-full border border-hairline px-5 py-2 text-center text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">
-            Built with Rho · ElevenLabs · Tavily · Stan
+            Enterprise systems used
           </p>
         </div>
         <div className="mt-12 w-full">

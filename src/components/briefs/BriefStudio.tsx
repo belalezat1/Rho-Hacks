@@ -216,7 +216,7 @@ export function BriefStudio() {
                 }}
               />
               <div className="relative flex h-full min-h-[280px] flex-col justify-between md:min-h-full">
-                <p className="wordmark text-5xl text-white md:text-6xl lg:text-7xl">
+                <p className="wordmark text-[1.75rem] text-white md:text-[2rem]">
                   Pilot
                 </p>
                 <div className="space-y-3">

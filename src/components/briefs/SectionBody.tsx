@@ -53,6 +53,32 @@ function parsePipeTable(md: string) {
   return { headers: rows[0], body: rows.slice(1) };
 }
 
+function parseAccountLine(text: string) {
+  // Operating Checking (acc_checking_001): $428,450
+  const m = text.match(/^(.+?)\s+\(([^)]+)\):\s*(.+)$/);
+  if (m) {
+    return { name: m[1].trim(), id: m[2].trim(), balance: m[3].trim() };
+  }
+  const m2 = text.match(/^(.+?):\s*(.+)$/);
+  if (m2) return { name: m2[1].trim(), id: "", balance: m2[2].trim() };
+  return { name: text, id: "", balance: "" };
+}
+
+function parseConcentrationLine(text: string) {
+  // Gusto Payroll: $170,000 (67.6% of burn)
+  const m = text.match(/^(.+?):\s*(\$[\d,]+(?:\.\d+)?)\s*\(([^)]+)\)\s*$/);
+  if (m) {
+    return {
+      name: m[1].trim(),
+      amount: m[2].trim(),
+      pct: m[3].replace(/\s*of burn/i, "").trim(),
+    };
+  }
+  const m2 = text.match(/^(.+?):\s*(.+)$/);
+  if (m2) return { name: m2[1].trim(), amount: m2[2].trim(), pct: "" };
+  return { name: text, amount: "", pct: "" };
+}
+
 function CashPulseBody({ md }: { md: string }) {
   const metrics: { label: string; value: string }[] = [];
   const accounts: string[] = [];
@@ -95,33 +121,68 @@ function CashPulseBody({ md }: { md: string }) {
           ))}
         </div>
       )}
-      {accounts.length > 0 && (
-        <div>
-          <p className="mb-2 text-[12px] font-medium text-muted">Accounts</p>
-          <ul className="space-y-2">
-            {accounts.map((a) => (
-              <li
-                key={a}
-                className="rounded-xl bg-canvas/80 px-3.5 py-2.5 text-[14px] text-ink/90"
-                dangerouslySetInnerHTML={{ __html: inlineFormat(a) }}
-              />
-            ))}
-          </ul>
-        </div>
-      )}
-      {concentration.length > 0 && (
-        <div>
-          <p className="mb-2 text-[12px] font-medium text-muted">
-            Vendor concentration (30d)
-          </p>
-          <ul className="space-y-1.5">
-            {concentration.map((c) => (
-              <li key={c} className="flex gap-2 text-[14px] text-muted">
-                <span className="text-ink/40">•</span>
-                <span>{c}</span>
-              </li>
-            ))}
-          </ul>
+      {(accounts.length > 0 || concentration.length > 0) && (
+        <div className="grid gap-3 md:grid-cols-2">
+          {accounts.length > 0 && (
+            <div className="panel-soft">
+              <p className="text-[12px] font-medium text-muted">Accounts</p>
+              <ul className="mt-3 space-y-0">
+                {accounts.map((a) => {
+                  const row = parseAccountLine(a);
+                  return (
+                    <li
+                      key={a}
+                      className="flex justify-between gap-3 border-t border-white/80 py-2.5 text-sm first:border-0 first:pt-0"
+                    >
+                      <span className="min-w-0">
+                        <span className="font-medium text-ink">{row.name}</span>
+                        {row.id ? (
+                          <span className="mt-0.5 block font-mono text-[11px] text-muted">
+                            {row.id}
+                          </span>
+                        ) : null}
+                      </span>
+                      <span className="shrink-0 font-semibold tabular-nums text-ink">
+                        {row.balance}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+          {concentration.length > 0 && (
+            <div className="panel-soft">
+              <p className="text-[12px] font-medium text-muted">
+                Vendor concentration (30d)
+              </p>
+              <ul className="mt-3 space-y-2.5">
+                {concentration.map((c) => {
+                  const row = parseConcentrationLine(c);
+                  return (
+                    <li
+                      key={c}
+                      className="flex items-center justify-between gap-3 text-sm"
+                    >
+                      <span className="min-w-0 truncate font-medium text-ink">
+                        {row.name}
+                      </span>
+                      <span className="flex shrink-0 items-baseline gap-2 tabular-nums">
+                        {row.amount ? (
+                          <span className="text-[13px] text-muted">
+                            {row.amount}
+                          </span>
+                        ) : null}
+                        <span className="font-semibold text-ink">
+                          {row.pct || "—"}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>
