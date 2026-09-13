@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { VendorMark } from "@/components/VendorMark";
 import { formatUsd } from "@/lib/ledger/analytics";
 import type { SpendContextRow } from "@/lib/types";
@@ -21,6 +21,9 @@ function matchesFilter(row: SpendContextRow, filter: Filter) {
 
 export function SpendFilterTable({ rows }: { rows: SpendContextRow[] }) {
   const [filter, setFilter] = useState<Filter>("vendor");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   const visible = useMemo(
     () => rows.filter((r) => matchesFilter(r, filter)),
     [rows, filter],
@@ -32,27 +35,72 @@ export function SpendFilterTable({ rows }: { rows: SpendContextRow[] }) {
     { id: "department", label: "Contractors & roles" },
   ];
 
+  const activeLabel =
+    filters.find((f) => f.id === filter)?.label ?? "All vendors";
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    function onPointer(e: MouseEvent) {
+      if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onPointer);
+    };
+  }, [menuOpen]);
+
   return (
     <>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        {filters.map((f) => {
-          const active = filter === f.id;
-          return (
-            <button
-              key={f.id}
-              type="button"
-              onClick={() => setFilter(f.id)}
-              className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition ${
-                active
-                  ? "bg-ink text-white"
-                  : "bg-[#f3f4f4] text-ink hover:bg-[#ebecec]"
-              }`}
-              aria-pressed={active}
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <div className="relative" ref={menuRef}>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="inline-flex items-center gap-2 rounded-lg border border-hairline bg-white px-3.5 py-2 text-[13px] font-medium text-ink shadow-[0_1px_2px_rgba(15,23,22,0.04)] transition hover:bg-canvas"
+            aria-expanded={menuOpen}
+            aria-haspopup="listbox"
+          >
+            {activeLabel}
+            <span
+              className={`text-muted transition ${menuOpen ? "rotate-180" : ""}`}
+              aria-hidden
             >
-              {f.label}
-            </button>
-          );
-        })}
+              ▾
+            </span>
+          </button>
+          <div
+            className={`absolute left-0 z-20 mt-1.5 w-56 origin-top overflow-hidden rounded-lg border border-hairline bg-white shadow-[0_8px_24px_rgba(15,23,22,0.08)] transition ${
+              menuOpen
+                ? "pointer-events-auto scale-100 opacity-100"
+                : "pointer-events-none scale-95 opacity-0"
+            }`}
+            role="listbox"
+            aria-hidden={!menuOpen}
+          >
+            {filters.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                role="option"
+                aria-selected={filter === f.id}
+                onClick={() => {
+                  setFilter(f.id);
+                  setMenuOpen(false);
+                }}
+                className={`block w-full px-3.5 py-2.5 text-left text-[13px] transition hover:bg-canvas ${
+                  filter === f.id ? "font-medium text-ink" : "text-muted"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <span className="text-[12px] text-muted">
           {visible.length} of {rows.length} rows
         </span>
@@ -65,7 +113,15 @@ export function SpendFilterTable({ rows }: { rows: SpendContextRow[] }) {
           </h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[920px] border-collapse text-left text-sm">
+          <table className="w-full min-w-[960px] table-fixed border-collapse text-left text-sm">
+            <colgroup>
+              <col className="w-[22%]" />
+              <col className="w-[12%]" />
+              <col className="w-[22%]" />
+              <col className="w-[10%]" />
+              <col className="w-[14%]" />
+              <col className="w-[20%]" />
+            </colgroup>
             <thead className="border-b border-hairline text-[12px] text-muted">
               <tr>
                 <th className="px-5 py-3 font-medium">Item</th>
@@ -89,7 +145,7 @@ export function SpendFilterTable({ rows }: { rows: SpendContextRow[] }) {
               )}
               {visible.map((row) => {
                 const cites = row.citations ?? [];
-                const shown = cites.slice(0, 2);
+                const shown = cites.slice(0, 1);
                 const extra = cites.length - shown.length;
                 return (
                   <tr
@@ -105,7 +161,7 @@ export function SpendFilterTable({ rows }: { rows: SpendContextRow[] }) {
                     <td className="px-4 py-3.5 font-semibold tabular-nums text-ink">
                       {formatUsd(row.rhoAmountMonthlyCents)}
                     </td>
-                    <td className="px-4 py-3.5 tabular-nums text-muted">
+                    <td className="px-4 py-3.5 whitespace-nowrap tabular-nums text-muted">
                       {row.citedRangeLowCents != null &&
                       row.citedRangeHighCents != null
                         ? `${formatUsd(row.citedRangeLowCents)} to ${formatUsd(row.citedRangeHighCents)}`
@@ -130,7 +186,7 @@ export function SpendFilterTable({ rows }: { rows: SpendContextRow[] }) {
                           href={c.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="mb-0.5 block truncate text-ink/80 underline-offset-2 hover:underline"
+                          className="block truncate text-ink/80 underline-offset-2 hover:underline"
                           title={c.title}
                         >
                           {c.title}

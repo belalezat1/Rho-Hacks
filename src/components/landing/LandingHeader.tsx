@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId, useState, type ComponentType } from "react";
 import { PilotWordmark } from "@/components/PilotWordmark";
+import {
+  IconAnomalies,
+  IconBriefs,
+  IconCash,
+  IconExceptions,
+  IconSpend,
+  IconTalk,
+} from "@/components/NavIcons";
 
 type MenuItem = {
   href: string;
   title: string;
   body: string;
+  Icon: ComponentType<{ className?: string }>;
 };
 
 type MenuGroup = {
@@ -23,11 +32,13 @@ const PRODUCT: MenuGroup[] = [
         href: "/briefs",
         title: "Briefs",
         body: "Assemble evidence and publish the pack",
+        Icon: IconBriefs,
       },
       {
         href: "/talk",
         title: "Talk",
         body: "Ask Pilot about cash, spend, and risk",
+        Icon: IconTalk,
       },
     ],
   },
@@ -38,16 +49,19 @@ const PRODUCT: MenuGroup[] = [
         href: "/spend-context",
         title: "Spend Context",
         body: "Cited public market ranges on vendors",
+        Icon: IconSpend,
       },
       {
         href: "/cash-pulse",
         title: "Cash Pulse",
         body: "Balances, burn, and runway",
+        Icon: IconCash,
       },
       {
         href: "/anomalies",
         title: "Anomalies",
         body: "What looks off since Monday",
+        Icon: IconAnomalies,
       },
     ],
   },
@@ -61,11 +75,13 @@ const WORKSPACE: MenuGroup[] = [
         href: "/talk",
         title: "Founders",
         body: "Weekly money brief in conversation",
+        Icon: IconTalk,
       },
       {
         href: "/briefs",
         title: "Accountants",
         body: "Client-ready packs with a checklist",
+        Icon: IconBriefs,
       },
     ],
   },
@@ -76,6 +92,7 @@ const WORKSPACE: MenuGroup[] = [
         href: "#integrations",
         title: "Integrations",
         body: "Rho, ElevenLabs, Tavily, Stan",
+        Icon: IconExceptions,
       },
     ],
   },
@@ -117,13 +134,13 @@ export function LandingHeader() {
             Integrations
           </a>
           <Link
-            href="/talk"
+            href="/cash-pulse?pilot=1"
             className="hidden text-[15px] text-white/80 transition hover:text-white md:inline"
           >
             Open app
           </Link>
           <Link
-            href="/talk"
+            href="/cash-pulse?pilot=1"
             className="btn-primary rounded-full px-5 py-2.5 text-[15px] font-medium"
           >
             Start briefing
@@ -213,28 +230,33 @@ function MegaPanel({ groups }: { groups: MenuGroup[] }) {
               {g.label}
             </p>
             <ul className="space-y-1">
-              {g.items.map((item) => (
-                <li key={item.href + item.title}>
-                  <Link
-                    href={item.href}
-                    className="group flex gap-3 rounded-xl px-2.5 py-2.5 transition hover:bg-white/[0.06]"
-                    role="menuitem"
-                  >
-                    <span
-                      className="mt-0.5 h-8 w-8 shrink-0 rounded-md border border-white/10 bg-white/[0.04]"
-                      aria-hidden
-                    />
-                    <span>
-                      <span className="block text-[15px] font-medium text-white">
-                        {item.title}
+              {g.items.map((item) => {
+                const Icon = item.Icon;
+                return (
+                  <li key={item.href + item.title}>
+                    <Link
+                      href={item.href}
+                      className="group flex gap-3 rounded-xl px-2.5 py-2.5 transition hover:bg-white/[0.06]"
+                      role="menuitem"
+                    >
+                      <span
+                        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] text-white/80"
+                        aria-hidden
+                      >
+                        <Icon className="h-4 w-4" />
                       </span>
-                      <span className="mt-0.5 block text-[13px] leading-snug text-white/45">
-                        {item.body}
+                      <span>
+                        <span className="block text-[15px] font-medium text-white">
+                          {item.title}
+                        </span>
+                        <span className="mt-0.5 block text-[13px] leading-snug text-white/45">
+                          {item.body}
+                        </span>
                       </span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
@@ -250,8 +272,8 @@ function MegaPanel({ groups }: { groups: MenuGroup[] }) {
           }}
         />
         <div className="relative flex h-full min-h-[140px] items-center justify-center">
-          <span className="text-3xl text-white" aria-hidden>
-            ✦
+          <span className="wordmark text-2xl text-white" aria-hidden>
+            Pilot
           </span>
         </div>
       </div>

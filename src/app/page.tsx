@@ -11,13 +11,12 @@ export default function HomePage() {
       <ScrollRevealInit />
 
       <div className="landing-root relative flex min-h-[min(100vh,920px)] flex-col bg-rho-black text-white">
-        {/* Noise stays in the upper hero only so particles stay off the gradient seam */}
         <div
-          className="landing-noise pointer-events-none absolute inset-x-0 top-0 h-[70%]"
+          className="landing-noise pointer-events-none absolute inset-x-0 top-0 h-[75%]"
           aria-hidden
         />
         <div
-          className="landing-fade pointer-events-none absolute inset-x-0 bottom-0 h-[35%]"
+          className="landing-fade pointer-events-none absolute inset-x-0 bottom-0 h-[42%]"
           aria-hidden
         />
 
@@ -68,7 +67,7 @@ export default function HomePage() {
           {/* Dashboard sits inside the black→white wash so the fade and product peek align */}
           <div className="landing-hero-bottom relative z-10 mt-auto w-full">
             <div className="landing-bw-fade absolute inset-0" aria-hidden />
-            <div className="relative px-4 pt-16 md:px-8 md:pt-20">
+            <div className="relative px-4 pt-20 pb-0 md:px-8 md:pt-24">
               <div className="reveal reveal-delay">
                 <LandingDashboardPreview />
               </div>

@@ -164,6 +164,10 @@ body {
   }
 }
 
+.page-enter {
+  animation: page-enter 0.45s ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page-enter {
     animation: none;
@@ -387,20 +391,23 @@ body {
   animation: landing-rise 0.9s ease-out both;
 }
 
-/* Black → white wash behind the dashboard peek */
-.landing-hero-bottom {
-  min-height: 280px;
-}
-
 .landing-bw-fade {
   background: linear-gradient(
     180deg,
     #050505 0%,
-    #121212 22%,
-    #3a3a3a 48%,
-    #b8b8b8 78%,
+    #0a0a0a 12%,
+    #1a1a1a 28%,
+    #3d3d3d 48%,
+    #8a8a8a 68%,
+    #d4d4d4 84%,
+    #f4f4f4 94%,
     #ffffff 100%
   );
+}
+
+.landing-hero-bottom {
+  min-height: 320px;
+  margin-bottom: -1px;
 }
 
 .mega-menu {

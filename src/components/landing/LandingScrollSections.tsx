@@ -9,14 +9,14 @@ const GLASS_LOOP =
 
 export function LandingScrollSections() {
   return (
-    <div className="relative z-10 bg-white text-ink">
+    <div className="relative z-10 -mt-px bg-white text-ink">
       <section
         id="integrations"
         className="reveal overflow-hidden px-0 py-20 md:py-24"
       >
         <div className="mx-auto max-w-6xl px-6 md:px-10">
-          <p className="mx-auto w-fit rounded-full border border-hairline px-5 py-2 text-center text-[14px] font-medium tracking-wide text-muted">
-            Integration using companies such as
+          <p className="mx-auto w-fit rounded-full border border-hairline px-5 py-2 text-center text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">
+            Built with Rho · ElevenLabs · Tavily · Stan
           </p>
         </div>
         <div className="mt-12 w-full">

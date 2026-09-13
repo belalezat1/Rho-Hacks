@@ -129,17 +129,17 @@ export function ExceptionsBoard({ anomalies }: { anomalies: Anomaly[] }) {
           return (
             <li
               key={a.id}
-              className="grid grid-cols-1 items-center gap-3 rounded-2xl border border-hairline bg-white px-4 py-3.5 shadow-[0_1px_2px_rgba(15,23,22,0.03)] md:grid-cols-[7rem_9.5rem_2.5rem_minmax(0,1fr)_auto]"
+              className="grid grid-cols-1 items-center gap-3 rounded-2xl border border-hairline bg-white px-4 py-3.5 shadow-[0_1px_2px_rgba(15,23,22,0.03)] md:grid-cols-[7rem_11.5rem_2.5rem_minmax(0,1fr)_auto]"
             >
               <span className="text-[15px] font-semibold tabular-nums text-ink">
                 {formatUsd(a.amountCents)}
               </span>
-              <div className="flex flex-wrap items-center gap-1.5 md:flex-col md:items-start md:gap-1">
+              <div className="flex flex-wrap items-center gap-1.5">
                 <span className="rounded-md bg-[#f3f4f4] px-2.5 py-1 text-[11px] font-medium capitalize text-ink/80">
                   {statusLabel(a)}
                 </span>
                 {needsAction && (
-                  <span className="rounded-md bg-mint-soft px-2 py-0.5 text-[10px] font-semibold text-ink">
+                  <span className="rounded-md bg-mint-soft px-2.5 py-1 text-[11px] font-semibold text-ink">
                     Needs action
                   </span>
                 )}

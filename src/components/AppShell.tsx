@@ -5,12 +5,38 @@ import Link from "next/link";
 import { PilotWordmark } from "@/components/PilotWordmark";
 import { PageEnter } from "@/components/PageEnter";
 import { PilotAssistant } from "@/components/PilotAssistant";
+import {
+  IconBriefs,
+  IconCash,
+  IconExceptions,
+  IconSpend,
+} from "@/components/NavIcons";
 
 const nav = [
-  { href: "/cash-pulse", label: "Cash", match: ["/cash-pulse"] },
-  { href: "/spend-context", label: "Spend", match: ["/spend-context"] },
-  { href: "/anomalies", label: "Exceptions", match: ["/anomalies"] },
-  { href: "/briefs", label: "Brief Studio", match: ["/briefs"] },
+  {
+    href: "/cash-pulse",
+    label: "Cash",
+    match: ["/cash-pulse"],
+    Icon: IconCash,
+  },
+  {
+    href: "/spend-context",
+    label: "Spend",
+    match: ["/spend-context"],
+    Icon: IconSpend,
+  },
+  {
+    href: "/anomalies",
+    label: "Exceptions",
+    match: ["/anomalies"],
+    Icon: IconExceptions,
+  },
+  {
+    href: "/briefs",
+    label: "Brief Studio",
+    match: ["/briefs"],
+    Icon: IconBriefs,
+  },
 ];
 
 const SIDE_INSET = "px-5";
@@ -44,16 +70,18 @@ export function AppShell({
                     (m) => active === m || active.startsWith(m + "/"),
                   )
                 : false;
+            const Icon = item.Icon;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex h-10 items-center rounded-[var(--radius-control)] px-3 text-[14px] transition duration-150 ${
+                className={`flex h-10 items-center gap-2.5 rounded-[var(--radius-control)] px-3 text-[14px] transition duration-150 ${
                   isActive
                     ? "bg-nav-active font-medium text-ink"
                     : "text-muted hover:bg-canvas hover:text-ink"
                 }`}
               >
+                <Icon className="h-[18px] w-[18px] shrink-0 opacity-80" />
                 {item.label}
               </Link>
             );
